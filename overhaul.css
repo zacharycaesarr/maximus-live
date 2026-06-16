@@ -1,0 +1,889 @@
+/* ============================================================
+   McClURE REALTY — Visual Overhaul v1.0
+   Style: Clean & Earthy Professional
+   Typography: Playfair Display (headings) + Inter (body)
+   Priority: Property browsing CTAs front and center
+
+   HOW TO USE:
+   1. WordPress Admin → WPCode Lite → Add Snippet
+   2. Choose "CSS Snippet" type
+   3. Paste this entire file
+   4. Set location to "Site Wide Header"
+   5. Activate and save
+   ============================================================ */
+
+/* =====================
+   FONT IMPORT
+   (Elementor also lets you set these in
+   Elementor > Site Settings > Global Fonts — do both)
+===================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+/* =====================
+   DESIGN TOKENS
+   Change colors here to update the whole site
+===================== */
+:root {
+  --mc-green:        #3B5E4F;   /* Primary — deep sage/forest green  */
+  --mc-green-mid:    #4E7A68;   /* Hover states                       */
+  --mc-green-pale:   #EBF0EB;   /* Light section backgrounds          */
+  --mc-cream:        #FAF7F2;   /* Main page background               */
+  --mc-cream-dark:   #F0EAE0;   /* Alternate section background       */
+  --mc-tan:          #C4A87A;   /* Accent — warm tan/stone            */
+  --mc-tan-light:    #DFC9A3;   /* Tan hover/lighter variant          */
+  --mc-text:         #1C1C1C;   /* Primary text                       */
+  --mc-muted:        #5A5A5A;   /* Body text / secondary              */
+  --mc-border:       #DDD7CC;   /* Borders, dividers                  */
+  --mc-white:        #FFFFFF;
+
+  --font-heading: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --radius-sm: 3px;
+  --radius:    6px;
+  --radius-lg: 12px;
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.07);
+  --shadow:    0 4px 18px rgba(0, 0, 0, 0.09);
+  --shadow-lg: 0 10px 36px rgba(0, 0, 0, 0.12);
+
+  --transition: 0.22s ease;
+}
+
+/* =====================
+   1. GLOBAL BASE
+===================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+
+body,
+.elementor-page {
+  font-family: var(--font-body) !important;
+  color: var(--mc-text) !important;
+  background-color: var(--mc-cream) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background-color: var(--mc-green);
+  color: var(--mc-white);
+}
+
+/* =====================
+   2. TYPOGRAPHY
+===================== */
+h1, h2, h3, h4, h5, h6,
+.elementor-heading-title {
+  font-family: var(--font-heading) !important;
+  color: var(--mc-text) !important;
+  line-height: 1.15 !important;
+  font-weight: 600 !important;
+  margin-top: 0 !important;
+}
+
+h1,
+.elementor-widget-heading .elementor-heading-title[class*="h1"] {
+  font-size: clamp(2.4rem, 5vw, 4.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+h2,
+.elementor-widget-heading .elementor-heading-title[class*="h2"] {
+  font-size: clamp(1.8rem, 3.5vw, 3rem) !important;
+}
+
+h3,
+.elementor-widget-heading .elementor-heading-title[class*="h3"] {
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem) !important;
+}
+
+h4,
+.elementor-widget-heading .elementor-heading-title[class*="h4"] {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+}
+
+p,
+.elementor-widget-text-editor p,
+.elementor-widget-text-editor {
+  font-family: var(--font-body) !important;
+  font-size: 1rem !important;
+  line-height: 1.82 !important;
+  color: var(--mc-muted) !important;
+}
+
+a {
+  color: var(--mc-green) !important;
+  text-decoration: none !important;
+  transition: color var(--transition) !important;
+}
+
+a:hover {
+  color: var(--mc-tan) !important;
+}
+
+/* Overline / eyebrow labels — small caps text above section titles */
+.elementor-widget-heading .elementor-heading-title.eyebrow,
+.section-eyebrow,
+.mc-eyebrow {
+  font-family: var(--font-body) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: var(--mc-green) !important;
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+
+/* =====================
+   3. HEADER & NAVIGATION
+===================== */
+header,
+.elementor-location-header,
+.site-header,
+#masthead {
+  background-color: rgba(255, 255, 255, 0.97) !important;
+  border-bottom: 1px solid var(--mc-border) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 9999 !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+.elementor-nav-menu a,
+.elementor-nav-menu--main .elementor-item,
+.site-navigation a {
+  font-family: var(--font-body) !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.07em !important;
+  text-transform: uppercase !important;
+  color: var(--mc-text) !important;
+  padding: 6px 14px !important;
+  transition: color var(--transition) !important;
+}
+
+.elementor-nav-menu a:hover,
+.elementor-nav-menu--main .elementor-item:hover,
+.site-navigation a:hover {
+  color: var(--mc-green) !important;
+}
+
+.elementor-nav-menu--main .elementor-item.elementor-item-active {
+  color: var(--mc-green) !important;
+  border-bottom: 2px solid var(--mc-green) !important;
+}
+
+/* Logo */
+.elementor-widget-site-logo img,
+.site-logo img,
+.custom-logo {
+  max-height: 54px !important;
+  width: auto !important;
+}
+
+/* =====================
+   4. SECTIONS & LAYOUT
+===================== */
+.elementor-section,
+.e-con {
+  transition: background-color var(--transition) !important;
+}
+
+/* Alternating section backgrounds for visual rhythm */
+.elementor-section:nth-of-type(even) {
+  background-color: var(--mc-cream) !important;
+}
+
+.elementor-section:nth-of-type(odd) {
+  background-color: var(--mc-green-pale) !important;
+}
+
+/* Don't override sections with explicit background images */
+.elementor-section[data-settings*='"background_background":"classic"'],
+.elementor-section[data-settings*='"background_background":"gradient"'] {
+  background-color: transparent !important;
+}
+
+/* Standard section vertical padding */
+.elementor-section .elementor-container {
+  padding-top: 88px !important;
+  padding-bottom: 88px !important;
+}
+
+/* =====================
+   5. HERO SECTION
+===================== */
+/* Target the first full-width section as hero */
+.elementor-section.elementor-section-full_width:first-of-type,
+.elementor-section:first-of-type {
+  min-height: 88vh !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Hero text on dark/image backgrounds */
+.elementor-section:first-of-type .elementor-heading-title {
+  color: var(--mc-white) !important;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+.elementor-section:first-of-type p,
+.elementor-section:first-of-type .elementor-widget-text-editor,
+.elementor-section:first-of-type .elementor-widget-text-editor p {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 1.1rem !important;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Subtle dark overlay on hero if it has a background image */
+.elementor-section:first-of-type::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(27, 47, 38, 0.55) 0%,
+    rgba(27, 47, 38, 0.28) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.elementor-section:first-of-type .elementor-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* =====================
+   6. BUTTONS
+===================== */
+.elementor-button,
+.elementor-button-wrapper a.elementor-button,
+.elementor-widget-button .elementor-button {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 14px 32px !important;
+  transition: all var(--transition) !important;
+  border: 2px solid transparent !important;
+  cursor: pointer !important;
+}
+
+/* Primary (green fill) */
+.elementor-widget-button .elementor-button,
+.elementor-button.elementor-button-info {
+  background-color: var(--mc-green) !important;
+  color: var(--mc-white) !important;
+  border-color: var(--mc-green) !important;
+}
+
+.elementor-widget-button .elementor-button:hover,
+.elementor-button.elementor-button-info:hover {
+  background-color: var(--mc-green-mid) !important;
+  border-color: var(--mc-green-mid) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Secondary / ghost buttons (assign via Elementor button type "default") */
+.elementor-button.elementor-button-default {
+  background-color: transparent !important;
+  color: var(--mc-green) !important;
+  border-color: var(--mc-green) !important;
+}
+
+.elementor-button.elementor-button-default:hover {
+  background-color: var(--mc-green) !important;
+  color: var(--mc-white) !important;
+}
+
+/* Tan/accent variant */
+.elementor-button.elementor-button-warning {
+  background-color: var(--mc-tan) !important;
+  color: var(--mc-white) !important;
+  border-color: var(--mc-tan) !important;
+}
+
+.elementor-button.elementor-button-warning:hover {
+  background-color: transparent !important;
+  color: var(--mc-tan) !important;
+}
+
+/* =====================
+   7. SERVICE / ICON BOXES
+===================== */
+.elementor-widget-icon-box,
+.elementor-widget-image-box {
+  background: var(--mc-white) !important;
+  border: 1px solid var(--mc-border) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 36px 28px !important;
+  transition: box-shadow var(--transition), transform var(--transition) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.elementor-widget-icon-box:hover,
+.elementor-widget-image-box:hover {
+  box-shadow: var(--shadow) !important;
+  transform: translateY(-4px) !important;
+}
+
+.elementor-icon-box-title,
+.elementor-image-box-title {
+  font-family: var(--font-heading) !important;
+  color: var(--mc-text) !important;
+  font-size: 1.2rem !important;
+  margin-bottom: 10px !important;
+}
+
+.elementor-icon-box-description,
+.elementor-image-box-description {
+  font-family: var(--font-body) !important;
+  color: var(--mc-muted) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.8 !important;
+}
+
+.elementor-icon i,
+.elementor-icon svg {
+  color: var(--mc-green) !important;
+  fill: var(--mc-green) !important;
+  transition: color var(--transition) !important;
+}
+
+.elementor-widget-icon-box:hover .elementor-icon i,
+.elementor-widget-icon-box:hover .elementor-icon svg {
+  color: var(--mc-tan) !important;
+  fill: var(--mc-tan) !important;
+}
+
+/* =====================
+   8. TESTIMONIALS / REVIEWS
+===================== */
+.elementor-widget-testimonial,
+.elementor-widget-testimonial-carousel .elementor-testimonial,
+.elementor-widget-reviews .elementor-review {
+  background: var(--mc-white) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 32px 28px !important;
+  box-shadow: var(--shadow-sm) !important;
+  border-left: 3px solid var(--mc-green) !important;
+  margin-bottom: 16px !important;
+  transition: box-shadow var(--transition) !important;
+}
+
+.elementor-widget-testimonial:hover {
+  box-shadow: var(--shadow) !important;
+}
+
+.elementor-testimonial-content,
+.elementor-testimonial-text,
+blockquote {
+  font-family: var(--font-body) !important;
+  font-style: italic !important;
+  font-size: 0.95rem !important;
+  line-height: 1.88 !important;
+  color: var(--mc-muted) !important;
+}
+
+.elementor-testimonial-name {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  color: var(--mc-text) !important;
+  font-size: 1rem !important;
+}
+
+.elementor-testimonial-job {
+  font-family: var(--font-body) !important;
+  font-size: 0.78rem !important;
+  color: var(--mc-green) !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Star rating */
+.elementor-star-rating i,
+.elementor-star-rating svg {
+  color: var(--mc-tan) !important;
+  fill: var(--mc-tan) !important;
+}
+
+/* =====================
+   9. CONTACT FORMS
+===================== */
+.elementor-field-group input,
+.elementor-field-group textarea,
+.elementor-field-group select,
+.wpcf7-text,
+.wpcf7-email,
+.wpcf7-tel,
+.wpcf7-textarea,
+.wpcf7-select {
+  font-family: var(--font-body) !important;
+  font-size: 0.92rem !important;
+  border: 1.5px solid var(--mc-border) !important;
+  border-radius: var(--radius) !important;
+  padding: 13px 16px !important;
+  background: var(--mc-white) !important;
+  color: var(--mc-text) !important;
+  transition: border-color var(--transition), box-shadow var(--transition) !important;
+  width: 100% !important;
+  appearance: none !important;
+}
+
+.elementor-field-group input:focus,
+.elementor-field-group textarea:focus,
+.wpcf7-text:focus,
+.wpcf7-email:focus,
+.wpcf7-tel:focus,
+.wpcf7-textarea:focus {
+  border-color: var(--mc-green) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(59, 94, 79, 0.12) !important;
+}
+
+.elementor-field-label,
+label {
+  font-family: var(--font-body) !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em !important;
+  color: var(--mc-text) !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+/* Form submit button */
+.elementor-button[type="submit"],
+.wpcf7-submit,
+input[type="submit"],
+.elementor-form-fields-wrapper .elementor-button {
+  background-color: var(--mc-green) !important;
+  color: var(--mc-white) !important;
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  border: 2px solid var(--mc-green) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 14px 32px !important;
+  cursor: pointer !important;
+  transition: all var(--transition) !important;
+  width: auto !important;
+}
+
+.elementor-button[type="submit"]:hover,
+.wpcf7-submit:hover,
+input[type="submit"]:hover {
+  background-color: transparent !important;
+  color: var(--mc-green) !important;
+}
+
+/* =====================
+   10. CLICK-TO-CALL & CLICK-TO-EMAIL
+   (These target any <a href="tel:"> or <a href="mailto:"> link)
+===================== */
+a[href^="tel:"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: var(--mc-green) !important;
+  font-weight: 600 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.01em !important;
+  transition: color var(--transition) !important;
+  border-bottom: 1px dashed var(--mc-green) !important;
+  padding-bottom: 1px !important;
+}
+
+a[href^="tel:"]:hover {
+  color: var(--mc-tan) !important;
+  border-bottom-color: var(--mc-tan) !important;
+}
+
+a[href^="mailto:"] {
+  color: var(--mc-green) !important;
+  font-weight: 500 !important;
+  transition: color var(--transition) !important;
+}
+
+a[href^="mailto:"]:hover {
+  color: var(--mc-tan) !important;
+}
+
+/* =====================
+   11. PROPERTY / LISTING CARDS
+   (Targets common real estate plugin card classes)
+===================== */
+.property-listing,
+.listing-card,
+[class*="property-card"],
+[class*="listing-item"],
+.elementor-posts .elementor-post,
+.elementor-posts-container .elementor-article {
+  background: var(--mc-white) !important;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--mc-border) !important;
+  overflow: hidden !important;
+  transition: box-shadow var(--transition), transform var(--transition) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.property-listing:hover,
+.listing-card:hover,
+[class*="property-card"]:hover,
+[class*="listing-item"]:hover,
+.elementor-posts .elementor-post:hover,
+.elementor-posts-container .elementor-article:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* Property image thumbnail */
+.property-listing img,
+.listing-card img,
+[class*="property-card"] img,
+.elementor-post__thumbnail img {
+  width: 100% !important;
+  height: 240px !important;
+  object-fit: cover !important;
+  display: block !important;
+  transition: transform 0.4s ease !important;
+}
+
+.property-listing:hover img,
+.listing-card:hover img {
+  transform: scale(1.03) !important;
+}
+
+/* Property price badge */
+[class*="property-price"],
+[class*="listing-price"] {
+  font-family: var(--font-heading) !important;
+  font-size: 1.3rem !important;
+  color: var(--mc-green) !important;
+  font-weight: 700 !important;
+}
+
+/* =====================
+   12. SEARCH BAR (Property Search)
+   Make it impossible to miss
+===================== */
+.elementor-widget-search-form,
+[class*="property-search"],
+[class*="listing-search"],
+[class*="idx-search"],
+[class*="home-search"] {
+  background: var(--mc-white) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 24px !important;
+  box-shadow: var(--shadow-lg) !important;
+  border: 1px solid var(--mc-border) !important;
+}
+
+.elementor-search-form__input,
+[class*="property-search"] input,
+[class*="listing-search"] input {
+  font-family: var(--font-body) !important;
+  font-size: 1rem !important;
+  padding: 15px 20px !important;
+  border: 1.5px solid var(--mc-border) !important;
+  border-radius: var(--radius) !important;
+  background: var(--mc-cream) !important;
+  width: 100% !important;
+}
+
+.elementor-search-form__input:focus,
+[class*="property-search"] input:focus {
+  border-color: var(--mc-green) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(59, 94, 79, 0.12) !important;
+}
+
+/* =====================
+   13. DIVIDERS & DECORATIVE ELEMENTS
+===================== */
+.elementor-widget-divider .elementor-divider-separator {
+  border-color: var(--mc-border) !important;
+}
+
+/* Accent dot/line before section headings */
+.elementor-widget-heading::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--mc-tan);
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+
+/* =====================
+   14. FOOTER
+===================== */
+footer,
+.elementor-location-footer,
+#colophon,
+.site-footer {
+  background-color: var(--mc-green) !important;
+  color: var(--mc-white) !important;
+}
+
+footer .elementor-container,
+.elementor-location-footer .elementor-container {
+  padding-top: 72px !important;
+  padding-bottom: 48px !important;
+}
+
+footer h1, footer h2, footer h3, footer h4,
+.elementor-location-footer .elementor-heading-title {
+  font-family: var(--font-body) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  margin-bottom: 18px !important;
+}
+
+footer p,
+footer li,
+.elementor-location-footer p,
+.elementor-location-footer li {
+  font-family: var(--font-body) !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: 0.92rem !important;
+  line-height: 1.85 !important;
+}
+
+footer a,
+.elementor-location-footer a {
+  color: rgba(255, 255, 255, 0.78) !important;
+  transition: color var(--transition) !important;
+  text-decoration: none !important;
+}
+
+footer a:hover,
+.elementor-location-footer a:hover {
+  color: var(--mc-tan-light) !important;
+}
+
+/* Copyright bar */
+footer .copyright,
+footer .site-info,
+.elementor-location-footer .elementor-section:last-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding-top: 24px !important;
+  margin-top: 40px !important;
+}
+
+footer .copyright p,
+footer .site-info {
+  font-size: 0.78rem !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* =====================
+   15. VIDEO SECTIONS
+   (She has property tour videos)
+===================== */
+.elementor-widget-video,
+.elementor-widget-video-playlist {
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Video grid title */
+.elementor-playlist-header {
+  font-family: var(--font-heading) !important;
+  color: var(--mc-text) !important;
+}
+
+/* =====================
+   16. FAQ / ACCORDION
+===================== */
+.elementor-accordion-item {
+  border: 1px solid var(--mc-border) !important;
+  border-radius: var(--radius) !important;
+  margin-bottom: 8px !important;
+  overflow: hidden !important;
+  transition: box-shadow var(--transition) !important;
+}
+
+.elementor-accordion-item:hover {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.elementor-accordion-title,
+.elementor-tab-title {
+  font-family: var(--font-body) !important;
+  font-weight: 500 !important;
+  color: var(--mc-text) !important;
+  padding: 18px 20px !important;
+  background: var(--mc-white) !important;
+  transition: background var(--transition) !important;
+}
+
+.elementor-accordion-title:hover,
+.elementor-tab-title.elementor-active {
+  background: var(--mc-green-pale) !important;
+  color: var(--mc-green) !important;
+}
+
+.elementor-tab-content,
+.elementor-accordion-content {
+  font-family: var(--font-body) !important;
+  padding: 18px 20px !important;
+  background: var(--mc-white) !important;
+  color: var(--mc-muted) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.82 !important;
+  border-top: 1px solid var(--mc-border) !important;
+}
+
+/* =====================
+   17. MOBILE RESPONSIVE
+===================== */
+@media (max-width: 1024px) {
+  .elementor-section .elementor-container {
+    padding-top: 72px !important;
+    padding-bottom: 72px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: clamp(1.9rem, 9vw, 2.8rem) !important;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 7vw, 2.2rem) !important;
+  }
+
+  .elementor-section .elementor-container {
+    padding-top: 52px !important;
+    padding-bottom: 52px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .elementor-widget-icon-box,
+  .elementor-widget-image-box {
+    padding: 24px 20px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .elementor-button,
+  .elementor-button-wrapper a.elementor-button {
+    width: 100% !important;
+    text-align: center !important;
+    display: block !important;
+    padding: 16px 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .elementor-widget-testimonial {
+    padding: 24px 20px !important;
+  }
+
+  .elementor-section:first-of-type {
+    min-height: 75vh !important;
+  }
+
+  /* Nav hamburger override */
+  .elementor-nav-menu--dropdown .elementor-item {
+    font-size: 1rem !important;
+    padding: 14px 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: clamp(1.7rem, 10vw, 2.4rem) !important;
+  }
+
+  .elementor-section .elementor-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* =====================
+   18. UTILITY CLASSES
+   Add these class names in Elementor's
+   "CSS Classes" field on any widget
+===================== */
+
+/* mc-accent-line — green underline accent */
+.mc-accent-line {
+  position: relative;
+  display: inline-block;
+}
+.mc-accent-line::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 60%;
+  height: 3px;
+  background: var(--mc-tan);
+  border-radius: 2px;
+}
+
+/* mc-badge — small pill badge */
+.mc-badge {
+  display: inline-block;
+  background: var(--mc-green-pale);
+  color: var(--mc-green);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+}
+
+/* mc-highlight — tan highlighted text */
+.mc-highlight {
+  color: var(--mc-tan) !important;
+}
+
+/* mc-card — apply to any column to make it a card */
+.mc-card {
+  background: var(--mc-white) !important;
+  border-radius: var(--radius-lg) !important;
+  border: 1px solid var(--mc-border) !important;
+  padding: 32px !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: box-shadow var(--transition), transform var(--transition) !important;
+}
+.mc-card:hover {
+  box-shadow: var(--shadow) !important;
+  transform: translateY(-3px) !important;
+}
