@@ -583,10 +583,28 @@ body::after {
   font-style: italic;
   letter-spacing: 0.01em;
   text-transform: uppercase;
-  opacity: 0;
   margin-top: 14px;
   color: var(--c3);
-  overflow: hidden;
+}
+
+.stat-label.is-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.stat-label.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+}
+
+.stat-num.stat-pop {
+  animation: statPop 0.14s ease-out;
+}
+
+@keyframes statPop {
+  0%   { transform: scale(1.08); opacity: 0.75; }
+  100% { transform: scale(1);    opacity: 1;    }
 }
 
 .stat-plus {
@@ -655,7 +673,7 @@ body::after {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 10px 14px;
   font-family: var(--ff-mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
@@ -663,20 +681,30 @@ body::after {
   text-align: center;
 }
 
+.footer > * {
+  flex: 0 0 auto;
+}
+
 .ft-dot { opacity: 0.45; }
 
 .ft-sleep {
-  display: inline;
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
+  line-height: 1;
 }
 
 .ft-moon-scene {
-  display: inline;
-  height: 0.62em;
-  width: auto;
-  margin-left: 0.28em;
-  vertical-align: -0.06em;
-  overflow: visible;
+  width: 10px !important;
+  height: 6px !important;
+  min-width: 10px;
+  max-width: 10px;
+  min-height: 6px;
+  max-height: 6px;
+  margin-left: 3px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .ft-star {

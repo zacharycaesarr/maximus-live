@@ -28,9 +28,6 @@ gsap.set('#scroll-hint',{ opacity: 0 });
 gsap.set('#ct-label',   { opacity: 0, y: 32 });
 gsap.set('#ct-h',       { opacity: 0, y: 64 });
 gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
-gsap.set('#stat-block', { opacity: 1 });
-gsap.set('#stat-label', { y: 28, opacity: 0 });
-gsap.set('#stat-plus',  { opacity: 0 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 gsap.set('#ct-tagline', { opacity: 0 });
 
@@ -332,117 +329,6 @@ gsap.to('.card', {
   stagger: 0.16,
   scrollTrigger: { trigger: '.cards', start: 'top 87%' }
 });
-
-/* Customer counter — runs when scrolled into view */
-let counterHasRun = false;
-
-function startCustomerCounter() {
-  if (counterHasRun) return;
-  counterHasRun = true;
-  runCustomerCounter();
-}
-
-ScrollTrigger.create({
-  trigger: '#stat-block',
-  start: 'top 95%',
-  once: true,
-  onEnter: startCustomerCounter
-});
-
-window.addEventListener('load', () => {
-  ScrollTrigger.refresh();
-  const el = document.getElementById('stat-block');
-  if (!el) return;
-  const rect = el.getBoundingClientRect();
-  if (rect.top < window.innerHeight * 0.98 && rect.bottom > 0) {
-    startCustomerCounter();
-  }
-});
-
-function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function runCustomerCounter() {
-  const numEl   = document.getElementById('stat-num');
-  const plusEl  = document.getElementById('stat-plus');
-  const blockEl = document.getElementById('stat-block');
-  const burstEl = document.getElementById('stat-burst');
-  const ringEl  = document.getElementById('stat-ring');
-  const labelEl = document.getElementById('stat-label');
-
-  numEl.textContent = '0';
-  plusEl.textContent = '';
-  plusEl.classList.remove('is-live');
-
-  function pulseNum(val) {
-    numEl.textContent = val;
-    gsap.fromTo(numEl,
-      { scale: 1.08, opacity: 0.75 },
-      { scale: 1, opacity: 1, duration: 0.14, ease: 'power2.out', overwrite: true }
-    );
-  }
-
-  function finishCounter() {
-    numEl.textContent = '100';
-    plusEl.textContent = '+';
-    plusEl.classList.add('is-live');
-    blockEl.classList.add('is-complete');
-
-    gsap.to(plusEl, { opacity: 0.9, duration: 0.35, ease: 'power2.out' });
-    gsap.fromTo(burstEl,
-      { scale: 0.35, opacity: 0.75 },
-      { scale: 1.6, opacity: 0, duration: 1.4, ease: 'power2.out' }
-    );
-    gsap.fromTo(ringEl,
-      { scale: 0.7, opacity: 0.45 },
-      { scale: 1.55, opacity: 0, duration: 1.6, ease: 'power2.out' }
-    );
-    gsap.fromTo(numEl,
-      { scale: 1 },
-      { scale: 1.05, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.inOut' }
-    );
-  }
-
-  /* Big 0 visible — brief pause */
-  await wait(500);
-
-  /* Label rises from below */
-  await new Promise(resolve => {
-    gsap.to(labelEl, {
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power3.out',
-      onComplete: resolve
-    });
-  });
-
-  await wait(400);
-
-  /* Slow ticks: 1, 2, 3 with pauses */
-  pulseNum(1);
-  await wait(700);
-  pulseNum(2);
-  await wait(450);
-  pulseNum(3);
-  await wait(250);
-
-  /* Rapid climb 3 → 100 */
-  await new Promise(resolve => {
-    const counter = { val: 3 };
-    gsap.to(counter, {
-      val: 100,
-      duration: 2.5,
-      ease: 'power3.in',
-      onUpdate: () => pulseNum(Math.round(counter.val)),
-      onComplete: () => {
-        finishCounter();
-        resolve();
-      }
-    });
-  });
-}
 
 /* Bottom tagline */
 gsap.to('#ct-tagline', {
