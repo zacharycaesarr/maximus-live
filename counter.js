@@ -1,41 +1,73 @@
-/* Customer counter — standalone, no GSAP dependency */
+/* Customer counter */
 (function () {
-  var block   = document.getElementById('stat-block');
-  var rowEl   = document.getElementById('stat-num-row');
-  var numEl   = document.getElementById('stat-num');
-  var blurEl  = document.getElementById('stat-num-blur');
-  var plusEl  = document.getElementById('stat-plus');
-  var labelEl = document.getElementById('stat-label');
-  var burstEl = document.getElementById('stat-burst');
-  var ringEl  = document.getElementById('stat-ring');
+  var block    = document.getElementById('stat-block');
+  var rowEl    = document.getElementById('stat-num-row');
+  var viewport = document.getElementById('stat-num-viewport');
+  var roll     = document.getElementById('stat-num-roll');
+  var plusEl   = document.getElementById('stat-plus');
+  var labelEl  = document.getElementById('stat-label');
+  var burstEl  = document.getElementById('stat-burst');
+  var ringEl   = document.getElementById('stat-ring');
+  var blurNode = document.getElementById('stat-vblur-std');
 
-  if (!block || !numEl || !labelEl) return;
+  if (!block || !roll || !labelEl || !viewport) return;
 
   var started = false;
+  var numEl   = document.getElementById('stat-num');
+
+  /* Speed threshold — blur only kicks in above this (values per ms) */
+  var BLUR_SPEED_START = 0.06;
+
+  function getNumEl() {
+    return document.getElementById('stat-num');
+  }
+
+  function setSingleDigit(n) {
+    roll.innerHTML = '<span class="stat-num stat-digit-line" id="stat-num">' + n + '</span>';
+    numEl = getNumEl();
+  }
 
   function pulse(n) {
-    numEl.textContent = String(n);
+    setSingleDigit(n);
+    numEl = getNumEl();
     numEl.classList.remove('stat-pop');
     void numEl.offsetWidth;
     numEl.classList.add('stat-pop');
   }
 
   function clearMotionBlur() {
-    if (rowEl) rowEl.classList.remove('is-ticking');
-    numEl.classList.remove('is-ticking');
-    numEl.style.filter = '';
-    numEl.style.transform = '';
-    if (blurEl) {
-      blurEl.textContent = '';
-      blurEl.style.opacity = '0';
-      blurEl.style.filter = '';
-      blurEl.style.transform = '';
+    viewport.classList.remove('is-fast');
+    viewport.style.filter = '';
+    roll.style.transform = '';
+    if (blurNode) blurNode.setAttribute('stdDeviation', '0 0');
+  }
+
+  function applyMotionBlur(velocity) {
+    if (velocity < BLUR_SPEED_START) {
+      viewport.classList.remove('is-fast');
+      viewport.style.filter = '';
+      roll.style.transform = roll.style.transform.replace(/ scaleY\([^)]*\)/, '');
+      if (blurNode) blurNode.setAttribute('stdDeviation', '0 0');
+      return;
     }
+
+    var intensity = Math.min(1, (velocity - BLUR_SPEED_START) / 0.45);
+    var yBlur     = intensity * 7;
+    var stretch   = 1 + intensity * 0.22;
+
+    viewport.classList.add('is-fast');
+    if (blurNode) {
+      blurNode.setAttribute('stdDeviation', '0 ' + yBlur.toFixed(2));
+      viewport.style.filter = 'url(#stat-vblur)';
+    }
+
+    var baseY = roll.dataset.baseY || '0';
+    roll.style.transform = 'translate3d(0,' + baseY + 'px,0) scaleY(' + stretch.toFixed(3) + ')';
   }
 
   function finish() {
     clearMotionBlur();
-    numEl.textContent = '100';
+    setSingleDigit('100');
     plusEl.textContent = '+';
     plusEl.classList.add('is-live');
     block.classList.add('is-complete');
@@ -50,7 +82,7 @@
         { scale: 0.7, opacity: 0.45 },
         { scale: 1.55, opacity: 0, duration: 1.6, ease: 'power2.out' }
       );
-      gsap.fromTo(numEl,
+      gsap.fromTo(getNumEl(),
         { scale: 1 },
         { scale: 1.05, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.inOut' }
       );
@@ -60,46 +92,43 @@
     }
   }
 
+  /* Odometer roll — continuous vertical morph with directional blur */
   function rapidCount(from, to, durationMs, done) {
-    if (rowEl) rowEl.classList.add('is-ticking');
-    numEl.classList.add('is-ticking');
+    var lineH = viewport.offsetHeight;
+    var html  = '';
 
-    var lastVal  = from;
-    var lastTime = performance.now();
-    var t0       = performance.now();
+    for (var i = from; i <= to; i++) {
+      html += '<span class="stat-digit-line">' + i + '</span>';
+    }
+    roll.innerHTML = html;
+    roll.dataset.baseY = '0';
+    roll.style.transform = 'translate3d(0,0,0)';
+
+    var t0           = performance.now();
+    var lastEased    = 0;
+    var lastFrame    = t0;
 
     function frame(now) {
       var t     = Math.min(1, (now - t0) / durationMs);
       var eased = t * t * t;
-      var val   = Math.round(from + (to - from) * eased);
-      var dt    = Math.max(1, now - lastTime);
-      var speed = Math.abs(val - lastVal) / dt;
+      var dt    = Math.max(1, now - lastFrame);
+      var velocity = Math.abs(eased - lastEased) / dt * (to - from);
 
-      numEl.textContent = String(val);
+      var floatVal = from + (to - from) * eased;
+      var offsetY  = -((floatVal - from) * lineH);
 
-      /* Motion blur — trail ghost + velocity-scaled smear */
-      if (blurEl && val !== lastVal) {
-        blurEl.textContent = String(lastVal);
-        var blurPx  = Math.min(8, 2 + speed * 12);
-        var trailY  = Math.min(-18, -4 - speed * 80);
-        var stretch = Math.min(1.45, 1.08 + speed * 0.35);
-        var ghostOp = Math.min(0.65, 0.2 + speed * 0.4);
+      roll.dataset.baseY = String(offsetY);
+      roll.style.transform = 'translate3d(0,' + offsetY + 'px,0)';
 
-        blurEl.style.filter    = 'blur(' + blurPx + 'px)';
-        blurEl.style.opacity   = String(ghostOp);
-        blurEl.style.transform = 'translateY(' + trailY + 'px) scaleY(' + stretch + ')';
-      }
+      applyMotionBlur(velocity);
 
-      /* Main digit soft blur while accelerating */
-      var mainBlur = t > 0.02 && t < 0.98 ? Math.min(2.2, 0.4 + eased * 1.8) : 0;
-      numEl.style.filter = mainBlur ? 'blur(' + mainBlur + 'px)' : '';
-
-      lastVal  = val;
-      lastTime = now;
+      lastEased = eased;
+      lastFrame = now;
 
       if (t < 1) {
         requestAnimationFrame(frame);
       } else {
+        clearMotionBlur();
         done();
       }
     }
@@ -112,12 +141,19 @@
     started = true;
 
     clearMotionBlur();
-    numEl.textContent = '0';
+    rowEl.classList.remove('is-num-visible');
+    setSingleDigit('0');
     plusEl.textContent = '';
     plusEl.classList.remove('is-live');
     labelEl.classList.add('is-hidden');
     labelEl.classList.remove('is-visible');
 
+    /* Fade 0 in */
+    requestAnimationFrame(function () {
+      rowEl.classList.add('is-num-visible');
+    });
+
+    /* Wait for fade, then label + slow ticks */
     setTimeout(function () {
       labelEl.classList.remove('is-hidden');
       labelEl.classList.add('is-visible');
@@ -134,7 +170,7 @@
           }, 450);
         }, 700);
       }, 900);
-    }, 500);
+    }, 850);
   }
 
   if ('IntersectionObserver' in window) {

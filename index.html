@@ -23,7 +23,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -145,13 +145,23 @@
 
     <!-- Customer counter -->
     <div class="stat-block" id="stat-block">
+      <svg class="stat-svg-defs" aria-hidden="true" width="0" height="0">
+        <defs>
+          <filter id="stat-vblur" x="-30%" y="-80%" width="160%" height="260%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0 0" id="stat-vblur-std"/>
+          </filter>
+        </defs>
+      </svg>
       <div class="stat-burst" id="stat-burst" aria-hidden="true"></div>
       <div class="stat-ring" id="stat-ring" aria-hidden="true"></div>
       <div class="stat-inner">
         <div class="stat-num-row" id="stat-num-row">
           <div class="stat-num-wrap">
-            <span class="stat-num-blur" id="stat-num-blur" aria-hidden="true"></span>
-            <span class="stat-num" id="stat-num">0</span>
+            <div class="stat-num-viewport" id="stat-num-viewport">
+              <div class="stat-num-roll" id="stat-num-roll">
+                <span class="stat-num stat-digit-line" id="stat-num">0</span>
+              </div>
+            </div>
           </div>
           <span class="stat-plus" id="stat-plus"></span>
         </div>
@@ -174,6 +184,6 @@
   </footer>
 
   <script src="script.js?v=5"></script>
-  <script src="counter.js?v=6"></script>
+  <script src="counter.js?v=7"></script>
 </body>
 </html>

@@ -572,37 +572,49 @@ body::after {
   display: inline-block;
 }
 
-.stat-num,
-.stat-num-blur {
-  font-family: var(--ff-mono);
+.stat-num-viewport {
+  height: 1em;
+  overflow: hidden;
+  display: inline-block;
+  line-height: 1;
   font-size: clamp(64px, 12vw, 108px);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+}
+
+.stat-num-row.is-num-visible .stat-num-viewport {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stat-num-roll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transform-origin: center top;
+}
+
+.stat-num,
+.stat-digit-line {
+  font-family: var(--ff-mono);
   font-weight: 300;
   color: var(--c3);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
   line-height: 1;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.stat-num-blur {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-  filter: blur(5px);
-  transform: translateY(-8px) scaleY(1.2);
-  transform-origin: center bottom;
-  will-change: transform, opacity, filter;
-}
-
-.stat-num-row.is-ticking .stat-num {
-  will-change: filter, transform;
-}
-
-.stat-num-row.is-ticking .stat-num-blur {
-  transition: opacity 0.06s linear, filter 0.06s linear, transform 0.06s linear;
+.stat-num-viewport.is-fast {
+  transform-origin: center center;
 }
 
 .stat-label {
@@ -632,8 +644,8 @@ body::after {
 }
 
 @keyframes statPop {
-  0%   { transform: scale(1.08); opacity: 0.75; }
-  100% { transform: scale(1);    opacity: 1;    }
+  0%   { transform: scale(1.06); opacity: 0.8; }
+  100% { transform: scale(1);    opacity: 1;   }
 }
 
 .stat-plus {
