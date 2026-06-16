@@ -28,6 +28,10 @@ gsap.set('#scroll-hint',{ opacity: 0 });
 gsap.set('#ct-label',   { opacity: 0, y: 32 });
 gsap.set('#ct-h',       { opacity: 0, y: 64 });
 gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
+gsap.set('#stat-block', { opacity: 0 });
+gsap.set('#stat-label', { y: 22, opacity: 0 });
+gsap.set('#stat-plus',  { opacity: 0 });
+gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 gsap.set('#ct-tagline', { opacity: 0 });
 
 /* ──────────────────────────────────────────────────────────
@@ -329,6 +333,81 @@ gsap.to('.card', {
   scrollTrigger: { trigger: '.cards', start: 'top 87%' }
 });
 
+/* Customer counter — reveal block, then run tick animation */
+ScrollTrigger.create({
+  trigger: '#stat-block',
+  start: 'top 88%',
+  once: true,
+  onEnter: () => {
+    gsap.to('#stat-block', {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      onComplete: runCustomerCounter
+    });
+  }
+});
+
+function runCustomerCounter() {
+  const numEl   = document.getElementById('stat-num');
+  const plusEl  = document.getElementById('stat-plus');
+  const blockEl = document.getElementById('stat-block');
+  const burstEl = document.getElementById('stat-burst');
+  const ringEl  = document.getElementById('stat-ring');
+
+  function tickNum(val) {
+    numEl.textContent = val;
+    gsap.fromTo(numEl,
+      { scale: 1.07, opacity: 0.72 },
+      { scale: 1, opacity: 1, duration: 0.12, ease: 'power2.out' }
+    );
+  }
+
+  function finishCounter() {
+    numEl.textContent = '100';
+    blockEl.classList.add('is-complete');
+
+    gsap.to(plusEl, { opacity: 0.85, duration: 0.35, ease: 'power2.out' });
+    gsap.fromTo(burstEl,
+      { scale: 0.35, opacity: 0.75 },
+      { scale: 1.6, opacity: 0, duration: 1.4, ease: 'power2.out' }
+    );
+    gsap.fromTo(ringEl,
+      { scale: 0.7, opacity: 0.45 },
+      { scale: 1.55, opacity: 0, duration: 1.6, ease: 'power2.out' }
+    );
+    gsap.fromTo(numEl,
+      { scale: 1 },
+      { scale: 1.04, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.inOut' }
+    );
+  }
+
+  const tl = gsap.timeline();
+
+  /* Label rises in after brief pause */
+  tl.to('#stat-label', {
+    y: 0,
+    opacity: 0.42,
+    duration: 0.75,
+    ease: 'power3.out'
+  }, 0.45);
+
+  /* Slow early ticks: 1 → 2 → 3 */
+  tl.call(() => tickNum(1), null, 1.15);
+  tl.call(() => tickNum(2), null, 1.85);
+  tl.call(() => tickNum(3), null, 2.35);
+
+  /* Rapid climb 3 → 100 */
+  const counter = { val: 3 };
+  tl.to(counter, {
+    val: 100,
+    duration: 2.4,
+    ease: 'power3.in',
+    onUpdate: () => tickNum(Math.round(counter.val)),
+    onComplete: finishCounter
+  }, 2.55);
+}
+
 /* Bottom tagline */
 gsap.to('#ct-tagline', {
   opacity: 0.28,
@@ -361,7 +440,7 @@ window.addEventListener('scroll', () => {
 ────────────────────────────────────────────────────────── */
 setTimeout(() => {
   document.querySelectorAll(
-    '#ct-label, #ct-h, .card, #ct-tagline'
+    '#ct-label, #ct-h, .card, #stat-block, #ct-tagline'
   ).forEach(el => {
     const opacity = parseFloat(window.getComputedStyle(el).opacity);
     if (opacity < 0.05) {

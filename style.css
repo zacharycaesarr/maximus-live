@@ -546,6 +546,95 @@ body::after {
   text-align: center;
 }
 
+/* ── Customer stat counter ───────────────── */
+.stat-block {
+  position: relative;
+  text-align: center;
+  width: 100%;
+  max-width: 740px;
+  padding: 8px 0 4px;
+}
+
+.stat-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.stat-num-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1;
+}
+
+.stat-num {
+  font-family: var(--ff-disp);
+  font-size: clamp(64px, 12vw, 108px);
+  font-weight: 900;
+  color: var(--c3);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.stat-plus {
+  font-family: var(--ff-disp);
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 700;
+  color: var(--c3);
+  opacity: 0;
+  margin-left: 2px;
+  margin-top: 0.15em;
+}
+
+.stat-label {
+  font-family: var(--ff-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  opacity: 0;
+  margin-top: 10px;
+  color: var(--c3);
+}
+
+.stat-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  margin: -140px 0 0 -140px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(217, 195, 176, 0.55) 0%,
+    rgba(217, 195, 176, 0.18) 42%,
+    transparent 72%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.4);
+  z-index: 0;
+}
+
+.stat-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  margin: -100px 0 0 -100px;
+  border-radius: 50%;
+  border: 1px solid rgba(44, 37, 32, 0.12);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+}
+
+.stat-block.is-complete .stat-num,
+.stat-block.is-complete .stat-plus {
+  color: var(--c3);
+}
+
 /* ============================================================
    FOOTER
 ============================================================ */
@@ -568,13 +657,25 @@ body::after {
 
 .ft-dot { opacity: 0.45; }
 
-.ft-moon {
+.ft-moon-scene {
   display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-left: 0.35em;
-  vertical-align: -0.1em;
-  color: inherit;
+  width: 1.45em;
+  height: 0.9em;
+  margin-left: 0.4em;
+  vertical-align: -0.08em;
+  overflow: visible;
+}
+
+.ft-star {
+  fill: currentColor;
+  opacity: 0.55;
+}
+
+.ft-crescent {
+  fill: #C4A574;
+  stroke: currentColor;
+  stroke-width: 0.65;
+  stroke-linejoin: round;
 }
 
 /* ============================================================
