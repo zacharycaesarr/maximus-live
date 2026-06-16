@@ -1,5 +1,5 @@
 /* ============================================================
-   MAXIMUS MARKETING  ·  Zachary Hitson
+   MAXIMUS MARKETING  ·  Zachary Maximus
    script.js  —  v1.0
 
    What's in here:

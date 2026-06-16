@@ -1,5 +1,5 @@
 /* ============================================================
-   MAXIMUS MARKETING  ·  Zachary Hitson
+   MAXIMUS MARKETING  ·  Zachary Maximus
    style.css  —  v1.0
 ============================================================ */
 
@@ -557,14 +557,25 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 14px;
   font-family: var(--ff-mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
   opacity: 0.35;
+  text-align: center;
 }
 
 .ft-dot { opacity: 0.45; }
+
+.ft-moon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.35em;
+  vertical-align: -0.1em;
+  color: inherit;
+}
 
 /* ============================================================
    MOBILE  ( ≤ 680px )
