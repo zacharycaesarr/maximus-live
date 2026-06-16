@@ -567,24 +567,53 @@ body::after {
   line-height: 1;
 }
 
-.stat-num {
-  font-family: var(--ff-disp);
+.stat-num-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.stat-num,
+.stat-num-blur {
+  font-family: var(--ff-mono);
   font-size: clamp(64px, 12vw, 108px);
-  font-weight: 900;
+  font-weight: 300;
   color: var(--c3);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.stat-num-blur {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(-8px) scaleY(1.2);
+  transform-origin: center bottom;
+  will-change: transform, opacity, filter;
+}
+
+.stat-num-row.is-ticking .stat-num {
+  will-change: filter, transform;
+}
+
+.stat-num-row.is-ticking .stat-num-blur {
+  transition: opacity 0.06s linear, filter 0.06s linear, transform 0.06s linear;
 }
 
 .stat-label {
-  font-family: var(--ff-disp);
-  font-size: clamp(22px, 4vw, 36px);
-  font-weight: 700;
-  font-style: italic;
-  letter-spacing: 0.01em;
+  font-family: var(--ff-mono);
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: 400;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  margin-top: 14px;
+  margin-top: 16px;
   color: var(--c3);
+  opacity: 0.55;
 }
 
 .stat-label.is-hidden {
@@ -593,7 +622,7 @@ body::after {
 }
 
 .stat-label.is-visible {
-  opacity: 1;
+  opacity: 0.55;
   transform: translateY(0);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
 }
@@ -608,9 +637,9 @@ body::after {
 }
 
 .stat-plus {
-  font-family: var(--ff-disp);
+  font-family: var(--ff-mono);
   font-size: clamp(28px, 5vw, 44px);
-  font-weight: 700;
+  font-weight: 300;
   color: var(--c3);
   opacity: 0;
   visibility: hidden;

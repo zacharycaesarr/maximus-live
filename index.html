@@ -23,7 +23,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -148,8 +148,12 @@
       <div class="stat-burst" id="stat-burst" aria-hidden="true"></div>
       <div class="stat-ring" id="stat-ring" aria-hidden="true"></div>
       <div class="stat-inner">
-        <div class="stat-num-row">
-          <span class="stat-num" id="stat-num">0</span><span class="stat-plus" id="stat-plus"></span>
+        <div class="stat-num-row" id="stat-num-row">
+          <div class="stat-num-wrap">
+            <span class="stat-num-blur" id="stat-num-blur" aria-hidden="true"></span>
+            <span class="stat-num" id="stat-num">0</span>
+          </div>
+          <span class="stat-plus" id="stat-plus"></span>
         </div>
         <p class="stat-label is-hidden" id="stat-label">CUSTOMERS SERVICED:</p>
       </div>
@@ -170,6 +174,6 @@
   </footer>
 
   <script src="script.js?v=5"></script>
-  <script src="counter.js?v=5"></script>
+  <script src="counter.js?v=6"></script>
 </body>
 </html>
