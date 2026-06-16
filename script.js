@@ -28,8 +28,8 @@ gsap.set('#scroll-hint',{ opacity: 0 });
 gsap.set('#ct-label',   { opacity: 0, y: 32 });
 gsap.set('#ct-h',       { opacity: 0, y: 64 });
 gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
-gsap.set('#stat-block', { opacity: 0 });
-gsap.set('#stat-label', { y: 22, opacity: 0 });
+gsap.set('#stat-block', { opacity: 1 });
+gsap.set('#stat-label', { y: 28, opacity: 0 });
 gsap.set('#stat-plus',  { opacity: 0 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 gsap.set('#ct-tagline', { opacity: 0 });
@@ -333,41 +333,63 @@ gsap.to('.card', {
   scrollTrigger: { trigger: '.cards', start: 'top 87%' }
 });
 
-/* Customer counter — reveal block, then run tick animation */
+/* Customer counter — runs when scrolled into view */
+let counterHasRun = false;
+
+function startCustomerCounter() {
+  if (counterHasRun) return;
+  counterHasRun = true;
+  runCustomerCounter();
+}
+
 ScrollTrigger.create({
   trigger: '#stat-block',
-  start: 'top 88%',
+  start: 'top 95%',
   once: true,
-  onEnter: () => {
-    gsap.to('#stat-block', {
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power2.out',
-      onComplete: runCustomerCounter
-    });
+  onEnter: startCustomerCounter
+});
+
+window.addEventListener('load', () => {
+  ScrollTrigger.refresh();
+  const el = document.getElementById('stat-block');
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  if (rect.top < window.innerHeight * 0.98 && rect.bottom > 0) {
+    startCustomerCounter();
   }
 });
 
-function runCustomerCounter() {
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function runCustomerCounter() {
   const numEl   = document.getElementById('stat-num');
   const plusEl  = document.getElementById('stat-plus');
   const blockEl = document.getElementById('stat-block');
   const burstEl = document.getElementById('stat-burst');
   const ringEl  = document.getElementById('stat-ring');
+  const labelEl = document.getElementById('stat-label');
 
-  function tickNum(val) {
+  numEl.textContent = '0';
+  plusEl.textContent = '';
+  plusEl.classList.remove('is-live');
+
+  function pulseNum(val) {
     numEl.textContent = val;
     gsap.fromTo(numEl,
-      { scale: 1.07, opacity: 0.72 },
-      { scale: 1, opacity: 1, duration: 0.12, ease: 'power2.out' }
+      { scale: 1.08, opacity: 0.75 },
+      { scale: 1, opacity: 1, duration: 0.14, ease: 'power2.out', overwrite: true }
     );
   }
 
   function finishCounter() {
     numEl.textContent = '100';
+    plusEl.textContent = '+';
+    plusEl.classList.add('is-live');
     blockEl.classList.add('is-complete');
 
-    gsap.to(plusEl, { opacity: 0.85, duration: 0.35, ease: 'power2.out' });
+    gsap.to(plusEl, { opacity: 0.9, duration: 0.35, ease: 'power2.out' });
     gsap.fromTo(burstEl,
       { scale: 0.35, opacity: 0.75 },
       { scale: 1.6, opacity: 0, duration: 1.4, ease: 'power2.out' }
@@ -378,34 +400,48 @@ function runCustomerCounter() {
     );
     gsap.fromTo(numEl,
       { scale: 1 },
-      { scale: 1.04, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.inOut' }
+      { scale: 1.05, duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.inOut' }
     );
   }
 
-  const tl = gsap.timeline();
+  /* Big 0 visible — brief pause */
+  await wait(500);
 
-  /* Label rises in after brief pause */
-  tl.to('#stat-label', {
-    y: 0,
-    opacity: 0.42,
-    duration: 0.75,
-    ease: 'power3.out'
-  }, 0.45);
+  /* Label rises from below */
+  await new Promise(resolve => {
+    gsap.to(labelEl, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power3.out',
+      onComplete: resolve
+    });
+  });
 
-  /* Slow early ticks: 1 → 2 → 3 */
-  tl.call(() => tickNum(1), null, 1.15);
-  tl.call(() => tickNum(2), null, 1.85);
-  tl.call(() => tickNum(3), null, 2.35);
+  await wait(400);
+
+  /* Slow ticks: 1, 2, 3 with pauses */
+  pulseNum(1);
+  await wait(700);
+  pulseNum(2);
+  await wait(450);
+  pulseNum(3);
+  await wait(250);
 
   /* Rapid climb 3 → 100 */
-  const counter = { val: 3 };
-  tl.to(counter, {
-    val: 100,
-    duration: 2.4,
-    ease: 'power3.in',
-    onUpdate: () => tickNum(Math.round(counter.val)),
-    onComplete: finishCounter
-  }, 2.55);
+  await new Promise(resolve => {
+    const counter = { val: 3 };
+    gsap.to(counter, {
+      val: 100,
+      duration: 2.5,
+      ease: 'power3.in',
+      onUpdate: () => pulseNum(Math.round(counter.val)),
+      onComplete: () => {
+        finishCounter();
+        resolve();
+      }
+    });
+  });
 }
 
 /* Bottom tagline */
