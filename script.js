@@ -8,43 +8,49 @@
    - particle count feels good around 55, don't crank it on mobile
    - logo tilt + card tilt share the same elastic settle
    - about page photo uses the same tilt pattern as the logo card
+   - later: typed / staggered text inside each pf concept block
 */
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* mobile browser chrome resize was causing reveal jolts */
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+const isTouch = window.matchMedia('(hover: none)').matches;
+const revealY = isTouch ? 22 : 48;
+const revealYSm = isTouch ? 14 : 32;
+
 /* hide stuff before the intro timeline runs */
-gsap.set('#logo-wrap',  { opacity: 0, y: 55 });
-gsap.set('#hero-by',    { opacity: 0, y: 26 });
+gsap.set('#logo-wrap',  { opacity: 0, y: isTouch ? 28 : 55 });
+gsap.set('#hero-by',    { opacity: 0, y: revealYSm });
 gsap.set('.h-word',     { yPercent: 115, opacity: 0 });
 gsap.set('#hero-svc',   { opacity: 0, y: 22 });
 gsap.set('#scroll-hint',{ opacity: 0 });
-gsap.set('#ct-label',   { opacity: 0, y: 32 });
-gsap.set('#ct-h',       { opacity: 0, y: 64 });
-gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
+gsap.set('#ct-label',   { opacity: 0, y: revealYSm });
+gsap.set('#ct-h',       { opacity: 0, y: isTouch ? 28 : 64 });
+gsap.set('.card',       { opacity: 0, y: revealY, scale: 0.95 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 gsap.set('#ct-tagline', { opacity: 0 });
 
 if (document.getElementById('wt-label')) {
-  gsap.set('#wt-label, #wt-h, #wt-sub', { opacity: 0, y: 32 });
-  gsap.set('.wt-card', { opacity: 0, y: 44 });
+  gsap.set('#wt-label, #wt-h, #wt-sub', { opacity: 0, y: revealYSm });
+  gsap.set('.wt-card', { opacity: 0, y: revealY });
   gsap.set('#wt-view-all', { opacity: 0, y: 16 });
 }
 
 if (document.getElementById('pf-label')) {
-  gsap.set('#pf-label, #pf-h, #pf-intro, #pf-concepts-line, #pf-disclaimer', { opacity: 0, y: 32 });
-  gsap.set('.pf-card', { opacity: 0, y: 48 });
+  gsap.set('#pf-label, #pf-h, #pf-intro, #pf-concepts-line, #pf-disclaimer', { opacity: 0, y: revealYSm });
+  gsap.set('.pf-card', { opacity: 0, y: revealY });
   gsap.set('.pf-filter', { opacity: 0, y: 12 });
 }
 
 if (document.getElementById('ab-label')) {
-  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, y: 36 });
-  gsap.set('.ab-do-item, .ab-proof-card, .ab-step', { opacity: 0, y: 40 });
+  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, y: isTouch ? 20 : 36 });
+  gsap.set('.ab-do-item, .ab-proof-card, .ab-step', { opacity: 0, y: isTouch ? 20 : 40 });
   gsap.set('#ab-cta', { opacity: 0, y: 28 });
 }
 
 /* custom cursor: fast dot, slower ring */
-const isTouch = window.matchMedia('(hover: none)').matches;
-
 if (!isTouch) {
   const dot  = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
@@ -408,12 +414,32 @@ if (document.getElementById('pf-label')) {
     scrollTrigger: { trigger: '#pf-filters', start: 'top 90%' }
   });
   gsap.to('.pf-filter.is-active', { opacity: 1, duration: 0.3 });
-  gsap.to('.pf-card', {
-    opacity: 1, y: 0,
-    duration: 0.95, ease: 'power3.out',
-    stagger: 0.1,
-    scrollTrigger: { trigger: '#pf-grid', start: 'top 88%' }
-  });
+
+  /* mobile: each concept reveals only when it enters the viewport */
+  const pfMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (pfMobile) {
+    ScrollTrigger.batch('.pf-card', {
+      start: 'top 82%',
+      once: true,
+      onEnter: batch => {
+        gsap.to(batch, {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          stagger: 0.15,
+          overwrite: true
+        });
+      }
+    });
+  } else {
+    gsap.to('.pf-card', {
+      opacity: 1, y: 0,
+      duration: 0.95, ease: 'power3.out',
+      stagger: 0.1,
+      scrollTrigger: { trigger: '#pf-grid', start: 'top 88%' }
+    });
+  }
 }
 
 /* about sections on scroll */
@@ -460,7 +486,11 @@ if (pfFilters.length && pfCards.length) {
       pfCards.forEach(card => {
         const show = filter === 'all' || card.dataset.category === filter;
         card.classList.toggle('is-hidden', !show);
+        if (show) {
+          gsap.to(card, { opacity: 1, y: 0, duration: 0.4, overwrite: true });
+        }
       });
+      ScrollTrigger.refresh();
     });
   });
 }
@@ -502,3 +532,12 @@ setTimeout(() => {
     }
   });
 }, 4000);
+
+/* fonts / late layout can shift trigger points; refresh once settled */
+function refreshTriggers() {
+  ScrollTrigger.refresh();
+}
+window.addEventListener('load', refreshTriggers);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(refreshTriggers).catch(() => {});
+}

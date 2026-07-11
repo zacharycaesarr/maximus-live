@@ -43,6 +43,38 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* hide reveal targets before GSAP boots (kills the load/scroll jolt) */
+html.js #logo-wrap,
+html.js #hero-by,
+html.js #hero-svc,
+html.js #scroll-hint,
+html.js #ct-label,
+html.js #ct-h,
+html.js .card,
+html.js #ct-tagline,
+html.js #wt-label,
+html.js #wt-h,
+html.js #wt-sub,
+html.js .wt-card,
+html.js #wt-view-all,
+html.js #pf-label,
+html.js #pf-h,
+html.js #pf-intro,
+html.js #pf-concepts-line,
+html.js #pf-disclaimer,
+html.js .pf-card,
+html.js .pf-filter,
+html.js #ab-label,
+html.js #ab-h,
+html.js #ab-bio,
+html.js #ab-photo-wrap,
+html.js .ab-do-item,
+html.js .ab-proof-card,
+html.js .ab-step,
+html.js #ab-cta {
+  opacity: 0;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -1410,20 +1442,28 @@ body::after {
 
 .pf-preview-reel-play {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  width: 28px; height: 28px;
+  width: 28px;
+  height: 28px;
   border: 2px solid rgba(252, 250, 242, 0.5);
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .pf-preview-reel-play::after {
   content: '';
-  position: absolute;
-  top: 50%; left: 55%;
-  transform: translate(-50%, -50%);
-  border: 5px solid transparent;
-  border-left: 8px solid rgba(252, 250, 242, 0.6);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 9px;
+  border-color: transparent transparent transparent rgba(252, 250, 242, 0.75);
+  /* triangles look left-heavy; nudge so the mark reads centered */
+  margin-left: 2px;
 }
 
 .pf-preview-reel-tag {
@@ -1906,12 +1946,12 @@ body::after {
   animation: icoWave 2.4s ease-in-out infinite;
 }
 
-/* creative: reel spins, play drifts */
+/* creative: outer reel spins, play ring + triangle bob together */
 .ab-do-ico--creative .ico-reel {
   transform-origin: center;
   animation: icoSpin 8s linear infinite;
 }
-.ab-do-ico--creative .ico-play {
+.ab-do-ico--creative .ico-play-btn {
   transform-origin: 20px 20px;
   animation: icoPlayDrift 2.4s ease-in-out infinite;
 }
