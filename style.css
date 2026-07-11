@@ -43,38 +43,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* hide reveal targets before GSAP boots (kills the load/scroll jolt) */
-html.js #logo-wrap,
-html.js #hero-by,
-html.js #hero-svc,
-html.js #scroll-hint,
-html.js #ct-label,
-html.js #ct-h,
-html.js .card,
-html.js #ct-tagline,
-html.js #wt-label,
-html.js #wt-h,
-html.js #wt-sub,
-html.js .wt-card,
-html.js #wt-view-all,
-html.js #pf-label,
-html.js #pf-h,
-html.js #pf-intro,
-html.js #pf-concepts-line,
-html.js #pf-disclaimer,
-html.js .pf-card,
-html.js .pf-filter,
-html.js #ab-label,
-html.js #ab-h,
-html.js #ab-bio,
-html.js #ab-photo-wrap,
-html.js .ab-do-item,
-html.js .ab-proof-card,
-html.js .ab-step,
-html.js #ab-cta {
-  opacity: 0;
-}
-
 a {
   text-decoration: none;
   color: inherit;
@@ -398,7 +366,9 @@ body::after {
 
 .h-line {
   display: block;
-  overflow: hidden;    /* clip for the slide-up intro, then unlock */
+  overflow: hidden; /* clip for slide-up; padding keeps glyph bottoms visible while clipped */
+  padding: 0.12em 0.06em 0.2em;
+  margin: -0.12em -0.06em -0.2em;
 }
 
 .hero-h.is-revealed .h-line {
@@ -408,6 +378,8 @@ body::after {
 .h-word {
   display: inline-block;
   will-change: transform;
+  /* Playfair sits a hair low in the line box; keeps bottoms from looking shaved */
+  padding-bottom: 0.04em;
 }
 
 .h-word.italic {

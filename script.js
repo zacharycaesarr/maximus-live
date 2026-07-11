@@ -13,44 +13,42 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* mobile browser chrome resize was causing reveal jolts */
+/* stops mobile URL-bar resize from re-firing scroll reveals mid-scroll */
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const isTouch = window.matchMedia('(hover: none)').matches;
-const revealY = isTouch ? 22 : 48;
-const revealYSm = isTouch ? 14 : 32;
-
 /* hide stuff before the intro timeline runs */
-gsap.set('#logo-wrap',  { opacity: 0, y: isTouch ? 28 : 55 });
-gsap.set('#hero-by',    { opacity: 0, y: revealYSm });
+gsap.set('#logo-wrap',  { opacity: 0, y: 55 });
+gsap.set('#hero-by',    { opacity: 0, y: 26 });
 gsap.set('.h-word',     { yPercent: 115, opacity: 0 });
 gsap.set('#hero-svc',   { opacity: 0, y: 22 });
 gsap.set('#scroll-hint',{ opacity: 0 });
-gsap.set('#ct-label',   { opacity: 0, y: revealYSm });
-gsap.set('#ct-h',       { opacity: 0, y: isTouch ? 28 : 64 });
-gsap.set('.card',       { opacity: 0, y: revealY, scale: 0.95 });
+gsap.set('#ct-label',   { opacity: 0, y: 32 });
+gsap.set('#ct-h',       { opacity: 0, y: 64 });
+gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 gsap.set('#ct-tagline', { opacity: 0 });
 
 if (document.getElementById('wt-label')) {
-  gsap.set('#wt-label, #wt-h, #wt-sub', { opacity: 0, y: revealYSm });
-  gsap.set('.wt-card', { opacity: 0, y: revealY });
+  gsap.set('#wt-label, #wt-h, #wt-sub', { opacity: 0, y: 32 });
+  gsap.set('.wt-card', { opacity: 0, y: 44 });
   gsap.set('#wt-view-all', { opacity: 0, y: 16 });
 }
 
 if (document.getElementById('pf-label')) {
-  gsap.set('#pf-label, #pf-h, #pf-intro, #pf-concepts-line, #pf-disclaimer', { opacity: 0, y: revealYSm });
-  gsap.set('.pf-card', { opacity: 0, y: revealY });
+  gsap.set('#pf-label, #pf-h, #pf-intro, #pf-concepts-line, #pf-disclaimer', { opacity: 0, y: 32 });
+  gsap.set('.pf-card', { opacity: 0, y: 48 });
   gsap.set('.pf-filter', { opacity: 0, y: 12 });
 }
 
 if (document.getElementById('ab-label')) {
-  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, y: isTouch ? 20 : 36 });
-  gsap.set('.ab-do-item, .ab-proof-card, .ab-step', { opacity: 0, y: isTouch ? 20 : 40 });
+  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, y: 36 });
+  gsap.set('.ab-do-item, .ab-proof-card, .ab-step', { opacity: 0, y: 40 });
   gsap.set('#ab-cta', { opacity: 0, y: 28 });
 }
 
 /* custom cursor: fast dot, slower ring */
+const isTouch = window.matchMedia('(hover: none)').matches;
+
 if (!isTouch) {
   const dot  = document.getElementById('cursor-dot');
   const ring = document.getElementById('cursor-ring');
@@ -262,10 +260,12 @@ document.querySelectorAll('.card, .wt-card').forEach(card => {
   });
 });
 
-/* hero parallax (home only) */
+/* hero parallax (home only) — wait until title reveal unlocks so it doesn't fight the slide-up */
 document.addEventListener('mousemove', e => {
   if (!document.getElementById('logo-wrap')) return;
   if (window.scrollY > window.innerHeight * 0.55) return;
+  const heroH = document.getElementById('hero-h');
+  if (heroH && !heroH.classList.contains('is-revealed')) return;
 
   const cx = window.innerWidth  / 2;
   const cy = window.innerHeight / 2;
@@ -299,7 +299,11 @@ intro.to('#hl1 .h-word', {
 
 intro.to('#hl2 .h-word', {
   yPercent: 0, opacity: 1,
-  duration: 1.05, ease: 'power3.out'
+  duration: 1.05, ease: 'power3.out',
+  onComplete: () => {
+    const heroH = document.getElementById('hero-h');
+    if (heroH) heroH.classList.add('is-revealed');
+  }
 }, '-=0.78');
 
 intro.to('#hero-svc', {
@@ -311,11 +315,6 @@ intro.to('#scroll-hint', {
   opacity: 1,
   duration: 0.7
 }, '-=0.3');
-
-intro.eventCallback('onComplete', () => {
-  const heroH = document.getElementById('hero-h');
-  if (heroH) heroH.classList.add('is-revealed');
-});
 
 /* about intro (runs on about.html) */
 if (document.getElementById('ab-label')) {
@@ -532,12 +531,3 @@ setTimeout(() => {
     }
   });
 }, 4000);
-
-/* fonts / late layout can shift trigger points; refresh once settled */
-function refreshTriggers() {
-  ScrollTrigger.refresh();
-}
-window.addEventListener('load', refreshTriggers);
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(refreshTriggers).catch(() => {});
-}
