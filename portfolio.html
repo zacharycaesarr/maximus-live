@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio | Maximus Marketing</title>
+  <meta name="description" content="Selected concept work and sample campaigns by Maximus Marketing. Web development, ad management, digital growth, and creative.">
+
+  <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Maximus">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,900;1,400;1,900&family=Inter:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="style.css?v=13">
+</head>
+<body class="page-portfolio">
+
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="blob-wrap" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="hdr-brand">MM</a>
+    <nav class="hdr-nav" aria-label="Main">
+      <a href="portfolio.html" class="hdr-link is-active">Work</a>
+      <a href="about.html" class="hdr-link">About</a>
+      <a href="index.html#cards" class="hdr-link">Contact</a>
+    </nav>
+  </header>
+
+  <main class="pf-page">
+
+    <section class="pf-hero">
+      <p class="pf-label" id="pf-label">SELECTED WORK</p>
+      <h1 class="pf-h" id="pf-h">Concept projects<br><em>built to perform</em></h1>
+      <p class="pf-intro" id="pf-intro">A closer look at the kind of work I build.<br>All entries are samples of my work with current and past clients.</p>
+      <p class="pf-concepts-line" id="pf-concepts-line"><strong class="pf-concepts-lead">Concepts show:</strong> the problem, the fix, and a modeled outcome.</p>
+      <p class="pf-disclaimer" id="pf-disclaimer">Don't see the project you have in mind? <a href="mailto:hello@maxmarket.live?subject=Project%20idea" class="pf-disclaimer-link">Tell me what you're working on<span class="pf-disclaimer-arrow" aria-hidden="true">→</span></a></p>
+    </section>
+
+    <div class="pf-filters" id="pf-filters" role="tablist" aria-label="Filter portfolio by category">
+      <button class="pf-filter is-active" type="button" data-filter="all" role="tab" aria-selected="true">All</button>
+      <button class="pf-filter" type="button" data-filter="web" role="tab" aria-selected="false">Web Development</button>
+      <button class="pf-filter" type="button" data-filter="ads" role="tab" aria-selected="false">Ad Management</button>
+      <button class="pf-filter" type="button" data-filter="growth" role="tab" aria-selected="false">Digital Growth</button>
+      <button class="pf-filter" type="button" data-filter="creative" role="tab" aria-selected="false">Creative</button>
+    </div>
+
+    <div class="pf-grid" id="pf-grid">
+
+      <article class="pf-card" data-category="web" id="fitness-landing">
+        <div class="pf-mock pf-mock--fitness" aria-hidden="true">
+          <div class="pf-preview pf-preview--browser">
+            <div class="pf-preview-bar"><span></span><span></span><span></span></div>
+            <div class="pf-preview-body pf-preview-body--gym">
+              <p class="pf-p-logo">IRON PULSE GYM</p>
+              <p class="pf-p-head">Your first week is on us</p>
+              <p class="pf-p-sub">Classes · Personal training · Open 24/7</p>
+              <span class="pf-p-btn">Start Free Trial</span>
+            </div>
+          </div>
+        </div>
+        <div class="pf-card-body">
+          <div class="pf-card-meta">
+            <span class="pf-badge">Concept Project</span>
+            <span class="pf-cat">Web Development</span>
+          </div>
+          <h2 class="pf-card-title">Gym Website Redesign</h2>
+          <p class="pf-client">For a local gym that needed more trial sign-ups</p>
+          <div class="pf-scan">
+            <div class="pf-scan-block pf-scan-issue">
+              <span class="pf-scan-label">Problem</span>
+              <p>Old site looked dated, loaded slow on phones, and visitors had no clear path to sign up.</p>
+            </div>
+            <div class="pf-scan-block pf-scan-fix">
+              <span class="pf-scan-label">What I did</span>
+              <ul class="pf-deliverables">
+                <li>Mobile-first page with back-end code cleanup</li>
+                <li>Sign-up form that emails the owner instantly</li>
+                <li>Clear buttons that guide people to act</li>
+              </ul>
+            </div>
+            <div class="pf-scan-block pf-scan-result">
+              <span class="pf-scan-label">Modeled result</span>
+              <p>About 28% more people tapping sign-up on mobile vs the old layout.</p>
+            </div>
+          </div>
+          <a href="mailto:hello@maxmarket.live?subject=Similar%20project%20-%20Gym%20Website" class="pf-cta">Want something like this? Let's talk →</a>
+        </div>
+      </article>
+
+      <article class="pf-card" data-category="web" id="roofing-site">
+        <div class="pf-mock pf-mock--roofing" aria-hidden="true">
+          <div class="pf-preview pf-preview--browser">
+            <div class="pf-preview-bar"><span></span><span></span><span></span></div>
+            <div class="pf-preview-body pf-preview-body--roof">
+              <p class="pf-p-logo">SUMMIT ROOFING</p>
+              <p class="pf-p-head">Free roof inspection</p>
+              <div class="pf-preview-split">
+                <div class="pf-preview-photo"></div>
+                <div class="pf-preview-mini-form">
+                  <span></span><span></span>
+                  <span class="pf-p-btn pf-p-btn--small">Get a Quote</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pf-card-body">
+          <div class="pf-card-meta">
+            <span class="pf-badge">Concept Project</span>
+            <span class="pf-cat">Web Development</span>
+          </div>
+          <h2 class="pf-card-title">Roofing Company Website</h2>
+          <p class="pf-client">For a home services contractor that needed more quote requests</p>
+          <div class="pf-scan">
+            <div class="pf-scan-block pf-scan-issue">
+              <span class="pf-scan-label">Problem</span>
+              <p>Generic template site, hard to find the contact form, nothing that built trust with homeowners.</p>
+            </div>
+            <div class="pf-scan-block pf-scan-fix">
+              <span class="pf-scan-label">What I did</span>
+              <ul class="pf-deliverables">
+                <li>Customized pages for each city they serve</li>
+                <li>Before-and-after project photos</li>
+                <li>Sticky call and quote contact buttons on mobile</li>
+              </ul>
+            </div>
+            <div class="pf-scan-block pf-scan-result">
+              <span class="pf-scan-label">Modeled result</span>
+              <p>Roughly 35% more people starting a quote form from their phone.</p>
+            </div>
+          </div>
+          <a href="mailto:hello@maxmarket.live?subject=Similar%20project%20-%20Roofing%20Website" class="pf-cta">Want something like this? Let's talk →</a>
+        </div>
+      </article>
+
+      <article class="pf-card" data-category="ads" id="medspa-ads">
+        <div class="pf-mock pf-mock--medspa" aria-hidden="true">
+          <div class="pf-preview pf-preview--social">
+            <div class="pf-preview-social-hdr">Glow Med Spa · Sponsored</div>
+            <div class="pf-preview-social-img"></div>
+            <p class="pf-preview-social-copy">New clients: free skin consult this month. Limited spots.</p>
+            <span class="pf-p-btn pf-p-btn--light">Book Now</span>
+            <div class="pf-preview-social-stats">
+              <span>Reach 12.4k</span>
+              <span>Leads 38</span>
+            </div>
+          </div>
+        </div>
+        <div class="pf-card-body">
+          <div class="pf-card-meta">
+            <span class="pf-badge pf-badge--sample">Sample Campaign</span>
+            <span class="pf-cat">Ad Management</span>
+          </div>
+          <h2 class="pf-card-title">Med Spa Facebook Ads</h2>
+          <p class="pf-client">For a med spa that wanted more booked consultations</p>
+          <div class="pf-scan">
+            <div class="pf-scan-block pf-scan-issue">
+              <span class="pf-scan-label">Problem</span>
+              <p>Meta budget going to broad audiences with one generic ad. No testing, no follow-up.</p>
+            </div>
+            <div class="pf-scan-block pf-scan-fix">
+              <span class="pf-scan-label">What I did</span>
+              <ul class="pf-deliverables">
+                <li>Facebook and Instagram ads with 3 offers to test</li>
+                <li>Follow-up ads for people who visited but didn't book</li>
+                <li>Landing page matched to the ad promise</li>
+              </ul>
+            </div>
+            <div class="pf-scan-block pf-scan-result">
+              <span class="pf-scan-label">Modeled result</span>
+              <p>Cost per lead from about $48 down to $31 over six weeks.</p>
+            </div>
+          </div>
+          <a href="mailto:hello@maxmarket.live?subject=Similar%20project%20-%20Med%20Spa%20Ads" class="pf-cta">Want something like this? Let's talk →</a>
+        </div>
+      </article>
+
+      <article class="pf-card" data-category="ads" id="roofing-ads">
+        <div class="pf-mock pf-mock--ads-local" aria-hidden="true">
+          <div class="pf-preview pf-preview--google">
+            <p class="pf-preview-ad-label">Ad</p>
+            <p class="pf-preview-ad-title">Storm Damage? Free Roof Inspection</p>
+            <p class="pf-preview-ad-url">summitroofing.com</p>
+            <p class="pf-preview-ad-desc">Licensed &amp; insured. Same-week estimates. Call now.</p>
+            <div class="pf-preview-ad-ext">
+              <span>Call</span><span>Directions</span>
+            </div>
+          </div>
+        </div>
+        <div class="pf-card-body">
+          <div class="pf-card-meta">
+            <span class="pf-badge pf-badge--sample">Sample Campaign</span>
+            <span class="pf-cat">Ad Management</span>
+          </div>
+          <h2 class="pf-card-title">Roofing Google Ads</h2>
+          <p class="pf-client">For a roofing company targeting storm-season leads</p>
+          <div class="pf-scan">
+            <div class="pf-scan-block pf-scan-issue">
+              <span class="pf-scan-label">Problem</span>
+              <p>Paying for clicks outside their service area and searches that never turned into calls.</p>
+            </div>
+            <div class="pf-scan-block pf-scan-fix">
+              <span class="pf-scan-label">What I did</span>
+              <ul class="pf-deliverables">
+                <li>Google ads limited to their service radius</li>
+                <li>Filtered junk search terms that waste budget</li>
+                <li>Call buttons on mobile so people can tap and dial</li>
+              </ul>
+            </div>
+            <div class="pf-scan-block pf-scan-result">
+              <span class="pf-scan-label">Modeled result</span>
+              <p>About 22% lower cost per lead with better-quality phone calls.</p>
+            </div>
+          </div>
+          <a href="mailto:hello@maxmarket.live?subject=Similar%20project%20-%20Roofing%20Google%20Ads" class="pf-cta">Want something like this? Let's talk →</a>
+        </div>
+      </article>
+
+      <article class="pf-card" data-category="growth" id="restaurant-growth">
+        <div class="pf-mock pf-mock--restaurant" aria-hidden="true">
+          <div class="pf-preview pf-preview--maps">
+            <p class="pf-preview-maps-name">Harbor Kitchen</p>
+            <p class="pf-preview-maps-stars">★★★★★ <span>4.8 · 127 reviews</span></p>
+            <p class="pf-preview-maps-meta">Italian restaurant · Open now · $$</p>
+            <div class="pf-preview-maps-post">
+              <span class="pf-preview-maps-post-tag">New post</span>
+              <span>Thursday pasta night. Reserve your table.</span>
+            </div>
+            <span class="pf-p-btn pf-p-btn--maps">Call · Directions</span>
+          </div>
+        </div>
+        <div class="pf-card-body">
+          <div class="pf-card-meta">
+            <span class="pf-badge">Concept Project</span>
+            <span class="pf-cat">Digital Growth</span>
+          </div>
+          <h2 class="pf-card-title">Restaurant Google Listing</h2>
+          <p class="pf-client">For a family restaurant that wanted more walk-ins and reservations</p>
+          <div class="pf-scan">
+            <div class="pf-scan-block pf-scan-issue">
+              <span class="pf-scan-label">Problem</span>
+              <p>Outdated Google listing, almost no reviews, and no regular posts to stay visible.</p>
+            </div>
+            <div class="pf-scan-block pf-scan-fix">
+              <span class="pf-scan-label">What I did</span>
+              <ul class="pf-deliverables">
+                <li>Cleaned up their Google Business profile</li>
+                <li>Simple in-store review request flow</li>
+                <li>Weekly posts for specials and events</li>
+              </ul>
+            </div>
+            <div class="pf-scan-block pf-scan-result">
+              <span class="pf-scan-label">Modeled result</span>
+              <p>About 40% more people clicking directions, calling, or visiting from Google.</p>
+            </div>
+          </div>
+          <a href="mailto:hello@maxmarket.live?subject=Similar%20project%20-%20Restaurant%20Google%20Listing" class="pf-cta">Want something like this? Let's talk →</a>
+        </div>
+      </article>
+
+      <article class="pf-card" data-category="creative" id="coffee-creative">
+        <div class="pf-mock pf-mock--coffee" aria-hidden="true">
+          <div class="pf-preview pf-preview--reel">
+            <div class="pf-preview-reel-frame">
+              <span class="pf-preview-reel-play"></span>
+              <p class="pf-preview-reel-tag">@northside.coffee</p>
+            </div>
+            <div class="pf-preview-brand-row">
+              <span class="pf-preview-brand-swatch"></span>
+              <span class="pf-preview-brand-swatch"></span>
+              <span class="pf-preview-brand-type">Northside</span>
+            </div>
+          </div>
+        </div>
+        <div class="pf-card-body">
+          <div class="pf-card-meta">
+            <span class="pf-badge">Concept Project</span>
+            <span class="pf-cat">Creative</span>
+          </div>
+          <h2 class="pf-card-title">Coffee Shop Social Media Refresh</h2>
+          <p class="pf-client">For a local coffee shop that needed a consistent look online</p>
+          <div class="pf-scan">
+            <div class="pf-scan-block pf-scan-issue">
+              <span class="pf-scan-label">Problem</span>
+              <p>Random photos, mismatched colors, no real brand across Instagram, menus, and in-store.</p>
+            </div>
+            <div class="pf-scan-block pf-scan-fix">
+              <span class="pf-scan-label">What I did</span>
+              <ul class="pf-deliverables">
+                <li>Simple brand guide: colors, fonts, logo use</li>
+                <li>Edited 6 short videos for Reels and TikTok</li>
+                <li>Templates for weekly drink specials</li>
+              </ul>
+            </div>
+            <div class="pf-scan-block pf-scan-result">
+              <span class="pf-scan-label">Modeled result</span>
+              <p>Roughly 2x more engagement on the refreshed content batch.</p>
+            </div>
+          </div>
+          <a href="mailto:hello@maxmarket.live?subject=Similar%20project%20-%20Coffee%20Shop%20Creative" class="pf-cta">Want something like this? Let's talk →</a>
+        </div>
+      </article>
+
+    </div>
+
+    <section class="pf-bottom-cta">
+      <p class="pf-bottom-label">Ready to start?</p>
+      <h2 class="pf-bottom-h">Let's talk about your project</h2>
+      <div class="pf-bottom-links">
+        <a href="index.html#cards" class="pf-bottom-btn">Back to contact</a>
+        <a href="mailto:hello@maxmarket.live" class="pf-bottom-btn pf-bottom-btn--dark">hello@maxmarket.live</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Maximus Marketing</span>
+    <span class="ft-dot">·</span>
+    <span class="ft-sleep">Site built while the world was sleeping<svg class="ft-moon-scene" width="10" height="6" style="width:10px;height:6px;display:inline-block;vertical-align:middle;margin-left:3px;flex-shrink:0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 8" aria-hidden="true"><circle class="ft-star" cx="1.2" cy="1.6" r="0.28"/><circle class="ft-star" cx="3.2" cy="0.9" r="0.18"/><circle class="ft-star" cx="2.2" cy="3.4" r="0.14"/><path class="ft-crescent" d="M11.2 0.8A4.2 4.2 0 0 0 6.4 4a4.2 4.2 0 0 0 4.8 4.2A3.1 3.1 0 0 1 7.8 4 3.1 3.1 0 0 1 11.2 0.8z"/></svg></span>
+    <span class="ft-dot">·</span>
+    <span>Zachary Maximus</span>
+  </footer>
+
+  <script src="script.js?v=13"></script>
+</body>
+</html>

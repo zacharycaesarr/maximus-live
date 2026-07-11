@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Maximus Marketing</title>
+  <meta name="description" content="Zachary Maximus, 24, Staunton VA. Websites, ads, and digital growth for local businesses.">
+
+  <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Maximus">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,900;1,400;1,900&family=Inter:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="style.css?v=13">
+</head>
+<body class="page-about">
+
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="blob-wrap" aria-hidden="true">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="hdr-brand">MM</a>
+    <nav class="hdr-nav" aria-label="Main">
+      <a href="portfolio.html" class="hdr-link">Work</a>
+      <a href="about.html" class="hdr-link is-active">About</a>
+      <a href="index.html#cards" class="hdr-link">Contact</a>
+    </nav>
+  </header>
+
+  <main class="about-page">
+
+    <!-- intro + photo -->
+    <section class="ab-hero">
+      <div class="ab-photo-wrap" id="ab-photo-wrap">
+        <div class="ab-photo-card" id="ab-photo-card">
+          <img src="assets/zachary.jpg" alt="Zachary Maximus" class="ab-photo">
+        </div>
+      </div>
+      <div class="ab-hero-copy">
+        <p class="ab-label" id="ab-label">ABOUT</p>
+        <h1 class="ab-h" id="ab-h">Hey, I'm<br><em>Zachary</em></h1>
+        <p class="ab-bio" id="ab-bio">
+          I'm 24, based in Staunton, Virginia. I've been building online since I was 14.
+          My dad's been into computers for as long as I can remember, so I grew up around
+          that energy. Maximus Marketing is how I help local businesses show up better online.
+        </p>
+      </div>
+    </section>
+
+    <!-- what I do -->
+    <section class="ab-section" id="ab-do">
+      <p class="ab-sec-label">WHAT I DO</p>
+      <h2 class="ab-sec-h">Websites, ads, and the stuff that connects them</h2>
+      <div class="ab-do-grid">
+        <div class="ab-do-item">
+          <div class="ab-do-ico ab-do-ico--web" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect class="ico-frame" x="4" y="8" width="32" height="24" rx="3"/>
+              <path class="ico-bar" d="M4 14h32"/>
+              <circle class="ico-dot" cx="8" cy="11" r="1" fill="currentColor" stroke="none"/>
+              <circle class="ico-dot" cx="12" cy="11" r="1" fill="currentColor" stroke="none"/>
+              <path class="ico-code" d="M14 22l-4 3 4 3M26 22l4 3-4 3M22 20l-4 10"/>
+            </svg>
+          </div>
+          <h3>Web Development</h3>
+          <p>Clean sites that load fast, look right on a phone, and make it easy for someone to call or book.</p>
+        </div>
+        <div class="ab-do-item">
+          <div class="ab-do-ico ab-do-ico--ads" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect class="ico-bar1" x="8" y="22" width="5" height="10" rx="1" fill="currentColor" stroke="none" opacity="0.35"/>
+              <rect class="ico-bar2" x="16" y="16" width="5" height="16" rx="1" fill="currentColor" stroke="none" opacity="0.55"/>
+              <rect class="ico-bar3" x="24" y="10" width="5" height="22" rx="1" fill="currentColor" stroke="none" opacity="0.8"/>
+              <path class="ico-trend" d="M7 26l8-8 6 4 10-12"/>
+            </svg>
+          </div>
+          <h3>Ad Management</h3>
+          <p>Facebook, Instagram, and Google ads aimed at people in your area who are actually looking.</p>
+        </div>
+        <div class="ab-do-item">
+          <div class="ab-do-ico ab-do-ico--growth" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle class="ico-pin" cx="20" cy="16" r="6"/>
+              <path class="ico-pin-stem" d="M20 22v8"/>
+              <path class="ico-waves" d="M10 30c3-3 7-3 10 0s7 3 10 0"/>
+            </svg>
+          </div>
+          <h3>Digital Growth</h3>
+          <p>Google listings, reviews, and the small systems that keep your business visible week to week.</p>
+        </div>
+        <div class="ab-do-item">
+          <div class="ab-do-ico ab-do-ico--creative" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle class="ico-reel" cx="20" cy="20" r="12"/>
+              <path class="ico-play" d="M17 14l10 6-10 6V14z" fill="currentColor" stroke="none" opacity="0.7"/>
+            </svg>
+          </div>
+          <h3>Creative</h3>
+          <p>Graphics and short video when your brand needs to look consistent across social and the site.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- light proof -->
+    <section class="ab-section" id="ab-proof">
+      <p class="ab-sec-label">A FEW THINGS I'VE WORKED ON</p>
+      <h2 class="ab-sec-h">Real projects, real businesses</h2>
+      <div class="ab-proof-grid">
+        <article class="ab-proof-card ab-proof-card--dogguard">
+          <div class="ab-proof-top">
+            <span class="ab-proof-tag">Client work</span>
+            <!-- Dog Guard logo: transparent bg preferred. black-bg pngs still work via blend -->
+            <img src="assets/dogguard-logo.png" alt="Dog Guard" class="ab-proof-logo">
+          </div>
+          <h3>Dog Guard</h3>
+          <p>Helped with digital presence and campaign work for a local brand that needed to reach more of the right people.</p>
+        </article>
+
+        <!--
+          CLIENT SLOT 2
+          To swap this business later:
+          1. Drop logo into assets/ (transparent PNG works best)
+          2. Change the img src below
+          3. Change the <h3> name and the <p> blurb
+          If you only have a black-bg logo, keep class="ab-proof-logo" (blend knocks out black)
+        -->
+        <article class="ab-proof-card ab-proof-card--client2">
+          <div class="ab-proof-top">
+            <span class="ab-proof-tag">Client work</span>
+            <span class="ab-proof-mono" aria-hidden="true">MR</span>
+            <!-- swap to this when you have a logo:
+            <img src="assets/client-2-logo.png" alt="Client name" class="ab-proof-logo">
+            -->
+          </div>
+          <h3>McClure Realty</h3>
+          <p>Site polish and conversion-focused updates for a Shenandoah Valley realty team.</p>
+        </article>
+      </div>
+      <p class="ab-proof-note">Want more examples? The <a href="portfolio.html">Work</a> page has concept samples you can flip through.</p>
+    </section>
+
+    <!-- process -->
+    <section class="ab-section" id="ab-process">
+      <p class="ab-sec-label">HOW IT WORKS</p>
+      <h2 class="ab-sec-h">From first message to launch</h2>
+      <ol class="ab-steps">
+        <li class="ab-step">
+          <span class="ab-step-num">01</span>
+          <div>
+            <h3>You tell me what you need</h3>
+            <p>Email or call. Quick chat about your business, goals, and timeline.</p>
+          </div>
+        </li>
+        <li class="ab-step">
+          <span class="ab-step-num">02</span>
+          <div>
+            <h3>I map the plan</h3>
+            <p>Clear scope: pages, ads, creatives, whatever fits. You know what you're getting before we start.</p>
+          </div>
+        </li>
+        <li class="ab-step">
+          <span class="ab-step-num">03</span>
+          <div>
+            <h3>Build and revise</h3>
+            <p>I build it, you review it, we tighten the details until it feels right.</p>
+          </div>
+        </li>
+        <li class="ab-step">
+          <span class="ab-step-num">04</span>
+          <div>
+            <h3>Launch and stay in touch</h3>
+            <p>Go live, check results, and keep the door open if you want ongoing help.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- cta -->
+    <section class="ab-cta" id="ab-cta">
+      <p class="ab-cta-label">NEXT STEP</p>
+      <h2 class="ab-cta-h">Tell me what you're working on</h2>
+      <p class="ab-cta-sub">Whether it's a new site, ads, or something in between, I'm easy to reach.</p>
+      <div class="pf-bottom-links">
+        <a href="mailto:hello@maxmarket.live" class="pf-bottom-btn pf-bottom-btn--dark">hello@maxmarket.live</a>
+        <a href="tel:+15404162983" class="pf-bottom-btn">(540) 416-2983</a>
+        <a href="index.html#cards" class="pf-bottom-btn">Back to contact</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Maximus Marketing</span>
+    <span class="ft-dot">·</span>
+    <span class="ft-sleep">Site built while the world was sleeping<svg class="ft-moon-scene" width="10" height="6" style="width:10px;height:6px;display:inline-block;vertical-align:middle;margin-left:3px;flex-shrink:0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 8" aria-hidden="true"><circle class="ft-star" cx="1.2" cy="1.6" r="0.28"/><circle class="ft-star" cx="3.2" cy="0.9" r="0.18"/><circle class="ft-star" cx="2.2" cy="3.4" r="0.14"/><path class="ft-crescent" d="M11.2 0.8A4.2 4.2 0 0 0 6.4 4a4.2 4.2 0 0 0 4.8 4.2A3.1 3.1 0 0 1 7.8 4 3.1 3.1 0 0 1 11.2 0.8z"/></svg></span>
+    <span class="ft-dot">·</span>
+    <span>Zachary Maximus</span>
+  </footer>
+
+  <script src="script.js?v=13"></script>
+</body>
+</html>

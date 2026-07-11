@@ -1,4 +1,7 @@
-/* Customer counter */
+/* counter.js
+   zach: kept separate so I can hide the whole block with [hidden]
+   without breaking the rest of the site
+*/
 (function () {
   var block     = document.getElementById('stat-block');
   var rowEl     = document.getElementById('stat-num-row');
@@ -83,7 +86,7 @@
     }
   }
 
-  /* Rapid tick — swaps digits in place, blur only when fast */
+  /* fast climb: blur only when speed picks up */
   function rapidCount(from, to, durationMs, done) {
     var lastVal  = from;
     var lastTime = performance.now();

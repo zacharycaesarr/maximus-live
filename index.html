@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maximus Marketing — Zachary Maximus</title>
-  <meta name="description" content="Zachary Maximus | Maximus Marketing — Digital Growth, Web Development, Ad Management">
+  <title>Maximus Marketing | Zachary Maximus</title>
+  <meta name="description" content="Zachary Maximus | Maximus Marketing. Digital Growth, Web Development, Ad Management.">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
@@ -23,37 +23,43 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 
-  <!-- Custom Cursor -->
+  <!-- cursor layers (dot + lag ring) -->
   <div class="cursor-dot" id="cursor-dot"></div>
   <div class="cursor-ring" id="cursor-ring"></div>
 
-  <!-- Particle Canvas -->
+  <!-- particle field -->
   <canvas id="canvas"></canvas>
 
-  <!-- Ambient Blob Backgrounds -->
+  <!-- soft color washes in the bg -->
   <div class="blob-wrap" aria-hidden="true">
     <div class="blob b1"></div>
     <div class="blob b2"></div>
     <div class="blob b3"></div>
   </div>
 
-  <!-- ─── HEADER ─────────────────────────────── -->
   <header class="header">
-    <div class="hdr-status">
-      <span class="hdr-dot"></span>
-      <span>Available for projects</span>
+    <div class="hdr-left">
+      <a href="index.html" class="hdr-brand">MM</a>
+      <div class="hdr-status">
+        <span class="hdr-dot"></span>
+        <span>Available for projects</span>
+      </div>
     </div>
-    <div class="hdr-brand">MM</div>
+    <nav class="hdr-nav" aria-label="Main">
+      <a href="portfolio.html" class="hdr-link">Work</a>
+      <a href="about.html" class="hdr-link">About</a>
+      <a href="#cards" class="hdr-link">Contact</a>
+    </nav>
   </header>
 
-  <!-- ─── HERO ────────────────────────────────── -->
+  <!-- hero -->
   <section class="hero">
 
-    <!-- Logo Badge -->
+    <!-- logo badge -->
     <div class="logo-wrap" id="logo-wrap">
       <div class="logo-card" id="logo-card">
         <img src="assets/logo.png?v=2" alt="Maximus Marketing Logo" class="logo-img">
@@ -90,11 +96,11 @@
 
   </section>
 
-  <!-- ─── CONTACT ──────────────────────────────── -->
+  <!-- contact -->
   <section class="contact">
 
     <div class="ct-intro">
-      <p class="ct-label" id="ct-label">— GET IN TOUCH —</p>
+      <p class="ct-label" id="ct-label">GET IN TOUCH</p>
       <h2 class="ct-h" id="ct-h">Let's build<br><em>something</em> great</h2>
     </div>
 
@@ -144,8 +150,8 @@
     </div>
 
     <!--
-      ============ CUSTOMER COUNTER (hidden) ============
-      To bring this back: remove the "hidden" attribute below.
+      customer counter (off for now)
+      to turn back on: remove the hidden attribute on #stat-block
     -->
     <div class="stat-block" id="stat-block" hidden>
       <svg class="stat-svg-defs" aria-hidden="true" width="0" height="0">
@@ -172,7 +178,72 @@
 
   </section>
 
-  <!-- ─── FOOTER ──────────────────────────────── -->
+  <!-- selected work teaser -->
+  <section class="work-teaser" id="work-teaser">
+    <div class="wt-intro">
+      <p class="wt-label" id="wt-label">SELECTED WORK</p>
+      <h2 class="wt-h" id="wt-h">Sample projects<br><em>you can review</em></h2>
+      <p class="wt-sub" id="wt-sub">Concepts &amp; campaigns for websites, ads, and overall growth.<br>Take a look at what suits your needs.</p>
+    </div>
+
+    <div class="wt-grid" id="wt-grid">
+
+      <a href="portfolio.html#fitness-landing" class="wt-card">
+        <div class="wt-mock wt-mock--fitness" aria-hidden="true">
+          <div class="pf-preview pf-preview--browser pf-preview--sm">
+            <div class="pf-preview-bar"><span></span><span></span><span></span></div>
+            <div class="pf-preview-body pf-preview-body--gym">
+              <p class="pf-p-logo">IRON PULSE</p>
+              <p class="pf-p-head">Free 7-Day Trial</p>
+              <span class="pf-p-btn">Sign Up</span>
+            </div>
+          </div>
+        </div>
+        <div class="wt-card-body">
+          <span class="pf-badge">Concept Project</span>
+          <h3 class="wt-card-title">Gym Website Redesign</h3>
+          <p class="wt-card-cat">Web Development</p>
+        </div>
+      </a>
+
+      <a href="portfolio.html#medspa-ads" class="wt-card">
+        <div class="wt-mock wt-mock--medspa" aria-hidden="true">
+          <div class="pf-preview pf-preview--social pf-preview--sm">
+            <div class="pf-preview-social-hdr">Glow Med Spa</div>
+            <div class="pf-preview-social-img"></div>
+            <p class="pf-preview-social-copy">Free skin consult. Book this week.</p>
+            <span class="pf-p-btn pf-p-btn--light">Learn More</span>
+          </div>
+        </div>
+        <div class="wt-card-body">
+          <span class="pf-badge pf-badge--sample">Sample Campaign</span>
+          <h3 class="wt-card-title">Med Spa Facebook Ads</h3>
+          <p class="wt-card-cat">Ad Management</p>
+        </div>
+      </a>
+
+      <a href="portfolio.html#restaurant-growth" class="wt-card">
+        <div class="wt-mock wt-mock--restaurant" aria-hidden="true">
+          <div class="pf-preview pf-preview--maps pf-preview--sm">
+            <p class="pf-preview-maps-name">Harbor Kitchen</p>
+            <p class="pf-preview-maps-stars">★★★★★ <span>4.8</span></p>
+            <p class="pf-preview-maps-meta">Open now · Italian · $$</p>
+            <span class="pf-p-btn pf-p-btn--maps">Directions</span>
+          </div>
+        </div>
+        <div class="wt-card-body">
+          <span class="pf-badge">Concept Project</span>
+          <h3 class="wt-card-title">Restaurant Google Listing</h3>
+          <p class="wt-card-cat">Digital Growth</p>
+        </div>
+      </a>
+
+    </div>
+
+    <a href="portfolio.html" class="wt-view-all" id="wt-view-all">View full portfolio →</a>
+  </section>
+
+  <!-- footer -->
   <footer class="footer">
     <span>© 2026 Maximus Marketing</span>
     <span class="ft-dot">·</span>
@@ -181,7 +252,7 @@
     <span>Zachary Maximus</span>
   </footer>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=13"></script>
   <script src="counter.js?v=8"></script>
 </body>
 </html>
