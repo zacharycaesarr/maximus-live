@@ -28,22 +28,8 @@ gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 gsap.set('#ct-tagline', { opacity: 0 });
 
-if (document.getElementById('wt-label')) {
-  gsap.set('#wt-label, #wt-h, #wt-sub', { opacity: 0, y: 32 });
-  gsap.set('.wt-card', { opacity: 0, y: 44 });
-  gsap.set('#wt-view-all', { opacity: 0, y: 16 });
-}
-
-if (document.getElementById('pf-label')) {
-  gsap.set('#pf-label, #pf-h, #pf-intro, #pf-concepts-line, #pf-disclaimer', { opacity: 0, y: 32 });
-  gsap.set('.pf-card', { opacity: 0, y: 48 });
-  gsap.set('.pf-filter', { opacity: 0, y: 12 });
-}
-
 if (document.getElementById('ab-label')) {
-  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, y: 36 });
-  gsap.set('.ab-do-item, .ab-proof-card, .ab-step', { opacity: 0, y: 40 });
-  gsap.set('#ab-cta', { opacity: 0, y: 28 });
+  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, scale: 0.97 });
 }
 
 /* custom cursor: fast dot, slower ring */
@@ -316,13 +302,13 @@ intro.to('#scroll-hint', {
   duration: 0.7
 }, '-=0.3');
 
-/* about intro (runs on about.html) */
+/* about intro — opacity/scale only (no vertical slide) */
 if (document.getElementById('ab-label')) {
   const abIntro = gsap.timeline({ delay: 0.2 });
-  abIntro.to('#ab-photo-wrap', { opacity: 1, y: 0, duration: 1.05, ease: 'power3.out' });
-  abIntro.to('#ab-label', { opacity: 0.36, y: 0, duration: 0.75, ease: 'power2.out' }, '-=0.7');
-  abIntro.to('#ab-h', { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' }, '-=0.55');
-  abIntro.to('#ab-bio', { opacity: 0.58, y: 0, duration: 0.9, ease: 'power2.out' }, '-=0.55');
+  abIntro.to('#ab-photo-wrap', { opacity: 1, scale: 1, duration: 1.05, ease: 'power3.out' });
+  abIntro.to('#ab-label', { opacity: 0.36, scale: 1, duration: 0.75, ease: 'power2.out' }, '-=0.7');
+  abIntro.to('#ab-h', { opacity: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, '-=0.55');
+  abIntro.to('#ab-bio', { opacity: 0.58, scale: 1, duration: 0.9, ease: 'power2.out' }, '-=0.55');
 }
 
 /* scroll reveals */
@@ -351,122 +337,98 @@ gsap.to('#ct-tagline', {
   scrollTrigger: { trigger: '#ct-tagline', start: 'top 90%' }
 });
 
-if (document.getElementById('work-teaser')) {
-  gsap.to('#wt-label', {
-    opacity: 0.36, y: 0,
-    duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#work-teaser', start: 'top 85%' }
-  });
-  gsap.to('#wt-h', {
-    opacity: 1, y: 0,
-    duration: 1.1, ease: 'power3.out',
-    scrollTrigger: { trigger: '#work-teaser', start: 'top 84%' }
-  });
-  gsap.to('#wt-sub', {
-    opacity: 0.52, y: 0,
-    duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#work-teaser', start: 'top 83%' }
-  });
-  gsap.to('.wt-card', {
-    opacity: 1, y: 0,
-    duration: 0.9, ease: 'power3.out',
-    stagger: 0.12,
-    scrollTrigger: { trigger: '#wt-grid', start: 'top 88%' }
-  });
-  gsap.to('#wt-view-all', {
-    opacity: 0.45, y: 0,
-    duration: 0.8,
-    scrollTrigger: { trigger: '#wt-view-all', start: 'top 92%' }
-  });
-}
+/*
+  Scroll reveals for work teaser / portfolio / about sections:
+  CSS .reveal + IntersectionObserver (once). No GSAP y slides — those were jolting on mobile.
+*/
+(function initSteadyReveals() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scrollTargets = [];
 
-if (document.getElementById('pf-label')) {
-  gsap.to('#pf-label', {
-    opacity: 0.36, y: 0,
-    duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '.pf-hero', start: 'top 88%' }
-  });
-  gsap.to('#pf-h', {
-    opacity: 1, y: 0,
-    duration: 1.1, ease: 'power3.out',
-    scrollTrigger: { trigger: '.pf-hero', start: 'top 86%' }
-  });
-  gsap.to('#pf-intro', {
-    opacity: 0.52, y: 0,
-    duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '.pf-hero', start: 'top 84%' }
-  });
-  gsap.to('#pf-concepts-line', {
-    opacity: 0.48, y: 0,
-    duration: 0.8, ease: 'power2.out',
-    scrollTrigger: { trigger: '.pf-hero', start: 'top 83%' }
-  });
-  gsap.to('#pf-disclaimer', {
-    opacity: 0.38, y: 0,
-    duration: 0.8, ease: 'power2.out',
-    scrollTrigger: { trigger: '.pf-hero', start: 'top 82%' }
-  });
-  gsap.to('.pf-filter', {
-    opacity: 0.45, y: 0,
-    duration: 0.7, ease: 'power2.out',
-    stagger: 0.05,
-    scrollTrigger: { trigger: '#pf-filters', start: 'top 90%' }
-  });
-  gsap.to('.pf-filter.is-active', { opacity: 1, duration: 0.3 });
-
-  /* mobile: each concept reveals only when it enters the viewport */
-  const pfMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (pfMobile) {
-    ScrollTrigger.batch('.pf-card', {
-      start: 'top 82%',
-      once: true,
-      onEnter: batch => {
-        gsap.to(batch, {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: 0.15,
-          overwrite: true
-        });
-      }
-    });
-  } else {
-    gsap.to('.pf-card', {
-      opacity: 1, y: 0,
-      duration: 0.95, ease: 'power3.out',
-      stagger: 0.1,
-      scrollTrigger: { trigger: '#pf-grid', start: 'top 88%' }
+  function arm(selector, extraClass, bucket) {
+    document.querySelectorAll(selector).forEach((el, i) => {
+      el.classList.add('reveal');
+      if (extraClass) el.classList.add(extraClass);
+      el.style.transitionDelay = (i * 0.07) + 's';
+      bucket.push(el);
     });
   }
-}
 
-/* about sections on scroll */
-if (document.getElementById('ab-do')) {
-  gsap.to('.ab-do-item', {
-    opacity: 1, y: 0,
-    duration: 0.85, ease: 'power3.out',
-    stagger: 0.1,
-    scrollTrigger: { trigger: '#ab-do', start: 'top 80%' }
+  function showStaggered(els, stepMs, startMs) {
+    els.forEach((el, i) => {
+      el.style.transitionDelay = (i * (stepMs / 1000)) + 's';
+      setTimeout(() => el.classList.add('is-visible'), startMs + i * stepMs);
+    });
+  }
+
+  if (document.getElementById('work-teaser')) {
+    arm('#wt-label', 'reveal-label', scrollTargets);
+    arm('#wt-h', null, scrollTargets);
+    arm('#wt-sub', 'reveal-soft', scrollTargets);
+    arm('.wt-card', null, scrollTargets);
+    arm('#wt-view-all', 'reveal-muted', scrollTargets);
+  }
+
+  /* portfolio: hero text plays on load; filters + cards wait for scroll */
+  const pfHero = [];
+  if (document.getElementById('pf-label')) {
+    arm('#pf-label', 'reveal-label', pfHero);
+    arm('#pf-h', null, pfHero);
+    arm('#pf-intro', 'reveal-soft', pfHero);
+    arm('#pf-concepts-line', 'reveal-concepts', pfHero);
+    arm('#pf-disclaimer', 'reveal-disclaimer', pfHero);
+    arm('.pf-filter', null, scrollTargets);
+    arm('.pf-card', null, scrollTargets);
+  }
+
+  if (document.getElementById('ab-do')) {
+    arm('.ab-do-item', null, scrollTargets);
+    arm('.ab-proof-card', null, scrollTargets);
+    arm('.ab-step', null, scrollTargets);
+    arm('#ab-cta', null, scrollTargets);
+  }
+
+  if (reduce) {
+    [...pfHero, ...scrollTargets].forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+
+  /* above-the-fold portfolio intro: wait a frame so opacity:0 paints, then fade/scale in */
+  if (pfHero.length) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => showStaggered(pfHero, 90, 120));
+    });
+  }
+
+  if (!scrollTargets.length) return;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+
+  scrollTargets.forEach(el => io.observe(el));
+})();
+
+/* category icons on concept card tags (same marks as the filter pills) */
+(function injectPfCatIcons() {
+  const icons = {
+    web: '<svg class="pf-filter-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="1.5" y="3" width="13" height="10" rx="1.5"/><path d="M1.5 5.5h13"/><path d="M5.5 8.5l-1.5 1.5 1.5 1.5M10.5 8.5l1.5 1.5-1.5 1.5M9 7.5l-2 5"/></svg>',
+    ads: '<svg class="pf-filter-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 12V8M6.5 12V5M10 12V7M13.5 12V3.5" stroke-linecap="round"/><path d="M2.5 10.5l3-3 2.5 1.5 4.5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    growth: '<svg class="pf-filter-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="6.5" r="2.5"/><path d="M8 9v4.5"/><path d="M4.5 13c1.5-1.5 3.5-1.5 5 0s3.5 1.5 5 0" stroke-linecap="round"/></svg>',
+    creative: '<svg class="pf-filter-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><path d="M6.5 5.8l4 2.2-4 2.2V5.8z" fill="currentColor" stroke="none"/></svg>'
+  };
+
+  document.querySelectorAll('.pf-card').forEach(card => {
+    const cat = card.querySelector('.pf-cat');
+    const svg = icons[card.dataset.category];
+    if (!cat || !svg || cat.querySelector('.pf-filter-ico')) return;
+    cat.insertAdjacentHTML('afterbegin', svg);
   });
-  gsap.to('.ab-proof-card', {
-    opacity: 1, y: 0,
-    duration: 0.85, ease: 'power3.out',
-    stagger: 0.12,
-    scrollTrigger: { trigger: '#ab-proof', start: 'top 80%' }
-  });
-  gsap.to('.ab-step', {
-    opacity: 1, y: 0,
-    duration: 0.8, ease: 'power3.out',
-    stagger: 0.1,
-    scrollTrigger: { trigger: '#ab-process', start: 'top 78%' }
-  });
-  gsap.to('#ab-cta', {
-    opacity: 1, y: 0,
-    duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#ab-cta', start: 'top 88%' }
-  });
-}
+})();
 
 /* portfolio filters */
 const pfFilters = document.querySelectorAll('.pf-filter');
@@ -480,16 +442,12 @@ if (pfFilters.length && pfCards.length) {
         const active = b === btn;
         b.classList.toggle('is-active', active);
         b.setAttribute('aria-selected', active ? 'true' : 'false');
-        gsap.to(b, { opacity: active ? 1 : 0.45, duration: 0.2 });
       });
       pfCards.forEach(card => {
         const show = filter === 'all' || card.dataset.category === filter;
         card.classList.toggle('is-hidden', !show);
-        if (show) {
-          gsap.to(card, { opacity: 1, y: 0, duration: 0.4, overwrite: true });
-        }
+        if (show) card.classList.add('is-visible');
       });
-      ScrollTrigger.refresh();
     });
   });
 }
@@ -507,27 +465,36 @@ if (window.location.hash && document.querySelector(window.location.hash)) {
   }, 600);
 }
 
+let scrollHintHidden = false;
 window.addEventListener('scroll', () => {
+  const hide = window.scrollY > 70;
+  if (hide === scrollHintHidden) return;
+  scrollHintHidden = hide;
   gsap.to('#scroll-hint', {
-    opacity: window.scrollY > 70 ? 0 : 1,
-    duration: 0.45
+    opacity: hide ? 0 : 1,
+    duration: 0.45,
+    overwrite: true
   });
 }, { passive: true });
 
+/* blob parallax: set position directly — gsap.to() on every scroll was stacking tweens */
+const setBlob1Y = gsap.quickSetter('.b1', 'y', 'px');
+const setBlob2Y = gsap.quickSetter('.b2', 'y', 'px');
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
-  gsap.to('.b1', { y: y * 0.24, duration: 0.5, ease: 'none' });
-  gsap.to('.b2', { y: y * -0.14, duration: 0.5, ease: 'none' });
+  setBlob1Y(y * 0.24);
+  setBlob2Y(y * -0.14);
 }, { passive: true });
 
-/* backup: if scroll triggers never fire, unhide after a few seconds */
+/* backup: contact GSAP reveals + CSS reveals if something never fired */
 setTimeout(() => {
-  document.querySelectorAll(
-    '#ct-label, #ct-h, .card, #stat-block, #ct-tagline, #wt-label, #wt-h, #wt-sub, .wt-card, #wt-view-all, #pf-label, #pf-h, #pf-intro, #pf-concepts-line, #pf-disclaimer, .pf-card, .pf-filter, .ab-do-item, .ab-proof-card, .ab-step, #ab-cta'
-  ).forEach(el => {
+  document.querySelectorAll('#ct-label, #ct-h, .card, #ct-tagline').forEach(el => {
     const opacity = parseFloat(window.getComputedStyle(el).opacity);
     if (opacity < 0.05) {
       gsap.to(el, { opacity: 1, y: 0, scale: 1, duration: 0.6 });
     }
+  });
+  document.querySelectorAll('.reveal:not(.is-visible)').forEach(el => {
+    el.classList.add('is-visible');
   });
 }, 4000);

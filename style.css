@@ -6,8 +6,7 @@
    palette locked in:
    cream FCFAF2 / warm F5F0E6 / tan D9C3B0 / dark 2C2520
 
-   if you're reading this: yeah I wrote it. leave the tokens alone
-   unless you're changing the whole look.
+   if you're reading this: you're cool and smart
 ============================================================ */
 
 /* ── Reset ─────────────────────────────────────────────── */
@@ -30,7 +29,6 @@
 
 /* ── Base ───────────────────────────────────────────────── */
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
@@ -47,6 +45,40 @@ a {
   text-decoration: none;
   color: inherit;
   display: block;
+}
+
+/* Reliable scroll reveals — opacity + micro-scale only (no slide = no jolt) */
+.reveal {
+  opacity: 0;
+  transform: scale(0.97);
+  transition:
+    opacity 0.75s var(--ease-out),
+    transform 0.75s var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-soft.is-visible { opacity: 0.52; }
+.reveal-label.is-visible { opacity: 0.36; }
+.reveal-muted.is-visible { opacity: 0.45; }
+.reveal-bio.is-visible { opacity: 0.58; }
+.reveal-concepts.is-visible { opacity: 0.48; }
+.reveal-disclaimer.is-visible { opacity: 0.38; }
+
+.pf-filter.reveal.is-visible { opacity: 0.45; }
+.pf-filter.reveal.is-active.is-visible,
+.pf-filter.is-active.reveal.is-visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────── */
@@ -223,11 +255,17 @@ body::after {
 }
 
 .hdr-brand {
-  font-family: var(--ff-disp);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.hdr-brand-mark {
+  width: 22px;
+  height: 26px;
+  display: block;
+  object-fit: contain;
 }
 
 .hdr-nav {
@@ -291,7 +329,7 @@ body::after {
   z-index: 2;
   width: 170px; height: 170px;
   border-radius: 22px;
-  background: #000000;   /* same black as the logo file */
+  background: var(--c3); /* same brown as Maximus Marketing title text */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -313,13 +351,20 @@ body::after {
   z-index: 3;
 }
 
+/*
+  Logo size inside the badge — edit these two numbers to taste.
+  Desktop default was 130; smaller = more padding in the box.
+  Mobile override is near the bottom of this file (.logo-img).
+*/
 .logo-img {
-  width: 130px;
-  height: 130px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   display: block;
   position: relative;
   z-index: 2;
+  /* mark file is black; invert so it reads on the dark badge */
+  filter: invert(1);
 }
 
 /* Pulsing orbit rings */
@@ -1063,6 +1108,21 @@ body::after {
   cursor: pointer;
   opacity: 0.45;
   transition: opacity 0.25s, background 0.25s, border-color 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pf-filter-ico {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.75;
+  display: block;
+}
+
+.pf-filter.is-active .pf-filter-ico {
+  opacity: 1;
 }
 
 .pf-filter:hover { opacity: 0.7; }
@@ -1509,6 +1569,15 @@ body::after {
   border-radius: 4px;
   background: rgba(44, 37, 32, 0.08);
   color: var(--c3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pf-cat .pf-filter-ico {
+  width: 12px;
+  height: 12px;
+  opacity: 0.85;
 }
 
 .pf-card[data-category="web"] .pf-cat {
@@ -2163,7 +2232,8 @@ body::after {
   body { cursor: auto; }
 
   .logo-wrap, .logo-card { width: 130px; height: 130px; }
-  .logo-img  { width: 88px; height: 88px; }
+  /* mobile logo size inside badge — edit with the desktop .logo-img above */
+  .logo-img  { width: 72px; height: 72px; }
   .r1 { width: 176px; height: 176px; }
   .r2 { width: 232px; height: 232px; }
   .r3 { width: 288px; height: 288px; }
