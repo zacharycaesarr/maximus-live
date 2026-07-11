@@ -1993,45 +1993,43 @@ body::after {
 }
 
 .ab-proof-logo {
-  width: 58px;
-  height: 58px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
   flex-shrink: 0;
-  /* black logo backgrounds drop out on cream cards */
-  mix-blend-mode: screen;
-  filter: contrast(1.15) brightness(1.05);
-  opacity: 0.95;
-  transition: transform 0.45s var(--ease-elastic), opacity 0.3s;
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
+  /* white mark needs a dark badge so it reads on cream cards */
+  background: var(--c3);
+  padding: 8px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  opacity: 1;
+  transition: transform 0.45s var(--ease-elastic);
 }
 
 .ab-proof-card:hover .ab-proof-logo {
   transform: scale(1.08) rotate(-3deg);
-  opacity: 1;
 }
 
 .ab-proof-mono {
   font-family: var(--ff-disp);
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--c3);
-  opacity: 0.55;
+  color: #FCFAF2;
   line-height: 1;
   flex-shrink: 0;
-  background: none;
-  width: auto;
-  height: auto;
-  padding: 0;
-  border-radius: 0;
-  transition: transform 0.45s var(--ease-elastic), opacity 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: var(--c3);
+  border-radius: 10px;
+  transition: transform 0.45s var(--ease-elastic);
 }
 
 .ab-proof-card:hover .ab-proof-mono {
   transform: scale(1.08) rotate(3deg);
-  opacity: 0.85;
 }
 
 .ab-proof-card h3 {
