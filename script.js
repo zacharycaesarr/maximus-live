@@ -340,44 +340,46 @@ gsap.to('#ct-tagline', {
 /*
   Scroll reveals for work teaser / portfolio / about sections:
   CSS .reveal + IntersectionObserver (once). No GSAP y slides — those were jolting on mobile.
+  Homepage hero (logo → services line) is never touched here.
 */
 (function initSteadyReveals() {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const scrollTargets = [];
 
   function arm(selector, extraClass, bucket) {
-    document.querySelectorAll(selector).forEach((el, i) => {
+    document.querySelectorAll(selector).forEach((el) => {
       el.classList.add('reveal');
       if (extraClass) el.classList.add(extraClass);
-      el.style.transitionDelay = (i * 0.07) + 's';
       bucket.push(el);
     });
   }
 
   function showStaggered(els, stepMs, startMs) {
     els.forEach((el, i) => {
-      el.style.transitionDelay = (i * (stepMs / 1000)) + 's';
       setTimeout(() => el.classList.add('is-visible'), startMs + i * stepMs);
     });
   }
 
-  if (document.getElementById('work-teaser')) {
-    arm('#wt-label', 'reveal-label', scrollTargets);
-    arm('#wt-h', null, scrollTargets);
-    arm('#wt-sub', 'reveal-soft', scrollTargets);
-    arm('.wt-card', null, scrollTargets);
-    arm('#wt-view-all', 'reveal-muted', scrollTargets);
+  /* homepage selected work — only when that section enters view */
+  const wtSection = document.getElementById('work-teaser');
+  const wtItems = [];
+  if (wtSection) {
+    arm('#wt-label', 'reveal-label', wtItems);
+    arm('#wt-h', null, wtItems);
+    arm('#wt-sub', 'reveal-soft', wtItems);
+    arm('.wt-card', null, wtItems);
+    arm('#wt-view-all', 'reveal-muted', wtItems);
   }
 
-  /* portfolio: hero text plays on load; filters + cards wait for scroll */
-  const pfHero = [];
+  /* portfolio intro (copy + category pills) on load; cards on scroll */
+  const pfIntro = [];
   if (document.getElementById('pf-label')) {
-    arm('#pf-label', 'reveal-label', pfHero);
-    arm('#pf-h', null, pfHero);
-    arm('#pf-intro', 'reveal-soft', pfHero);
-    arm('#pf-concepts-line', 'reveal-concepts', pfHero);
-    arm('#pf-disclaimer', 'reveal-disclaimer', pfHero);
-    arm('.pf-filter', null, scrollTargets);
+    arm('#pf-label', 'reveal-label', pfIntro);
+    arm('#pf-h', null, pfIntro);
+    arm('#pf-intro', 'reveal-soft', pfIntro);
+    arm('#pf-concepts-line', 'reveal-concepts', pfIntro);
+    arm('#pf-disclaimer', 'reveal-disclaimer', pfIntro);
+    arm('.pf-filter', null, pfIntro);
     arm('.pf-card', null, scrollTargets);
   }
 
@@ -389,15 +391,27 @@ gsap.to('#ct-tagline', {
   }
 
   if (reduce) {
-    [...pfHero, ...scrollTargets].forEach(el => el.classList.add('is-visible'));
+    [...wtItems, ...pfIntro, ...scrollTargets].forEach(el => el.classList.add('is-visible'));
     return;
   }
 
-  /* above-the-fold portfolio intro: wait a frame so opacity:0 paints, then fade/scale in */
-  if (pfHero.length) {
+  /* portfolio page intro: already at 0 via CSS, then stagger in */
+  if (pfIntro.length) {
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => showStaggered(pfHero, 90, 120));
+      requestAnimationFrame(() => showStaggered(pfIntro, 130, 200));
     });
+  }
+
+  /* work teaser: fire only when the block is on screen */
+  if (wtSection && wtItems.length) {
+    const wtIo = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        showStaggered(wtItems, 110, 0);
+        wtIo.disconnect();
+      });
+    }, { threshold: 0.22, rootMargin: '0px 0px -10% 0px' });
+    wtIo.observe(wtSection);
   }
 
   if (!scrollTargets.length) return;
@@ -408,7 +422,7 @@ gsap.to('#ct-tagline', {
       entry.target.classList.add('is-visible');
       io.unobserve(entry.target);
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
 
   scrollTargets.forEach(el => io.observe(el));
 })();
@@ -486,15 +500,12 @@ window.addEventListener('scroll', () => {
   setBlob2Y(y * -0.14);
 }, { passive: true });
 
-/* backup: contact GSAP reveals + CSS reveals if something never fired */
+/* backup: contact GSAP only — never force off-screen .reveal items visible */
 setTimeout(() => {
   document.querySelectorAll('#ct-label, #ct-h, .card, #ct-tagline').forEach(el => {
     const opacity = parseFloat(window.getComputedStyle(el).opacity);
     if (opacity < 0.05) {
       gsap.to(el, { opacity: 1, y: 0, scale: 1, duration: 0.6 });
     }
-  });
-  document.querySelectorAll('.reveal:not(.is-visible)').forEach(el => {
-    el.classList.add('is-visible');
   });
 }, 4000);

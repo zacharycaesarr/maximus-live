@@ -50,10 +50,10 @@ a {
 /* Reliable scroll reveals — opacity + micro-scale only (no slide = no jolt) */
 .reveal {
   opacity: 0;
-  transform: scale(0.97);
+  transform: scale(0.94);
   transition:
-    opacity 0.75s var(--ease-out),
-    transform 0.75s var(--ease-out);
+    opacity 0.9s var(--ease-out),
+    transform 0.9s var(--ease-out);
   will-change: opacity, transform;
 }
 
@@ -73,8 +73,43 @@ a {
 .pf-filter.reveal.is-active.is-visible,
 .pf-filter.is-active.reveal.is-visible { opacity: 1; }
 
+/*
+  Pre-hide before JS so the first paint isn't full-opacity
+  (fixes “animation already done” on portfolio load / mobile).
+  Homepage hero is intentionally NOT listed here.
+*/
+.page-portfolio #pf-label:not(.is-visible),
+.page-portfolio #pf-h:not(.is-visible),
+.page-portfolio #pf-intro:not(.is-visible),
+.page-portfolio #pf-concepts-line:not(.is-visible),
+.page-portfolio #pf-disclaimer:not(.is-visible),
+.page-portfolio .pf-filter:not(.is-visible) {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+#work-teaser #wt-label:not(.is-visible),
+#work-teaser #wt-h:not(.is-visible),
+#work-teaser #wt-sub:not(.is-visible),
+#work-teaser .wt-card:not(.is-visible),
+#work-teaser #wt-view-all:not(.is-visible) {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .page-portfolio #pf-label,
+  .page-portfolio #pf-h,
+  .page-portfolio #pf-intro,
+  .page-portfolio #pf-concepts-line,
+  .page-portfolio #pf-disclaimer,
+  .page-portfolio .pf-filter,
+  #work-teaser #wt-label,
+  #work-teaser #wt-h,
+  #work-teaser #wt-sub,
+  #work-teaser .wt-card,
+  #work-teaser #wt-view-all {
     opacity: 1;
     transform: none;
     transition: none;
