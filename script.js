@@ -22,14 +22,10 @@ gsap.set('#hero-by',    { opacity: 0, y: 26 });
 gsap.set('.h-word',     { yPercent: 115, opacity: 0 });
 gsap.set('#hero-svc',   { opacity: 0, y: 22 });
 gsap.set('#scroll-hint',{ opacity: 0 });
-gsap.set('#ct-label',   { opacity: 0, y: 32 });
-gsap.set('#ct-h',       { opacity: 0, y: 64 });
-gsap.set('.card',       { opacity: 0, y: 52, scale: 0.95 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
-gsap.set('#ct-tagline', { opacity: 0 });
 
 if (document.getElementById('ab-label')) {
-  gsap.set('#ab-label, #ab-h, #ab-bio, #ab-photo-wrap', { opacity: 0, scale: 0.97 });
+  gsap.set('#ab-label, #ab-h, #ab-photo-wrap', { opacity: 0, scale: 0.97 });
 }
 
 /* custom cursor: fast dot, slower ring */
@@ -302,41 +298,44 @@ intro.to('#scroll-hint', {
   duration: 0.7
 }, '-=0.3');
 
-/* about intro — opacity/scale only (no vertical slide) */
+/* about intro — opacity/scale only (no vertical slide); bio types out */
 if (document.getElementById('ab-label')) {
+  const bioEl = document.getElementById('ab-bio');
+  let bioFull = '';
+  if (bioEl) {
+    bioFull = bioEl.textContent.replace(/\s+/g, ' ').trim();
+    bioEl.textContent = '';
+    bioEl.setAttribute('aria-label', bioFull);
+  }
+
+  function typeBio(el, text) {
+    if (!el || !text) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.textContent = text;
+      return;
+    }
+    el.classList.add('is-typing');
+    let i = 0;
+    const speed = 16;
+    (function tick() {
+      i += 1;
+      el.textContent = text.slice(0, i);
+      if (i < text.length) {
+        setTimeout(tick, speed);
+      } else {
+        el.classList.remove('is-typing');
+      }
+    })();
+  }
+
   const abIntro = gsap.timeline({ delay: 0.2 });
   abIntro.to('#ab-photo-wrap', { opacity: 1, scale: 1, duration: 1.05, ease: 'power3.out' });
   abIntro.to('#ab-label', { opacity: 0.36, scale: 1, duration: 0.75, ease: 'power2.out' }, '-=0.7');
   abIntro.to('#ab-h', { opacity: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, '-=0.55');
-  abIntro.to('#ab-bio', { opacity: 0.58, scale: 1, duration: 0.9, ease: 'power2.out' }, '-=0.55');
+  abIntro.add(() => typeBio(bioEl, bioFull), '-=0.25');
 }
 
-/* scroll reveals */
-gsap.to('#ct-label', {
-  opacity: 0.36, y: 0,
-  duration: 0.95, ease: 'power2.out',
-  scrollTrigger: { trigger: '#ct-label', start: 'top 82%' }
-});
-
-gsap.to('#ct-h', {
-  opacity: 1, y: 0,
-  duration: 1.15, ease: 'power3.out',
-  scrollTrigger: { trigger: '#ct-h', start: 'top 85%' }
-});
-
-gsap.to('.card', {
-  opacity: 1, y: 0, scale: 1,
-  duration: 0.95, ease: 'power3.out',
-  stagger: 0.16,
-  scrollTrigger: { trigger: '.cards', start: 'top 87%' }
-});
-
-gsap.to('#ct-tagline', {
-  opacity: 0.28,
-  duration: 1,
-  scrollTrigger: { trigger: '#ct-tagline', start: 'top 90%' }
-});
-
+/* homepage contact uses CSS .reveal (below) — hero above services line stays GSAP */
 /*
   Scroll reveals for work teaser / portfolio / about sections:
   CSS .reveal + IntersectionObserver (once). No GSAP y slides — those were jolting on mobile.
@@ -371,6 +370,16 @@ gsap.to('#ct-tagline', {
     arm('#wt-view-all', 'reveal-muted', wtItems);
   }
 
+  /* homepage contact (below hero) — sequential when scrolled into view */
+  const contactSection = document.querySelector('.contact');
+  const contactItems = [];
+  if (contactSection && document.getElementById('ct-label')) {
+    arm('#ct-label', 'reveal-label', contactItems);
+    arm('#ct-h', null, contactItems);
+    arm('.contact .card', null, contactItems);
+    arm('#ct-tagline', 'reveal-tagline', contactItems);
+  }
+
   /* portfolio intro (copy + category pills) on load; cards on scroll */
   const pfIntro = [];
   if (document.getElementById('pf-label')) {
@@ -383,15 +392,32 @@ gsap.to('#ct-tagline', {
     arm('.pf-card', null, scrollTargets);
   }
 
+  /* portfolio bottom CTA */
+  const pfBottom = document.querySelector('.pf-bottom-cta');
+  const pfBottomItems = [];
+  if (pfBottom) {
+    arm('.pf-bottom-cta .pf-bottom-label', 'reveal-label', pfBottomItems);
+    arm('.pf-bottom-cta .pf-bottom-h', null, pfBottomItems);
+    arm('.pf-bottom-cta .pf-bottom-btn', null, pfBottomItems);
+  }
+
+  /* about page sections + bottom CTA (sequential) */
+  const abCtaItems = [];
   if (document.getElementById('ab-do')) {
     arm('.ab-do-item', null, scrollTargets);
     arm('.ab-proof-card', null, scrollTargets);
     arm('.ab-step', null, scrollTargets);
-    arm('#ab-cta', null, scrollTargets);
+  }
+  if (document.getElementById('ab-cta')) {
+    arm('#ab-cta .ab-cta-label', 'reveal-label', abCtaItems);
+    arm('#ab-cta .ab-cta-h', null, abCtaItems);
+    arm('#ab-cta .ab-cta-sub', 'reveal-soft', abCtaItems);
+    arm('#ab-cta .pf-bottom-btn', null, abCtaItems);
   }
 
   if (reduce) {
-    [...wtItems, ...pfIntro, ...scrollTargets].forEach(el => el.classList.add('is-visible'));
+    [...wtItems, ...contactItems, ...pfIntro, ...pfBottomItems, ...abCtaItems, ...scrollTargets]
+      .forEach(el => el.classList.add('is-visible'));
     return;
   }
 
@@ -402,17 +428,22 @@ gsap.to('#ct-tagline', {
     });
   }
 
-  /* work teaser: fire only when the block is on screen */
-  if (wtSection && wtItems.length) {
-    const wtIo = new IntersectionObserver((entries) => {
+  function observeStagger(section, items, opts) {
+    if (!section || !items.length) return;
+    const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        showStaggered(wtItems, 110, 0);
-        wtIo.disconnect();
+        showStaggered(items, opts.step || 110, 0);
+        io.disconnect();
       });
-    }, { threshold: 0.22, rootMargin: '0px 0px -10% 0px' });
-    wtIo.observe(wtSection);
+    }, { threshold: opts.threshold || 0.2, rootMargin: opts.rootMargin || '0px 0px -10% 0px' });
+    io.observe(section);
   }
+
+  observeStagger(wtSection, wtItems, { threshold: 0.22 });
+  observeStagger(contactSection, contactItems, { threshold: 0.18, step: 120 });
+  observeStagger(pfBottom, pfBottomItems, { threshold: 0.25, step: 110 });
+  observeStagger(document.getElementById('ab-cta'), abCtaItems, { threshold: 0.25, step: 110 });
 
   if (!scrollTargets.length) return;
 
@@ -500,11 +531,11 @@ window.addEventListener('scroll', () => {
   setBlob2Y(y * -0.14);
 }, { passive: true });
 
-/* backup: contact GSAP only — never force off-screen .reveal items visible */
+/* backup: only for leftover contact GSAP edge cases — reveals handle themselves */
 setTimeout(() => {
-  document.querySelectorAll('#ct-label, #ct-h, .card, #ct-tagline').forEach(el => {
+  document.querySelectorAll('#stat-block').forEach(el => {
     const opacity = parseFloat(window.getComputedStyle(el).opacity);
-    if (opacity < 0.05) {
+    if (opacity < 0.05 && !el.hidden) {
       gsap.to(el, { opacity: 1, y: 0, scale: 1, duration: 0.6 });
     }
   });

@@ -68,6 +68,7 @@ a {
 .reveal-bio.is-visible { opacity: 0.58; }
 .reveal-concepts.is-visible { opacity: 0.48; }
 .reveal-disclaimer.is-visible { opacity: 0.38; }
+.reveal-tagline.is-visible { opacity: 0.28; }
 
 .pf-filter.reveal.is-visible { opacity: 0.45; }
 .pf-filter.reveal.is-active.is-visible,
@@ -97,6 +98,25 @@ a {
   transform: scale(0.94);
 }
 
+.contact #ct-label:not(.is-visible),
+.contact #ct-h:not(.is-visible),
+.contact .card:not(.is-visible),
+.contact #ct-tagline:not(.is-visible) {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+#ab-cta .ab-cta-label:not(.is-visible),
+#ab-cta .ab-cta-h:not(.is-visible),
+#ab-cta .ab-cta-sub:not(.is-visible),
+#ab-cta .pf-bottom-btn:not(.is-visible),
+.pf-bottom-cta .pf-bottom-label:not(.is-visible),
+.pf-bottom-cta .pf-bottom-h:not(.is-visible),
+.pf-bottom-cta .pf-bottom-btn:not(.is-visible) {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .page-portfolio #pf-label,
@@ -109,7 +129,18 @@ a {
   #work-teaser #wt-h,
   #work-teaser #wt-sub,
   #work-teaser .wt-card,
-  #work-teaser #wt-view-all {
+  #work-teaser #wt-view-all,
+  .contact #ct-label,
+  .contact #ct-h,
+  .contact .card,
+  .contact #ct-tagline,
+  #ab-cta .ab-cta-label,
+  #ab-cta .ab-cta-h,
+  #ab-cta .ab-cta-sub,
+  #ab-cta .pf-bottom-btn,
+  .pf-bottom-cta .pf-bottom-label,
+  .pf-bottom-cta .pf-bottom-h,
+  .pf-bottom-cta .pf-bottom-btn {
     opacity: 1;
     transform: none;
     transition: none;
@@ -1894,6 +1925,24 @@ body::after {
   line-height: 1.7;
   opacity: 0.58;
   max-width: 480px;
+  min-height: 6.8em; /* keeps layout steady while typing */
+}
+
+.ab-bio.is-typing::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 0.95em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  opacity: 0.55;
+  animation: bioCaret 0.85s steps(1) infinite;
+}
+
+@keyframes bioCaret {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0; }
 }
 
 .ab-section {
