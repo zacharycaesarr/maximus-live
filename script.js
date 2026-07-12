@@ -312,7 +312,9 @@ if (document.getElementById('ab-label')) {
       return;
     }
     bioEl.classList.add('is-typing');
-    const duration = 720; /* matches the rest of the about intro pace */
+    /* desktop slower, mobile stays snappy — tweak these two numbers anytime */
+    const isNarrow = window.matchMedia('(max-width: 768px)').matches;
+    const duration = isNarrow ? 720 : 1450;
     const start = performance.now();
     (function frame(now) {
       const t = Math.min(1, (now - start) / duration);
@@ -439,7 +441,8 @@ if (document.getElementById('ab-label')) {
   }
 
   observeStagger(wtSection, wtItems, { threshold: 0.22 });
-  observeStagger(contactSection, contactItems, { threshold: 0.18, step: 120 });
+  /* contact stagger ms between items — higher = slower / more dramatic */
+  observeStagger(contactSection, contactItems, { threshold: 0.18, step: 190 });
   observeStagger(pfBottom, pfBottomItems, { threshold: 0.25, step: 110 });
   observeStagger(document.getElementById('ab-cta'), abCtaItems, { threshold: 0.25, step: 110 });
 

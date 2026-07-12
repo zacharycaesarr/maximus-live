@@ -57,6 +57,13 @@ a {
   will-change: opacity, transform;
 }
 
+/* homepage contact only — a touch slower for first-impression feel */
+.contact .reveal {
+  transition:
+    opacity 1.2s var(--ease-out),
+    transform 1.2s var(--ease-out);
+}
+
 .reveal.is-visible {
   opacity: 1;
   transform: none;
