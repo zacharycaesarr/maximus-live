@@ -1920,15 +1920,28 @@ body::after {
 }
 
 .ab-bio {
+  position: relative;
   font-size: 15px;
   font-weight: 300;
   line-height: 1.7;
   opacity: 0.58;
   max-width: 480px;
-  min-height: 6.8em; /* keeps layout steady while typing */
 }
 
-.ab-bio.is-typing::after {
+/* invisible full copy holds the height so typing never pushes content down */
+.ab-bio-ghost {
+  visibility: hidden;
+  display: block;
+}
+
+.ab-bio-live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+}
+
+.ab-bio.is-typing .ab-bio-live::after {
   content: '';
   display: inline-block;
   width: 2px;
@@ -1936,12 +1949,12 @@ body::after {
   margin-left: 2px;
   vertical-align: text-bottom;
   background: currentColor;
-  opacity: 0.55;
-  animation: bioCaret 0.85s steps(1) infinite;
+  opacity: 0.45;
+  animation: bioCaret 0.7s steps(1) infinite;
 }
 
 @keyframes bioCaret {
-  0%, 100% { opacity: 0.55; }
+  0%, 100% { opacity: 0.45; }
   50% { opacity: 0; }
 }
 

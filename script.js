@@ -298,41 +298,39 @@ intro.to('#scroll-hint', {
   duration: 0.7
 }, '-=0.3');
 
-/* about intro — opacity/scale only (no vertical slide); bio types out */
+/* about intro — opacity/scale only (no vertical slide); bio types fast in place */
 if (document.getElementById('ab-label')) {
   const bioEl = document.getElementById('ab-bio');
-  let bioFull = '';
-  if (bioEl) {
-    bioFull = bioEl.textContent.replace(/\s+/g, ' ').trim();
-    bioEl.textContent = '';
-    bioEl.setAttribute('aria-label', bioFull);
-  }
+  const bioLive = document.getElementById('ab-bio-live');
+  const bioGhost = bioEl ? bioEl.querySelector('.ab-bio-ghost') : null;
+  const bioFull = bioGhost ? bioGhost.textContent.replace(/\s+/g, ' ').trim() : '';
 
-  function typeBio(el, text) {
-    if (!el || !text) return;
+  function typeBio() {
+    if (!bioEl || !bioLive || !bioFull) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.textContent = text;
+      bioLive.textContent = bioFull;
       return;
     }
-    el.classList.add('is-typing');
-    let i = 0;
-    const speed = 16;
-    (function tick() {
-      i += 1;
-      el.textContent = text.slice(0, i);
-      if (i < text.length) {
-        setTimeout(tick, speed);
+    bioEl.classList.add('is-typing');
+    const duration = 720; /* matches the rest of the about intro pace */
+    const start = performance.now();
+    (function frame(now) {
+      const t = Math.min(1, (now - start) / duration);
+      bioLive.textContent = bioFull.slice(0, Math.floor(t * bioFull.length));
+      if (t < 1) {
+        requestAnimationFrame(frame);
       } else {
-        el.classList.remove('is-typing');
+        bioLive.textContent = bioFull;
+        bioEl.classList.remove('is-typing');
       }
-    })();
+    })(start);
   }
 
   const abIntro = gsap.timeline({ delay: 0.2 });
   abIntro.to('#ab-photo-wrap', { opacity: 1, scale: 1, duration: 1.05, ease: 'power3.out' });
   abIntro.to('#ab-label', { opacity: 0.36, scale: 1, duration: 0.75, ease: 'power2.out' }, '-=0.7');
   abIntro.to('#ab-h', { opacity: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, '-=0.55');
-  abIntro.add(() => typeBio(bioEl, bioFull), '-=0.25');
+  abIntro.add(typeBio, '-=0.35');
 }
 
 /* homepage contact uses CSS .reveal (below) — hero above services line stays GSAP */
