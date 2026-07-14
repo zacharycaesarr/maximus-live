@@ -1110,14 +1110,40 @@ body::after {
   padding: 14px 28px;
   border: 1px solid rgba(44, 37, 32, 0.12);
   border-radius: 100px;
-  transition: opacity 0.25s, border-color 0.25s, background 0.25s;
+  transition: opacity 0.25s, border-color 0.25s, background 0.25s, box-shadow 0.25s;
   display: inline-block;
 }
 
+/* starts after scroll reveal — slow soft pulse so it doesn’t get missed */
+.wt-view-all.is-visible {
+  animation: wtViewPulse 2.75s ease-in-out infinite;
+}
+
+@keyframes wtViewPulse {
+  0%, 100% {
+    opacity: 0.45;
+    border-color: rgba(44, 37, 32, 0.12);
+    box-shadow: 0 0 0 0 rgba(44, 37, 32, 0);
+  }
+  50% {
+    opacity: 0.9;
+    border-color: rgba(44, 37, 32, 0.32);
+    box-shadow: 0 0 0 10px rgba(44, 37, 32, 0.05);
+  }
+}
+
 .wt-view-all:hover {
+  animation: none;
   opacity: 0.85;
   border-color: rgba(44, 37, 32, 0.28);
   background: rgba(44, 37, 32, 0.03);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wt-view-all.is-visible {
+    animation: none;
+  }
 }
 
 /* ============================================================
@@ -2236,6 +2262,8 @@ body::after {
   opacity: 0.42;
   font-family: var(--ff-mono);
   letter-spacing: 0.04em;
+  line-height: 1.65;
+  max-width: 42em;
 }
 
 .ab-proof-note a {
