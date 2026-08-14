@@ -1961,35 +1961,11 @@ body::after {
 }
 
 .ab-bio {
-  position: relative;
   font-size: 15px;
   font-weight: 300;
   line-height: 1.7;
   opacity: 0.58;
   max-width: 480px;
-}
-
-/* remainder stays in flow (hidden) so wrapping matches the final paragraph while typing */
-.ab-bio-ghost {
-  visibility: hidden;
-}
-
-.ab-bio.is-typing .ab-bio-live::after {
-  content: '';
-  display: inline-block;
-  width: 2px;
-  height: 0.95em;
-  margin-left: 2px;
-  margin-right: -2px;
-  vertical-align: text-bottom;
-  background: currentColor;
-  opacity: 0.45;
-  animation: bioCaret 0.7s steps(1) infinite;
-}
-
-@keyframes bioCaret {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 0; }
 }
 
 .ab-section {

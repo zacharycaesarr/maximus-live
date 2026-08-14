@@ -25,7 +25,7 @@ gsap.set('#scroll-hint',{ opacity: 0 });
 gsap.set('#stat-ring',  { scale: 0.6, opacity: 0 });
 
 if (document.getElementById('ab-label')) {
-  gsap.set('#ab-label, #ab-h, #ab-photo-wrap', { opacity: 0, scale: 0.97 });
+  gsap.set('#ab-label, #ab-h, #ab-photo-wrap, #ab-bio', { opacity: 0, scale: 0.97 });
 }
 
 /* custom cursor: fast dot, slower ring */
@@ -306,45 +306,13 @@ if (document.getElementById('logo-wrap')) {
   }, '-=0.3');
 }
 
-/* about intro — opacity/scale only (no vertical slide); bio types fast in place */
+/* about intro — opacity/scale only (no vertical slide); bio fades after the name */
 if (document.getElementById('ab-label')) {
-  const bioEl = document.getElementById('ab-bio');
-  const bioLive = document.getElementById('ab-bio-live');
-  const bioGhost = bioEl ? bioEl.querySelector('.ab-bio-ghost') : null;
-  const bioFull = bioGhost ? bioGhost.textContent.replace(/\s+/g, ' ').trim() : '';
-
-  function typeBio() {
-    if (!bioEl || !bioLive || !bioGhost || !bioFull) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      bioLive.textContent = bioFull;
-      bioGhost.textContent = '';
-      return;
-    }
-    bioEl.classList.add('is-typing');
-    /* desktop slower, mobile stays snappy — tweak these two numbers anytime */
-    const isNarrow = window.matchMedia('(max-width: 768px)').matches;
-    const duration = isNarrow ? 720 : 1450;
-    const start = performance.now();
-    (function frame(now) {
-      const t = Math.min(1, (now - start) / duration);
-      const n = Math.floor(t * bioFull.length);
-      bioLive.textContent = bioFull.slice(0, n);
-      bioGhost.textContent = bioFull.slice(n);
-      if (t < 1) {
-        requestAnimationFrame(frame);
-      } else {
-        bioLive.textContent = bioFull;
-        bioGhost.textContent = '';
-        bioEl.classList.remove('is-typing');
-      }
-    })(start);
-  }
-
   const abIntro = gsap.timeline({ delay: 0.2 });
   abIntro.to('#ab-photo-wrap', { opacity: 1, scale: 1, duration: 1.05, ease: 'power3.out' });
   abIntro.to('#ab-label', { opacity: 0.36, scale: 1, duration: 0.75, ease: 'power2.out' }, '-=0.7');
   abIntro.to('#ab-h', { opacity: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, '-=0.55');
-  abIntro.call(typeBio, null, '-=0.35');
+  abIntro.to('#ab-bio', { opacity: 0.58, scale: 1, duration: 0.85, ease: 'power2.out' }, '-=0.35');
 }
 
 /* homepage contact uses CSS .reveal (below) — hero above services line stays GSAP */
