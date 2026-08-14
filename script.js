@@ -65,21 +65,25 @@ if (!isTouch) {
 
 /* background particles (mouse pushes them around) */
 const cvs = document.getElementById('canvas');
-const ctx = cvs.getContext('2d');
 const mouse = { x: -999, y: -999 };
 let W, H;
+let ctx;
 
-function resizeCvs() {
-  W = cvs.width  = window.innerWidth;
-  H = cvs.height = window.innerHeight;
+if (cvs) {
+  ctx = cvs.getContext('2d');
+
+  function resizeCvs() {
+    W = cvs.width  = window.innerWidth;
+    H = cvs.height = window.innerHeight;
+  }
+  resizeCvs();
+  window.addEventListener('resize', resizeCvs);
+
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
 }
-resizeCvs();
-window.addEventListener('resize', resizeCvs);
-
-document.addEventListener('mousemove', e => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-});
 
 const PCOUNT = 55;
 const particles = [];
@@ -132,32 +136,34 @@ class Particle {
   }
 }
 
-for (let i = 0; i < PCOUNT; i++) particles.push(new Particle());
+if (cvs && ctx) {
+  for (let i = 0; i < PCOUNT; i++) particles.push(new Particle());
 
-function drawConnections() {
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const d  = Math.sqrt(dx * dx + dy * dy);
-      if (d < 110) {
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(44,37,32,${(1 - d / 110) * 0.14})`;
-        ctx.lineWidth = 0.71;
-        ctx.stroke();
+  function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < 110) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(44,37,32,${(1 - d / 110) * 0.14})`;
+          ctx.lineWidth = 0.71;
+          ctx.stroke();
+        }
       }
     }
   }
-}
 
-(function particleLoop() {
-  ctx.clearRect(0, 0, W, H);
-  particles.forEach(p => { p.update(); p.draw(); });
-  drawConnections();
-  requestAnimationFrame(particleLoop);
-})();
+  (function particleLoop() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawConnections();
+    requestAnimationFrame(particleLoop);
+  })();
+}
 
 /* logo badge tilt */
 const logoWrap = document.getElementById('logo-wrap');
@@ -261,42 +267,44 @@ document.addEventListener('mousemove', e => {
   gsap.to('#hero-svc',      { x: dx *  7,  y: dy *  4, duration: 1.7, ease: 'power2.out' });
 });
 
-/* home intro */
-const intro = gsap.timeline({ delay: 0.25 });
+/* home intro — homepage only */
+if (document.getElementById('logo-wrap')) {
+  const intro = gsap.timeline({ delay: 0.25 });
 
-intro.to('#logo-wrap', {
-  opacity: 1, y: 0,
-  duration: 1.15, ease: 'power3.out'
-});
+  intro.to('#logo-wrap', {
+    opacity: 1, y: 0,
+    duration: 1.15, ease: 'power3.out'
+  });
 
-intro.to('#hero-by', {
-  opacity: 0.42, y: 0,
-  duration: 0.85, ease: 'power2.out'
-}, '-=0.65');
+  intro.to('#hero-by', {
+    opacity: 0.42, y: 0,
+    duration: 0.85, ease: 'power2.out'
+  }, '-=0.65');
 
-intro.to('#hl1 .h-word', {
-  yPercent: 0, opacity: 1,
-  duration: 1.05, ease: 'power3.out'
-}, '-=0.55');
+  intro.to('#hl1 .h-word', {
+    yPercent: 0, opacity: 1,
+    duration: 1.05, ease: 'power3.out'
+  }, '-=0.55');
 
-intro.to('#hl2 .h-word', {
-  yPercent: 0, opacity: 1,
-  duration: 1.05, ease: 'power3.out',
-  onComplete: () => {
-    const heroH = document.getElementById('hero-h');
-    if (heroH) heroH.classList.add('is-revealed');
-  }
-}, '-=0.78');
+  intro.to('#hl2 .h-word', {
+    yPercent: 0, opacity: 1,
+    duration: 1.05, ease: 'power3.out',
+    onComplete: () => {
+      const heroH = document.getElementById('hero-h');
+      if (heroH) heroH.classList.add('is-revealed');
+    }
+  }, '-=0.78');
 
-intro.to('#hero-svc', {
-  opacity: 1, y: 0,
-  duration: 0.85, ease: 'power2.out'
-}, '-=0.52');
+  intro.to('#hero-svc', {
+    opacity: 1, y: 0,
+    duration: 0.85, ease: 'power2.out'
+  }, '-=0.52');
 
-intro.to('#scroll-hint', {
-  opacity: 1,
-  duration: 0.7
-}, '-=0.3');
+  intro.to('#scroll-hint', {
+    opacity: 1,
+    duration: 0.7
+  }, '-=0.3');
+}
 
 /* about intro — opacity/scale only (no vertical slide); bio types fast in place */
 if (document.getElementById('ab-label')) {
@@ -306,9 +314,10 @@ if (document.getElementById('ab-label')) {
   const bioFull = bioGhost ? bioGhost.textContent.replace(/\s+/g, ' ').trim() : '';
 
   function typeBio() {
-    if (!bioEl || !bioLive || !bioFull) return;
+    if (!bioEl || !bioLive || !bioGhost || !bioFull) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       bioLive.textContent = bioFull;
+      bioGhost.textContent = '';
       return;
     }
     bioEl.classList.add('is-typing');
@@ -318,11 +327,14 @@ if (document.getElementById('ab-label')) {
     const start = performance.now();
     (function frame(now) {
       const t = Math.min(1, (now - start) / duration);
-      bioLive.textContent = bioFull.slice(0, Math.floor(t * bioFull.length));
+      const n = Math.floor(t * bioFull.length);
+      bioLive.textContent = bioFull.slice(0, n);
+      bioGhost.textContent = bioFull.slice(n);
       if (t < 1) {
         requestAnimationFrame(frame);
       } else {
         bioLive.textContent = bioFull;
+        bioGhost.textContent = '';
         bioEl.classList.remove('is-typing');
       }
     })(start);
@@ -332,7 +344,7 @@ if (document.getElementById('ab-label')) {
   abIntro.to('#ab-photo-wrap', { opacity: 1, scale: 1, duration: 1.05, ease: 'power3.out' });
   abIntro.to('#ab-label', { opacity: 0.36, scale: 1, duration: 0.75, ease: 'power2.out' }, '-=0.7');
   abIntro.to('#ab-h', { opacity: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, '-=0.55');
-  abIntro.add(typeBio, '-=0.35');
+  abIntro.call(typeBio, null, '-=0.35');
 }
 
 /* homepage contact uses CSS .reveal (below) — hero above services line stays GSAP */
@@ -357,6 +369,23 @@ if (document.getElementById('ab-label')) {
     els.forEach((el, i) => {
       setTimeout(() => el.classList.add('is-visible'), startMs + i * stepMs);
     });
+  }
+
+  /* some browsers (Edge local, Comet) miss IntersectionObserver callbacks */
+  function sectionInView(el) {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top < vh * 0.92 && r.bottom > vh * 0.08;
+  }
+
+  function revealIfInView(el) {
+    if (!el || el.classList.contains('is-visible')) return;
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    if (r.top < vh * 0.92 && r.bottom > 0) {
+      el.classList.add('is-visible');
+    }
   }
 
   /* homepage selected work — only when that section enters view */
@@ -430,6 +459,10 @@ if (document.getElementById('ab-label')) {
 
   function observeStagger(section, items, opts) {
     if (!section || !items.length) return;
+    if (sectionInView(section)) {
+      showStaggered(items, opts.step || 110, 0);
+      return;
+    }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
@@ -446,17 +479,43 @@ if (document.getElementById('ab-label')) {
   observeStagger(pfBottom, pfBottomItems, { threshold: 0.25, step: 110 });
   observeStagger(document.getElementById('ab-cta'), abCtaItems, { threshold: 0.25, step: 110 });
 
-  if (!scrollTargets.length) return;
+  if (scrollTargets.length) {
+    scrollTargets.forEach(el => revealIfInView(el));
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      io.unobserve(entry.target);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+    scrollTargets.forEach(el => io.observe(el));
+  }
+
+  /* scroll backup for browsers that skip observer callbacks (Edge file://, Comet, etc.) */
+  let revealScrollTick = false;
+  window.addEventListener('scroll', () => {
+    if (revealScrollTick) return;
+    revealScrollTick = true;
+    requestAnimationFrame(() => {
+      revealScrollTick = false;
+      if (wtSection && wtItems.length && !wtItems[0].classList.contains('is-visible') && sectionInView(wtSection)) {
+        showStaggered(wtItems, 110, 0);
+      }
+      if (contactSection && contactItems.length && !contactItems[0].classList.contains('is-visible') && sectionInView(contactSection)) {
+        showStaggered(contactItems, 190, 0);
+      }
+      if (pfBottom && pfBottomItems.length && !pfBottomItems[0].classList.contains('is-visible') && sectionInView(pfBottom)) {
+        showStaggered(pfBottomItems, 110, 0);
+      }
+      const abCta = document.getElementById('ab-cta');
+      if (abCta && abCtaItems.length && !abCtaItems[0].classList.contains('is-visible') && sectionInView(abCta)) {
+        showStaggered(abCtaItems, 110, 0);
+      }
+      scrollTargets.forEach(el => revealIfInView(el));
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
-
-  scrollTargets.forEach(el => io.observe(el));
+  }, { passive: true });
 })();
 
 /* category icons on concept card tags (same marks as the filter pills) */

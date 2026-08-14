@@ -1,0 +1,190 @@
+{
+  "brand": {
+    "name": "Maximus Marketing",
+    "shortName": "MM",
+    "founder": "Zachary Maximus",
+    "location": "Staunton, Virginia",
+    "domain": "maxmarket.live",
+    "email": "hello@maxmarket.live",
+    "phone": "(540) 416-2983",
+    "servicePillars": [
+      "Digital Growth",
+      "Web Development",
+      "Ad Management"
+    ],
+    "aesthetic": "Warm cream and tan editorial luxury meets clean tech. Serif headlines, light sans body, mono labels. Soft ambient motion, film grain, particle field."
+  },
+  "colors": {
+    "core": {
+      "c0": {
+        "hex": "#FCFAF2",
+        "name": "Cream",
+        "role": "Page background, light text on dark UI, PWA theme color, favicon light tone"
+      },
+      "c1": {
+        "hex": "#F5F0E6",
+        "name": "Warm Cream",
+        "role": "Cards, surfaces, contact cards, portfolio cards, scrollbar track, ambient blob center"
+      },
+      "c2": {
+        "hex": "#D9C3B0",
+        "name": "Tan",
+        "role": "Accent, scrollbar thumb, Ads category stripe, sample badges, problem scan blocks"
+      },
+      "c3": {
+        "hex": "#2C2520",
+        "name": "Dark Brown",
+        "role": "Primary text, logo badge, dark buttons, card icon backgrounds, active filters, headlines"
+      }
+    },
+    "extended": {
+      "blobTan": { "hex": "#DFCDB9", "role": "Bottom-left ambient blob" },
+      "growth": { "hex": "#8A9A7B", "role": "Growth category stripe and accents" },
+      "growthText": { "hex": "#3D4A35", "role": "Growth category tag text" },
+      "creative": { "hex": "#A89080", "role": "Creative category stripe and accents" },
+      "creativeText": { "hex": "#4A3A32", "role": "Creative category tag text" },
+      "resultGreen": { "hex": "#6B8F71", "role": "Portfolio result scan block" },
+      "resultGreenText": { "hex": "#4A6B50", "role": "Portfolio result label text" },
+      "statusGreen": { "hex": "#5BBD72", "role": "Header availability dot" },
+      "moonGold": { "hex": "#C4A574", "role": "Footer crescent moon" },
+      "photoFallback": { "hex": "#111111", "role": "About photo card fallback" },
+      "mockFitness": { "hex": "#1A1614", "role": "Work teaser dark mock" },
+      "mockRestaurant": { "hex": "#3D3530", "role": "Work teaser dark mock" },
+      "mockMedSpa": { "hex": "#E8DDD4", "role": "Work teaser light mock" }
+    },
+    "rgbaPatterns": {
+      "borderSubtle": "rgba(44, 37, 32, 0.07)",
+      "borderDefault": "rgba(44, 37, 32, 0.12)",
+      "borderHover": "rgba(44, 37, 32, 0.18)",
+      "cardHoverShadow": "rgba(44, 37, 32, 0.1)",
+      "logoBadgeShadow": "rgba(44, 37, 32, 0.3)",
+      "particleFill": "rgba(44, 37, 32, variable alpha 0.076-0.336)",
+      "problemScanBg": "rgba(217, 195, 176, 0.28)",
+      "fixScanBg": "rgba(245, 240, 230, 0.95)",
+      "resultScanBg": "rgba(107, 143, 113, 0.12)"
+    }
+  },
+  "cssVariables": {
+    "--c0": "#FCFAF2",
+    "--c1": "#F5F0E6",
+    "--c2": "#D9C3B0",
+    "--c3": "#2C2520",
+    "--ff-disp": "'Playfair Display', Georgia, serif",
+    "--ff-body": "'Inter', system-ui, sans-serif",
+    "--ff-mono": "'DM Mono', 'Courier New', monospace",
+    "--ease-out": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "--ease-elastic": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+  },
+  "typography": {
+    "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,900;1,400;1,900&family=Inter:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap",
+    "families": {
+      "display": {
+        "name": "Playfair Display",
+        "variable": "--ff-disp",
+        "weights": [400, 600, 900],
+        "italics": [400, 900],
+        "usage": "Headlines, hero titles, card values, section headings, portfolio card titles"
+      },
+      "body": {
+        "name": "Inter",
+        "variable": "--ff-body",
+        "weights": [200, 300, 400, 500],
+        "usage": "Body copy, subcopy, service line, deliverable text"
+      },
+      "mono": {
+        "name": "DM Mono",
+        "variable": "--ff-mono",
+        "weights": [300, 400],
+        "usage": "Section labels, nav, filters, badges, footer, buttons, stat counter"
+      }
+    },
+    "opacityTiers": {
+      "primary": 1.0,
+      "body": 0.58,
+      "subcopy": 0.52,
+      "muted": 0.45,
+      "secondary": 0.42,
+      "label": 0.36,
+      "disclaimer": 0.72,
+      "tagline": 0.28
+    },
+    "scale": {
+      "heroTitle": "clamp(68px, 12vw, 156px)",
+      "contactHeadline": "clamp(44px, 7vw, 100px)",
+      "portfolioHero": "clamp(40px, 7vw, 88px)",
+      "workTeaserHeadline": "clamp(36px, 6vw, 72px)",
+      "aboutHero": "clamp(42px, 7vw, 78px)",
+      "sectionHeadline": "clamp(28px, 4.5vw, 44px)",
+      "bottomCta": "clamp(28px, 5vw, 48px)",
+      "cardValue": "26px",
+      "body": "15px",
+      "subcopy": "14px",
+      "sectionLabel": "10-10.5px",
+      "nav": "10.5px",
+      "filterPill": "10px",
+      "badge": "9-9.5px",
+      "button": "11px",
+      "footer": "10.5px",
+      "statNumber": "clamp(64px, 12vw, 108px)"
+    }
+  },
+  "logo": {
+    "primaryAsset": "assets/mm-logo.svg",
+    "badgeBackground": "#2C2520",
+    "badgeRadius": "22px",
+    "badgeSizeDesktop": "170px",
+    "badgeSizeMobile": "130px",
+    "markSizeDesktop": "100px",
+    "markSizeMobile": "72px",
+    "markOnDark": "filter: invert(1) on #2C2520 badge",
+    "navMarkSize": "22x26px"
+  },
+  "spacing": {
+    "mobileBreakpoint": "680px",
+    "pagePaddingDesktop": "40px",
+    "pagePaddingMobile": "18-20px",
+    "maxWidths": {
+      "heroCopy": "960px",
+      "contactCards": "740px",
+      "workTeaserIntro": "620px",
+      "portfolioPage": "1100px",
+      "aboutPage": "980px"
+    }
+  },
+  "borderRadius": {
+    "pill": "100px",
+    "card": "20px",
+    "medium": "16-18px",
+    "small": "10-12px",
+    "tag": "4px",
+    "logoBadge": "22px"
+  },
+  "categories": {
+    "web": { "stripe": "#2C2520", "tagBg": "rgba(44, 37, 32, 0.12)", "tagText": "#2C2520" },
+    "ads": { "stripe": "#D9C3B0", "tagBg": "rgba(217, 195, 176, 0.55)", "tagText": "#2C2520" },
+    "growth": { "stripe": "#8A9A7B", "tagBg": "rgba(138, 154, 123, 0.3)", "tagText": "#3D4A35" },
+    "creative": { "stripe": "#A89080", "tagBg": "rgba(168, 144, 128, 0.38)", "tagText": "#4A3A32" }
+  },
+  "motion": {
+    "revealDuration": "0.9s",
+    "revealContactDuration": "1.2s",
+    "revealScaleFrom": 0.94,
+    "staggerContact": "190ms",
+    "staggerCta": "110ms",
+    "bioTypewriterMobile": "720ms",
+    "bioTypewriterDesktop": "1450ms",
+    "particleCount": 55
+  },
+  "pwa": {
+    "themeColor": "#FCFAF2",
+    "backgroundColor": "#FCFAF2",
+    "shortName": "MM"
+  },
+  "voice": {
+    "sectionLabels": "Short, uppercase, wide letter-spacing (e.g. GET IN TOUCH)",
+    "headlines": "Conversational with Playfair italic emphasis on key words",
+    "ctas": "Direct and friendly (e.g. Tell me what you're working on)",
+    "servicesSeparator": "Middle dot (·) not bullet",
+    "availability": "Available for projects"
+  }
+}

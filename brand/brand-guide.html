@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maximus Marketing — Brand Theme Reference</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,900;1,400;1,900&family=Inter:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --c0: #FCFAF2;
+      --c1: #F5F0E6;
+      --c2: #D9C3B0;
+      --c3: #2C2520;
+      --ff-disp: 'Playfair Display', Georgia, serif;
+      --ff-body: 'Inter', system-ui, sans-serif;
+      --ff-mono: 'DM Mono', 'Courier New', monospace;
+    }
+
+    body {
+      font-family: var(--ff-body);
+      background: var(--c0);
+      color: var(--c3);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .header {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(44, 37, 32, 0.1);
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-family: var(--ff-disp);
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .header h1 em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .header p {
+      font-size: 14px;
+      font-weight: 300;
+      opacity: 0.6;
+      max-width: 520px;
+    }
+
+    .note {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      padding: 14px 18px;
+      background: var(--c1);
+      border: 1px solid rgba(44, 37, 32, 0.08);
+      border-radius: 10px;
+      margin-bottom: 40px;
+      opacity: 0.75;
+      line-height: 1.55;
+    }
+
+    section {
+      margin-bottom: 56px;
+    }
+
+    .sec-label {
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 8px;
+    }
+
+    .sec-title {
+      font-family: var(--ff-disp);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* color swatches */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .swatch {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(44, 37, 32, 0.08);
+      background: #fff;
+    }
+
+    .swatch-color {
+      height: 100px;
+      position: relative;
+    }
+
+    .swatch-color.is-dark::after {
+      content: 'Aa';
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      font-family: var(--ff-disp);
+      font-size: 18px;
+      color: var(--c0);
+      opacity: 0.7;
+    }
+
+    .swatch-info {
+      padding: 14px 16px;
+      background: var(--c1);
+    }
+
+    .swatch-name {
+      font-family: var(--ff-disp);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .swatch-hex {
+      font-family: var(--ff-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+
+    .swatch-role {
+      font-size: 12px;
+      font-weight: 300;
+      opacity: 0.55;
+      line-height: 1.45;
+    }
+
+    .swatch-token {
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-top: 6px;
+    }
+
+    /* category row */
+    .cat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .cat-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 100px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid rgba(44, 37, 32, 0.1);
+    }
+
+    .cat-stripe {
+      width: 4px;
+      height: 20px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* type samples */
+    .type-block {
+      padding: 28px;
+      background: var(--c1);
+      border-radius: 16px;
+      border: 1px solid rgba(44, 37, 32, 0.07);
+      margin-bottom: 16px;
+    }
+
+    .type-meta {
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 12px;
+    }
+
+    .type-hero {
+      font-family: var(--ff-disp);
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+
+    .type-hero em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .type-headline {
+      font-family: var(--ff-disp);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .type-body {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      opacity: 0.58;
+      max-width: 480px;
+    }
+
+    .type-label {
+      font-family: var(--ff-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      opacity: 0.36;
+    }
+
+    .type-mono {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+
+    /* opacity ladder */
+    .opacity-ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .opacity-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .opacity-val {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      width: 48px;
+      flex-shrink: 0;
+      opacity: 0.5;
+    }
+
+    /* info table */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .info-table th,
+    .info-table td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(44, 37, 32, 0.08);
+      vertical-align: top;
+    }
+
+    .info-table th {
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      font-weight: 400;
+    }
+
+    .info-table code {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      background: rgba(44, 37, 32, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* logo preview */
+    .logo-preview {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .logo-badge {
+      width: 140px;
+      height: 140px;
+      border-radius: 22px;
+      background: var(--c3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 50px rgba(44, 37, 32, 0.25);
+    }
+
+    .logo-badge img {
+      width: 80px;
+      height: 80px;
+      filter: invert(1);
+    }
+
+    .logo-on-cream img {
+      width: 48px;
+      height: auto;
+      filter: none;
+    }
+
+    /* buttons preview */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 24px;
+      border-radius: 100px;
+      border: 1px solid rgba(44, 37, 32, 0.12);
+      background: transparent;
+      color: var(--c3);
+    }
+
+    .btn-dark {
+      background: var(--c3);
+      color: var(--c0);
+      border-color: var(--c3);
+    }
+
+    /* json block */
+    .json-wrap {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 100px;
+      border: 1px solid rgba(44, 37, 32, 0.15);
+      background: var(--c0);
+      color: var(--c3);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .copy-btn:hover { opacity: 0.7; }
+    .copy-btn.is-copied { opacity: 0.5; }
+
+    .json-block {
+      font-family: var(--ff-mono);
+      font-size: 11px;
+      line-height: 1.55;
+      background: var(--c3);
+      color: var(--c0);
+      padding: 24px;
+      border-radius: 12px;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .radius-demo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .radius-item {
+      text-align: center;
+    }
+
+    .radius-box {
+      width: 80px;
+      height: 80px;
+      background: var(--c1);
+      border: 1px solid rgba(44, 37, 32, 0.1);
+      margin-bottom: 8px;
+    }
+
+    .radius-label {
+      font-family: var(--ff-mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="header">
+      <div class="header-badge">Internal reference · not linked from site</div>
+      <h1>Maximus Marketing<br><em>Brand Theme</em></h1>
+      <p>Visual reference and AI-ready token export. Extracted from the live site. Open <code>brand-theme.json</code> or copy the JSON block below for other AI tools.</p>
+    </header>
+
+    <p class="note">This file lives in <strong>/brand/</strong> and is not part of the public website. Nothing here affects maxmarket.live.</p>
+
+    <!-- CORE COLORS -->
+    <section>
+      <div class="sec-label">01 — Palette</div>
+      <h2 class="sec-title">Core Colors</h2>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#FCFAF2"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Cream</div>
+            <div class="swatch-hex">#FCFAF2</div>
+            <div class="swatch-role">Page background, light text on dark UI, PWA theme</div>
+            <div class="swatch-token">--c0</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#F5F0E6"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Warm Cream</div>
+            <div class="swatch-hex">#F5F0E6</div>
+            <div class="swatch-role">Cards, surfaces, scrollbar track</div>
+            <div class="swatch-token">--c1</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#D9C3B0"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Tan</div>
+            <div class="swatch-hex">#D9C3B0</div>
+            <div class="swatch-role">Accent, scrollbar thumb, Ads stripe</div>
+            <div class="swatch-token">--c2</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color is-dark" style="background:#2C2520"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Dark Brown</div>
+            <div class="swatch-hex">#2C2520</div>
+            <div class="swatch-role">Text, logo badge, dark buttons, icons</div>
+            <div class="swatch-token">--c3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXTENDED COLORS -->
+    <section>
+      <div class="sec-label">02 — Extended</div>
+      <h2 class="sec-title">Secondary Colors</h2>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#DFCDB9"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Blob Tan</div>
+            <div class="swatch-hex">#DFCDB9</div>
+            <div class="swatch-role">Ambient background blob</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#8A9A7B"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Growth Green</div>
+            <div class="swatch-hex">#8A9A7B</div>
+            <div class="swatch-role">Growth category stripe</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#A89080"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Creative Brown</div>
+            <div class="swatch-hex">#A89080</div>
+            <div class="swatch-role">Creative category stripe</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#6B8F71"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Result Green</div>
+            <div class="swatch-hex">#6B8F71</div>
+            <div class="swatch-role">Portfolio result blocks</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#5BBD72"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Status Green</div>
+            <div class="swatch-hex">#5BBD72</div>
+            <div class="swatch-role">Available dot in header</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#C4A574"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Moon Gold</div>
+            <div class="swatch-hex">#C4A574</div>
+            <div class="swatch-role">Footer crescent moon</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section>
+      <div class="sec-label">03 — Categories</div>
+      <h2 class="sec-title">Portfolio Tags</h2>
+      <div class="cat-row">
+        <div class="cat-pill" style="background:rgba(44,37,32,0.08)">
+          <span class="cat-stripe" style="background:#2C2520"></span> Web
+        </div>
+        <div class="cat-pill" style="background:rgba(217,195,176,0.55)">
+          <span class="cat-stripe" style="background:#D9C3B0"></span> Ads
+        </div>
+        <div class="cat-pill" style="background:rgba(138,154,123,0.3); color:#3D4A35">
+          <span class="cat-stripe" style="background:#8A9A7B"></span> Growth
+        </div>
+        <div class="cat-pill" style="background:rgba(168,144,128,0.38); color:#4A3A32">
+          <span class="cat-stripe" style="background:#A89080"></span> Creative
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section>
+      <div class="sec-label">04 — Typography</div>
+      <h2 class="sec-title">Type System</h2>
+
+      <div class="type-block">
+        <div class="type-meta">Playfair Display · 900 / italic 400 · Display</div>
+        <div class="type-hero">MAXIMUS<br><em>MARKETING</em></div>
+      </div>
+
+      <div class="type-block">
+        <div class="type-meta">Playfair Display · 700 · Section headline</div>
+        <div class="type-headline">Let's build <em>something</em> great</div>
+      </div>
+
+      <div class="type-block">
+        <div class="type-meta">Inter · 300 · Body</div>
+        <p class="type-body">I'm 24, based in Staunton, Virginia. Maximus Marketing is how I help local businesses show up better online.</p>
+      </div>
+
+      <div class="type-block">
+        <div class="type-meta">DM Mono · uppercase · Labels & UI</div>
+        <div class="type-label">GET IN TOUCH</div>
+        <div style="height:12px"></div>
+        <div class="type-mono">Digital Growth · Web Development · Ad Management</div>
+      </div>
+
+      <table class="info-table" style="margin-top:24px">
+        <thead>
+          <tr><th>Family</th><th>Weights</th><th>Used for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Playfair Display</strong></td>
+            <td>400, 600, 900 + italic 400, 900</td>
+            <td>Hero, headlines, card values, portfolio titles</td>
+          </tr>
+          <tr>
+            <td><strong>Inter</strong></td>
+            <td>200, 300, 400, 500</td>
+            <td>Body, subcopy, service line</td>
+          </tr>
+          <tr>
+            <td><strong>DM Mono</strong></td>
+            <td>300, 400</td>
+            <td>Labels, nav, filters, badges, footer, buttons</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- OPACITY -->
+    <section>
+      <div class="sec-label">05 — Hierarchy</div>
+      <h2 class="sec-title">Text Opacity Tiers</h2>
+      <div class="opacity-ladder">
+        <div class="opacity-row" style="opacity:1"><span class="opacity-val">1.00</span> Primary — headlines, active states</div>
+        <div class="opacity-row" style="opacity:0.72"><span class="opacity-val">0.72</span> Disclaimer text</div>
+        <div class="opacity-row" style="opacity:0.58"><span class="opacity-val">0.58</span> Body / bio copy</div>
+        <div class="opacity-row" style="opacity:0.52"><span class="opacity-val">0.52</span> Subcopy, intros</div>
+        <div class="opacity-row" style="opacity:0.45"><span class="opacity-val">0.45</span> Muted UI, filters</div>
+        <div class="opacity-row" style="opacity:0.42"><span class="opacity-val">0.42</span> Nav links, byline</div>
+        <div class="opacity-row" style="opacity:0.36"><span class="opacity-val">0.36</span> Section labels</div>
+        <div class="opacity-row" style="opacity:0.28"><span class="opacity-val">0.28</span> Taglines, whispers</div>
+      </div>
+    </section>
+
+    <!-- LOGO -->
+    <section>
+      <div class="sec-label">06 — Logo</div>
+      <h2 class="sec-title">Mark Usage</h2>
+      <div class="logo-preview">
+        <div>
+          <div class="logo-badge">
+            <img src="../assets/mm-logo.svg" alt="MM logo on dark badge">
+          </div>
+          <p style="font-family:var(--ff-mono);font-size:9px;opacity:0.45;margin-top:10px;text-align:center">On #2C2520 badge (inverted)</p>
+        </div>
+        <div class="logo-on-cream" style="padding:24px;background:var(--c0);border-radius:12px;border:1px solid rgba(44,37,32,0.08)">
+          <img src="../assets/mm-logo.svg" alt="MM logo on cream">
+          <p style="font-family:var(--ff-mono);font-size:9px;opacity:0.45;margin-top:10px">On cream background</p>
+        </div>
+      </div>
+      <table class="info-table" style="margin-top:24px">
+        <tbody>
+          <tr><th>Asset</th><td><code>assets/mm-logo.svg</code></td></tr>
+          <tr><th>Badge size</th><td>170px desktop · 130px mobile</td></tr>
+          <tr><th>Mark inside badge</th><td>100px desktop · 72px mobile</td></tr>
+          <tr><th>Badge radius</th><td>22px</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- BUTTONS & RADIUS -->
+    <section>
+      <div class="sec-label">07 — Components</div>
+      <h2 class="sec-title">Buttons & Radius</h2>
+      <div class="btn-row" style="margin-bottom:32px">
+        <span class="btn">Outline pill</span>
+        <span class="btn btn-dark">Dark pill</span>
+      </div>
+      <div class="radius-demo">
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:100px"></div>
+          <div class="radius-label">100px pill</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:22px"></div>
+          <div class="radius-label">22px logo</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:20px"></div>
+          <div class="radius-label">20px card</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:16px"></div>
+          <div class="radius-label">16px medium</div>
+        </div>
+        <div class="radius-item">
+          <div class="radius-box" style="border-radius:4px"></div>
+          <div class="radius-label">4px tag</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRAND INFO -->
+    <section>
+      <div class="sec-label">08 — Identity</div>
+      <h2 class="sec-title">Brand Info</h2>
+      <table class="info-table">
+        <tbody>
+          <tr><th>Business</th><td>Maximus Marketing</td></tr>
+          <tr><th>Founder</th><td>Zachary Maximus</td></tr>
+          <tr><th>Location</th><td>Staunton, Virginia</td></tr>
+          <tr><th>Domain</th><td>maxmarket.live</td></tr>
+          <tr><th>Email</th><td>hello@maxmarket.live</td></tr>
+          <tr><th>Phone</th><td>(540) 416-2983</td></tr>
+          <tr><th>Services</th><td>Digital Growth · Web Development · Ad Management</td></tr>
+          <tr><th>PWA theme</th><td><code>#FCFAF2</code></td></tr>
+          <tr><th>Mobile breakpoint</th><td><code>680px</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- JSON FOR AI -->
+    <section>
+      <div class="sec-label">09 — AI Export</div>
+      <h2 class="sec-title">Copy for AI Tools</h2>
+      <p style="font-size:13px;font-weight:300;opacity:0.55;margin-bottom:16px">Paste this into ChatGPT, Claude, Cursor, or any design tool. Same data lives in <code>brand-theme.json</code>.</p>
+      <div class="json-wrap">
+        <button class="copy-btn" id="copy-btn" type="button">Copy JSON</button>
+        <pre class="json-block" id="json-out">Loading…</pre>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    fetch('brand-theme.json')
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('json-out').textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(() => {
+        document.getElementById('json-out').textContent = 'Could not load brand-theme.json. Open this file from the brand/ folder.';
+      });
+
+    document.getElementById('copy-btn').addEventListener('click', function () {
+      const text = document.getElementById('json-out').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        this.textContent = 'Copied!';
+        this.classList.add('is-copied');
+        setTimeout(() => {
+          this.textContent = 'Copy JSON';
+          this.classList.remove('is-copied');
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

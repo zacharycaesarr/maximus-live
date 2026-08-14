@@ -74,7 +74,7 @@ a {
 .reveal-muted.is-visible { opacity: 0.45; }
 .reveal-bio.is-visible { opacity: 0.58; }
 .reveal-concepts.is-visible { opacity: 0.48; }
-.reveal-disclaimer.is-visible { opacity: 0.38; }
+.reveal-disclaimer.is-visible { opacity: 0.72; }
 .reveal-tagline.is-visible { opacity: 0.28; }
 
 .pf-filter.reveal.is-visible { opacity: 0.45; }
@@ -1002,15 +1002,20 @@ body::after {
 
 .pf-disclaimer {
   font-family: var(--ff-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.05em;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   line-height: 1.55;
-  opacity: 0.38;
+  opacity: 0.72;
   margin-top: 16px;
-  max-width: 380px;
+  max-width: 420px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+.pf-disclaimer-lead {
+  font-weight: 500;
+  color: var(--c3);
 }
 
 .pf-disclaimer-link {
@@ -1018,8 +1023,10 @@ body::after {
   align-items: center;
   gap: 5px;
   margin-left: 4px;
-  opacity: 0.85;
-  transition: opacity 0.25s, transform 0.25s var(--ease-out);
+  opacity: 0.95;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(44, 37, 32, 0.25);
+  transition: opacity 0.25s, transform 0.25s var(--ease-out), border-color 0.25s;
 }
 
 .pf-disclaimer-arrow {
@@ -1029,6 +1036,7 @@ body::after {
 
 .pf-disclaimer-link:hover {
   opacity: 1;
+  border-color: rgba(44, 37, 32, 0.5);
 }
 
 .pf-disclaimer-link:hover .pf-disclaimer-arrow {
@@ -1961,17 +1969,9 @@ body::after {
   max-width: 480px;
 }
 
-/* invisible full copy holds the height so typing never pushes content down */
+/* remainder stays in flow (hidden) so wrapping matches the final paragraph while typing */
 .ab-bio-ghost {
   visibility: hidden;
-  display: block;
-}
-
-.ab-bio-live {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
 }
 
 .ab-bio.is-typing .ab-bio-live::after {
@@ -1980,6 +1980,7 @@ body::after {
   width: 2px;
   height: 0.95em;
   margin-left: 2px;
+  margin-right: -2px;
   vertical-align: text-bottom;
   background: currentColor;
   opacity: 0.45;
