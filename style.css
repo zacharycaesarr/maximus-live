@@ -1,5 +1,5 @@
 /* ============================================================
-   MAXIMUS MARKETING  ·  Zachary Maximus
+   MAXIMUS REACH  ·  Zachary Maximus
    style.css
    Staunton VA
 
@@ -402,7 +402,7 @@ body::after {
   z-index: 2;
   width: 170px; height: 170px;
   border-radius: 22px;
-  background: var(--c3); /* same brown as Maximus Marketing title text */
+  background: var(--c3); /* same brown as Maximus Reach title text */
   display: flex;
   align-items: center;
   justify-content: center;
