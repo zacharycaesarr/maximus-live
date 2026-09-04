@@ -1,0 +1,242 @@
+.scroll-zoom-stage {
+  position: relative;
+  background: #12100e;
+  z-index: 3;
+}
+
+.scroll-zoom-pin {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: visible;
+  perspective: 1600px;
+}
+
+.scroll-zoom-headline {
+  position: absolute;
+  left: 50%;
+  z-index: 6;
+  width: min(720px, calc(100% - var(--page-pad) * 2));
+  text-align: center;
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+  pointer-events: none;
+}
+
+.scroll-zoom-headline h2 {
+  font-family: var(--ff-body);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #f5f0e6;
+}
+
+.scroll-window {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background: var(--c0);
+  overflow: hidden;
+  transform: translateX(-50%);
+  transform-origin: center center;
+  will-change: transform;
+  transform-style: preserve-3d;
+  z-index: 2;
+}
+
+.scroll-window-titlebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 38px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  background: linear-gradient(180deg, rgba(252, 250, 242, 0.95) 0%, rgba(248, 244, 236, 0.82) 100%);
+  border-bottom: 1px solid rgba(44, 37, 32, 0.06);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-window-chrome {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  z-index: 21;
+  display: flex;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.scroll-window-chrome span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(44, 37, 32, 0.18);
+}
+
+.scroll-window-chrome span:nth-child(1) { background: #d4a89a; }
+.scroll-window-chrome span:nth-child(2) { background: #d9c3b0; }
+.scroll-window-chrome span:nth-child(3) { background: #8a9a7b; }
+
+.scroll-window-title {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(44, 37, 32, 0.38);
+}
+
+.scroll-window .blob-wrap,
+.scroll-window .particle-canvas,
+.scroll-window .hero-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.scroll-window .hero-scene {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scroll-window .particle-canvas {
+  z-index: 1;
+}
+
+.scroll-window .blob-wrap {
+  z-index: 0;
+}
+
+.scroll-window .hero-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+.scroll-zoom-dock {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 100px;
+  background: rgba(252, 250, 242, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  flex-shrink: 0;
+}
+
+.scroll-zoom-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  font-family: var(--ff-body);
+  font-size: 12px;
+  color: rgba(245, 240, 230, 0.65);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+
+.scroll-zoom-tab.is-active {
+  color: var(--c3);
+  background: rgba(217, 195, 176, 0.88);
+}
+
+.scroll-zoom-tab-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(245, 240, 230, 0.35);
+}
+
+.scroll-zoom-tab.is-active .scroll-zoom-tab-dot {
+  background: #8a9a7b;
+}
+
+.scroll-zoom-panel {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  flex-shrink: 0;
+}
+
+.scroll-zoom-panel-stat {
+  font-family: var(--ff-disp);
+  font-weight: 600;
+  color: #d9c3b0;
+  line-height: 1;
+}
+
+.scroll-zoom-panel-copy {
+  max-width: 360px;
+}
+
+.scroll-zoom-panel-label {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 240, 230, 0.45);
+  margin-bottom: 4px;
+}
+
+.scroll-zoom-panel-copy p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(245, 240, 230, 0.55);
+}
+
+.scroll-zoom-subline {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: 13px;
+  color: rgba(245, 240, 230, 0.48);
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.55;
+  opacity: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .scroll-zoom-headline h2 {
+    font-size: clamp(18px, 5vw, 24px) !important;
+  }
+
+  .scroll-zoom-panel {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    width: calc(100% - var(--page-pad) * 2);
+  }
+
+  .scroll-zoom-dock {
+    border-radius: 18px;
+    max-width: calc(100% - var(--page-pad) * 2);
+  }
+}

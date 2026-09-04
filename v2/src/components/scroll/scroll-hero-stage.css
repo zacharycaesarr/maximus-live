@@ -1,0 +1,202 @@
+.scroll-stage {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.scroll-stage-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: visible;
+  perspective: 1200px;
+  box-sizing: border-box;
+}
+
+.scroll-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scroll-reality-waves {
+  position: absolute;
+  inset: 0;
+}
+
+.scroll-reality-waves__canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.scroll-reality-dots-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scroll-scene-center {
+  position: relative;
+  z-index: 3;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.scroll-overhead-wrap {
+  position: absolute;
+  z-index: 8;
+  width: min(760px, 92vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+  padding-bottom: 16px;
+}
+
+.scroll-overhead-title {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.scroll-composition {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.scroll-composition-scale {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100vw;
+  height: 100vh;
+  margin-left: -50vw;
+  margin-top: -50vh;
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.scroll-reality-spotlight-outer {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.scroll-reality-spotlight-outer .scroll-reality-spotlight__core {
+  position: absolute;
+  inset: -32%;
+  width: 164%;
+  height: 164%;
+  filter: blur(48px);
+}
+
+.scroll-window-tilt {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.22s ease-out;
+}
+
+.scroll-shell-radius {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  will-change: border-radius;
+  backface-visibility: hidden;
+}
+
+.browser-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1a1c23;
+  box-sizing: border-box;
+}
+
+.browser-chrome-layer {
+  position: absolute;
+  top: -2px;
+  left: -3px;
+  right: -3px;
+  width: calc(100% + 6px);
+  z-index: 6;
+  overflow: hidden;
+  box-shadow: 0 4px 0 0 #1e2229;
+}
+
+.browser-viewport {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #ebe1ca;
+}
+
+.scroll-dock-wrap {
+  position: absolute;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100vw, 100%);
+  pointer-events: none;
+}
+
+.scroll-dock-wrap .scroll-pill-dock {
+  pointer-events: auto;
+}
+
+.scroll-dock-wrap .scroll-connector {
+  margin-top: 4px;
+}
+
+.hero-scene-glass-nav {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+}
+
+.hero-scene-glass-nav .mac-notch-wrap,
+.hero-scene-glass-nav .glass-nav-wrap {
+  pointer-events: none;
+  position: absolute !important;
+  inset: 0 auto auto 0;
+  width: 100%;
+  right: 0;
+}
+
+.hero-scene-glass-nav .mac-notch,
+.hero-scene-glass-nav .glass-nav {
+  pointer-events: auto;
+}

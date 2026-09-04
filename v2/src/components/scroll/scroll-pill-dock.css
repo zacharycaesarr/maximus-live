@@ -1,0 +1,62 @@
+.scroll-pill-dock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 18px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(18, 20, 26, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.scroll-pill-dock-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.scroll-pill-dock-item:hover {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.scroll-pill-dock-item:active {
+  transform: scale(0.98);
+}
+
+.scroll-pill-dock-item--active {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.scroll-pill-dock-icon {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.scroll-pill-dock-label {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .scroll-pill-dock {
+    max-width: 92vw;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .scroll-pill-dock::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,72 @@
+.scroll-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  pointer-events: none;
+}
+
+.scroll-connector-line {
+  width: 1px;
+  height: 56px;
+  background: linear-gradient(
+    180deg,
+    var(--connector-line-from, rgba(10, 12, 16, 0.85)),
+    var(--connector-line-to, rgba(10, 12, 16, 0.28))
+  );
+  animation: connectorLinePulse 2.8s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.scroll-connector-label {
+  margin-top: 12px;
+  margin-bottom: 14px;
+  font-family: ui-monospace, 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--connector-label-color, #0a0c10);
+  background-image: linear-gradient(
+    180deg,
+    #1a1612 0%,
+    #0a0c10 55%,
+    #2a241c 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.18));
+}
+
+.scroll-connector-divider {
+  width: 100vw;
+  height: var(--connector-divider-h, 2px);
+  margin-top: var(--connector-divider-y, 0px);
+  margin-bottom: var(--connector-bottom-pad, 20px);
+  opacity: var(--connector-divider-opacity, 1);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--connector-divider-color, rgba(10, 12, 16, 0.55)) 6%,
+    var(--connector-divider-color, rgba(10, 12, 16, 0.95)) 50%,
+    var(--connector-divider-color, rgba(10, 12, 16, 0.55)) 94%,
+    transparent 100%
+  );
+  box-shadow: 0 0 18px color-mix(in srgb, var(--connector-divider-color, #0a0c10) 35%, transparent);
+  transition: opacity 0.25s ease, margin-top 0.2s ease;
+}
+
+@keyframes connectorLinePulse {
+  0%, 100% {
+    opacity: 0.82;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.05);
+  }
+}

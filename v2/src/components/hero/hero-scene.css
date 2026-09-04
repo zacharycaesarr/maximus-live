@@ -1,0 +1,58 @@
+/* Hero inside browser viewport: absolute fill (not fixed to page). */
+
+.hero-scene .hero-bg {
+  position: absolute !important;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-scene .hero-kinetic,
+.hero-scene .hero-subhead,
+.hero-scene .service-card-stack-wrap,
+.hero-scene .aether-particles-canvas {
+  position: absolute !important;
+  animation: hero-particles-in 1.4s ease 0.15s both;
+}
+
+.hero-scene .hero-bg-parallax,
+.hero-scene .hero-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-scene .aether-particles-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-scene .hero-kinetic {
+  position: absolute;
+  z-index: 10;
+}
+
+.hero-scene .hero-subhead {
+  position: absolute;
+  z-index: 11;
+}
+
+.hero-scene .service-card-stack-wrap {
+  position: absolute;
+  z-index: 12;
+}
+
+.hero-scene .mac-notch-wrap,
+.hero-scene .glass-nav-wrap {
+  position: absolute !important;
+  inset: 0 auto auto 0;
+  z-index: 20;
+  width: 100%;
+  right: 0;
+  animation: hero-glass-nav-in 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}

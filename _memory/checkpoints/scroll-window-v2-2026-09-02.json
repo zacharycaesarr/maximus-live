@@ -1,0 +1,16 @@
+{
+  "checkpoint": "scroll-window-v2-fundamentals",
+  "date": "2026-09-02",
+  "summary": "Hero loads fullscreen (no chrome). Scroll reveals window with hold zone. Dark page bg. Dock/chrome stay visible. Cards pin on spread.",
+  "rollback": {
+    "quick": "SCROLL_WINDOW_ENABLED = false in v2/src/App.jsx",
+    "prior": "_memory/checkpoints/pre-scroll-window-2026-09-02.json"
+  },
+  "keyFiles": [
+    "v2/src/components/scroll/ScrollHeroStage.jsx",
+    "v2/src/lib/scrollDefaults.js",
+    "v2/src/context/ScrollTunerContext.jsx",
+    "v2/src/components/hero/BlurInLine.jsx",
+    "v2/src/components/cards/ServiceCardStack.jsx"
+  ]
+}

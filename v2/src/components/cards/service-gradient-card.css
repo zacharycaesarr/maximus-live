@@ -1,0 +1,103 @@
+.service-gradient-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.service-gradient-card--dark {
+  color: #f5f0e8;
+}
+
+.service-gradient-card-art {
+  position: absolute;
+  right: -18%;
+  bottom: -16%;
+  width: 72%;
+  max-width: 220px;
+  opacity: 0.72;
+  pointer-events: none;
+  object-fit: cover;
+  border-radius: 16px;
+  filter: saturate(0.9) contrast(1.05);
+  transform-origin: center center;
+}
+
+.service-gradient-card-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 22px 22px 20px;
+}
+
+.service-gradient-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-bottom: 16px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.service-gradient-card-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.service-gradient-card-copy {
+  flex: 1;
+}
+
+.service-gradient-card-title {
+  margin: 0 0 10px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.service-gradient-card-desc {
+  margin: 0;
+  max-width: 92%;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.service-gradient-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-family: ui-monospace, 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: gap 0.25s ease;
+}
+
+.service-gradient-card-cta:hover {
+  gap: 12px;
+}
+
+.service-gradient-card-cta svg {
+  transition: transform 0.25s ease;
+}
+
+.service-gradient-card-cta:hover svg {
+  transform: translateX(3px);
+}

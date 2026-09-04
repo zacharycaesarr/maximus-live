@@ -1,0 +1,219 @@
+.mac-notch-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  animation: mac-notch-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+
+@keyframes mac-notch-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mac-notch-wrap {
+    animation: none;
+  }
+}
+
+.mac-notch {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  width: min(920px, calc(100vw - 24px));
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 0;
+  border-radius: 0 0 18px 18px;
+  background: #0d0f14;
+  color: #f5f0e8;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.mac-notch-ear {
+  position: absolute;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--notch-bg, #0d0f14);
+  pointer-events: none;
+}
+
+.mac-notch-ear--left {
+  left: -16px;
+}
+
+.mac-notch-ear--right {
+  right: -16px;
+}
+
+.mac-notch-ear svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.mac-notch__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+
+.mac-notch__mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #6ec8ff 0%, #2f6bff 55%, #1a3a8f 100%);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.mac-notch__mark img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.mac-notch__name {
+  font-family: var(--font-display, 'Inter', system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.mac-notch__links {
+  display: none;
+  align-items: center;
+  gap: inherit;
+}
+
+.mac-notch__links a {
+  color: rgba(245, 240, 232, 0.58);
+  text-decoration: none;
+  font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+  transition: color 0.2s ease;
+}
+
+.mac-notch__links a:hover {
+  color: #fff;
+}
+
+.mac-notch__cta {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.mac-notch__cta:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mac-notch__menu-btn {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  margin-left: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.mac-notch__menu-btn span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  margin: 0 auto;
+  background: #fff;
+  transition: transform 0.2s ease;
+}
+
+.mac-notch__menu-btn.is-open span:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+
+.mac-notch__menu-btn.is-open span:last-child {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+.mac-notch__drawer {
+  pointer-events: auto;
+  width: min(920px, calc(100vw - 24px));
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(13, 15, 20, 0.96);
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mac-notch__drawer.is-open {
+  display: flex;
+}
+
+.mac-notch__drawer a {
+  color: rgba(245, 240, 232, 0.82);
+  text-decoration: none;
+  font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.mac-notch__drawer a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+@media (min-width: 860px) {
+  .mac-notch__links,
+  .mac-notch__cta {
+    display: inline-flex;
+  }
+
+  .mac-notch__menu-btn,
+  .mac-notch__drawer {
+    display: none !important;
+  }
+}

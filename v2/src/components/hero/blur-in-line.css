@@ -1,0 +1,32 @@
+.blur-in-line {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(14px);
+}
+
+.blur-in-line--play {
+  animation: mr-blur-in-line 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes mr-blur-in-line {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blur-in-line--play {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}

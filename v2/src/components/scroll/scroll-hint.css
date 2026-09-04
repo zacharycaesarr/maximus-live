@@ -1,0 +1,33 @@
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+  pointer-events: none;
+}
+
+.scroll-hint-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.38));
+  animation: scrollHintPulse 2.2s ease-in-out infinite;
+}
+
+.scroll-hint-tick {
+  width: 22px;
+  height: 1px;
+  margin-top: -1px;
+  background: rgba(255, 255, 255, 0.38);
+  animation: scrollHintPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes scrollHintPulse {
+  0%, 100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(4px);
+  }
+}

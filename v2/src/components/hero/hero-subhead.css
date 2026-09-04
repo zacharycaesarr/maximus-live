@@ -1,0 +1,47 @@
+.hero-subhead {
+  position: fixed;
+  z-index: 11;
+  transform: translateY(-50%);
+  padding-right: clamp(18px, 4vw, 40px);
+  pointer-events: none;
+}
+
+.hero-subhead-card {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.hero-subhead-text {
+  margin: 0;
+  font-family: var(--font-body, 'Archivo', 'Inter', system-ui, sans-serif);
+  animation: heroSubheadEnter var(--subhead-duration, 0.9s) cubic-bezier(0.22, 1, 0.36, 1)
+    var(--subhead-delay, 1.4s) backwards;
+}
+
+.hero-subhead-brand {
+  display: inline;
+  font-style: italic;
+  animation: heroBrandPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes heroSubheadEnter {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes heroBrandPulse {
+  0%, 100% {
+    opacity: 1;
+    text-shadow: 0 0 0 rgba(42, 35, 28, 0);
+  }
+  50% {
+    opacity: 0.88;
+    text-shadow: 0 0 14px rgba(79, 67, 59, 0.28);
+  }
+}

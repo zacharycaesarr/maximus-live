@@ -1,0 +1,72 @@
+.hero-logo-cluster {
+  position: fixed;
+  z-index: 30;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  pointer-events: none;
+}
+
+.hero-logo-cluster--outside {
+  z-index: 40;
+}
+
+.hero-logo-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.hero-logo-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-logo-item figcaption {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(26, 22, 18, 0.45);
+}
+
+.hero-logo-mark {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.hero-logo-mark--black {
+  width: 48px;
+  height: 48px;
+  background-color: color-mix(
+    in srgb,
+    #1a1612 calc((1 - var(--logo-light, 0)) * 100%),
+    #f5f0e8 calc(var(--logo-light, 0) * 100%)
+  );
+  -webkit-mask-image: url('/images/logo-mr-black.png');
+  mask-image: url('/images/logo-mr-black.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.hero-logo-img {
+  display: none;
+}
+
+.hero-logo-icon {
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.hero-logo-cluster--outside .hero-logo-item figcaption {
+  color: color-mix(
+    in srgb,
+    rgba(26, 22, 18, 0.45) calc((1 - var(--logo-light, 0)) * 100%),
+    rgba(245, 240, 232, 0.45) calc(var(--logo-light, 0) * 100%)
+  );
+}

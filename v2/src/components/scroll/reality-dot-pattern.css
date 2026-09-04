@@ -1,0 +1,26 @@
+/* 21st designali-in Dot Pattern port — absolute fill + soft pointer lag */
+
+.reality-dot-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  --dot-offset-x: 0px;
+  --dot-offset-y: 0px;
+  --dot-scroll-y: 0px;
+}
+
+.reality-dot-pattern__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translate3d(
+    var(--dot-offset-x),
+    calc(var(--dot-offset-y) + var(--dot-scroll-y)),
+    0
+  );
+  transition: transform 0.35s ease-out;
+}
