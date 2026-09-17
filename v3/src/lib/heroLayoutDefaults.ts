@@ -1,6 +1,16 @@
-export const HERO_LAYOUT_STORAGE_KEY = 'mr-v3-hero-layout-v16'
+export const HERO_LAYOUT_STORAGE_KEY = 'mr-v3-hero-layout-v18'
 
 export const defaultHeroLayout = {
+  /** Layout trial: left-aligned copy w/ room on the right for floating 3D objects */
+  heroAlign: 'left' as 'left' | 'center',
+  /** Video loop bg vs the old mesh-gradient bg (mesh stays wired, just off) */
+  bgVideoEnabled: true,
+  /** Dark wash over the video so left-aligned copy stays legible */
+  heroVideoOverlay: 0.55,
+  /** Shift the <video> only (px). + = down, − = up. Desktop default clears megaphone under fixed nav. */
+  heroVideoOffsetYDesktop: 36,
+  /** Mobile: slight nudge up so models sit a touch higher */
+  heroVideoOffsetYMobile: -18,
   eyebrow: 'Digital Growth · Web Development · Ad Management',
   showEyebrow: true,
   /** Pipe-separated lines for stacked body copy */

@@ -62,7 +62,9 @@ export default function HeroKineticText({
 
   const gapEm = typeof settings.spaceAfterTo === 'number' ? settings.spaceAfterTo : 0.05
   const phraseGap = gapEm > 0 ? `${gapEm}em` : undefined
-  const useStack = stacked || !settings.singleLine
+  // Stacked = centered hero (stem line, rotating phrase below). Left layout
+  // wants the plain wrap-like-a-sentence branch, so this now follows the prop only.
+  const useStack = stacked
   const cyclePaused = settings.pauseCycle || phraseHovered
   const headlineFontClass = settings.headlineFont === 'tiempos' ? 'font-tiempos' : 'font-nhg'
 
@@ -72,6 +74,15 @@ export default function HeroKineticText({
       : undefined
 
   useEffect(() => {
+    // Wait for aperture / chrome to unlock before typing — otherwise it finishes while hidden
+    if (!chromeVisible) {
+      if (!instantStem) {
+        setTyped('')
+        setStemDone(false)
+        setPhraseIndex(0)
+      }
+      return
+    }
     if (instantStem) {
       setTyped(stemFull)
       setStemDone(true)
@@ -80,10 +91,10 @@ export default function HeroKineticText({
     setTyped('')
     setStemDone(false)
     setPhraseIndex(0)
-  }, [stemFull, settings.typeSpeed, instantStem])
+  }, [stemFull, settings.typeSpeed, instantStem, chromeVisible])
 
   useEffect(() => {
-    if (instantStem || stemDone) return undefined
+    if (!chromeVisible || instantStem || stemDone) return undefined
     if (typed.length >= stemFull.length) {
       setStemDone(true)
       return undefined
@@ -92,7 +103,7 @@ export default function HeroKineticText({
       setTyped(stemFull.slice(0, typed.length + 1))
     }, settings.typeSpeed)
     return () => window.clearTimeout(timer)
-  }, [typed, stemFull, stemDone, settings.typeSpeed, instantStem])
+  }, [typed, stemFull, stemDone, settings.typeSpeed, instantStem, chromeVisible])
 
   useEffect(() => {
     if (!stemDone || scrollActivated || cyclePaused || phrases.length === 0) return undefined
@@ -372,7 +383,7 @@ export default function HeroKineticText({
       </span>
 
       <h1
-        className={cn('m-0', headlineFontClass)}
+        className={cn('relative m-0', headlineFontClass)}
         aria-live="polite"
         style={{
           fontSize,
@@ -383,28 +394,36 @@ export default function HeroKineticText({
           overflow: 'visible',
         }}
       >
-        <span style={{ fontWeight: settings.stemWeight, color: settings.stemColor }}>{typed}</span>
+        {/* Invisible full line locks height so type-in / first phrase never shove subtext */}
+        <span aria-hidden className="invisible block" style={{ pointerEvents: 'none' }}>
+          {stemFull}
+          <span style={{ marginLeft: phraseGap, fontWeight: settings.phraseWeight }}>{longestPhrase}</span>
+        </span>
 
-        {stemDone && (
-          <span className="inline" style={{ marginLeft: phraseGap }}>
-            <BlurOutWords
-              key={phraseKey}
-              text={phrase}
-              staggerDelay={settings.staggerDelay}
-              speed={settings.blurSpeed}
-              fps={settings.blurFps}
-              durationInFrames={settings.blurDurationFrames}
-              color={settings.phraseColor}
-              fontWeight={settings.phraseWeight}
-              textShadow={glow}
-              hold={scrollActivated}
-            />
-          </span>
-        )}
+        <span className="absolute left-0 top-0 w-full">
+          <span style={{ fontWeight: settings.stemWeight, color: settings.stemColor }}>{typed}</span>
 
-        {settings.showCursor && !stemDone && (
-          <span className="hero-type-cursor" aria-hidden style={{ backgroundColor: settings.stemColor }} />
-        )}
+          {stemDone && (
+            <span className="inline" style={{ marginLeft: phraseGap }}>
+              <BlurOutWords
+                key={phraseKey}
+                text={phrase}
+                staggerDelay={settings.staggerDelay}
+                speed={settings.blurSpeed}
+                fps={settings.blurFps}
+                durationInFrames={settings.blurDurationFrames}
+                color={settings.phraseColor}
+                fontWeight={settings.phraseWeight}
+                textShadow={glow}
+                hold={scrollActivated}
+              />
+            </span>
+          )}
+
+          {settings.showCursor && !stemDone && (
+            <span className="hero-type-cursor" aria-hidden style={{ backgroundColor: settings.stemColor }} />
+          )}
+        </span>
       </h1>
     </div>
   )

@@ -156,8 +156,9 @@ export function HeroTextTunerProvider({
           ),
           Animation: folder(
             {
-              typeSpeed: { value: initial.typeSpeed, min: 10, max: 120, step: 1 },
-              cycleSeconds: { value: initial.cycleSeconds, min: 1, max: 6, step: 0.1 },
+              typeSpeed: { value: initial.typeSpeed, min: 10, max: 120, step: 1, label: 'type speed (ms)' },
+              showCursor: { value: initial.showCursor, label: 'blinking type bar' },
+              cycleSeconds: { value: initial.cycleSeconds, min: 1, max: 6, step: 0.1, label: 'phrase cycle sec' },
               staggerDelay: { value: initial.staggerDelay, min: 0, max: 12, step: 1 },
               blurSpeed: { value: initial.blurSpeed, min: 0.2, max: 3, step: 0.05 },
               blurFps: { value: initial.blurFps, min: 15, max: 60, step: 1 },

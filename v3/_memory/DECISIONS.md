@@ -1,5 +1,15 @@
 # Decisions — V3
 
+## 2026-09-17 — Mobile-only mode ACTIVE + aperture intro replaces dock
+
+- Standing rule: `WORKING-MODE-MOBILE.md` — edit mobile only until Zachary says switch to desktop (exceptions: aperture intro, Home nav link).
+- White Maximus dock intro archived (code kept in `BrandPreloader`). Live intro = expanding aperture (`ApertureIntro`). Restore instructions in `FUTURE-LOADING.md`.
+- Desktop: Home + icon on glass nav and scrolled pill. Hero video files untouched; aperture may CSS-scale the hero root only.
+
+
+- Nav "Start" text link removed — it went to the same `/start` page as the "Get started" pill button, so it was a duplicate action. Nav is now About / Work / Portal + the one Get started CTA.
+- Zachary flagged: "we are missing section identity" (each section as you scroll should feel like its own section, not one long page). Not started yet — queued as next-up after the hero layout trial settles. Revisit ideas from the 2026-09-15 session (SectionBreak dividers already exist between some sections as a first pass).
+
 ## 2026-09-10 — Portal stack locked (Vite, not Next)
 
 - Client portal lives under `/portal` inside the existing Vite + React Router V3 app.

@@ -30,11 +30,11 @@ const defaults = {
   contactLabel: 'Or reach out directly',
 }
 
-function loadStart() {
+function loadStart(): typeof defaults {
   try {
     const raw = localStorage.getItem(START_KEY)
     if (!raw) return { ...defaults }
-    return { ...defaults, ...JSON.parse(raw) }
+    return { ...defaults, ...(JSON.parse(raw) as Partial<typeof defaults>) }
   } catch {
     return { ...defaults }
   }
@@ -162,10 +162,10 @@ export default function StartPage() {
 
   useEffect(() => {
     if ((values as { remember?: boolean }).remember) {
-      const { remember: _a, revert: _b, ...rest } = values as typeof defaults & {
-        remember: boolean
-        revert: boolean
-      }
+      const full = values as typeof defaults & { remember: boolean; revert: boolean }
+      const rest: Partial<typeof full> = { ...full }
+      delete rest.remember
+      delete rest.revert
       localStorage.setItem(START_KEY, JSON.stringify(rest))
     }
     if ((values as { revert?: boolean }).revert) {

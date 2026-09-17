@@ -26,9 +26,11 @@ export default function BrandPreloader() {
     intro.easeY2,
   ]
   // preview must never block the live site permanently
-  const active = intro.enabled && !intro.preview ? true : intro.preview
+  // Dock mode only — aperture intro is ApertureIntro.tsx (this file is archived path)
+  const active = intro.mode === 'dock' && (intro.enabled && !intro.preview ? true : intro.preview)
 
   const finish = (docked: boolean) => {
+    if (intro.mode !== 'dock') return
     if (finishedRef.current) return
     finishedRef.current = true
     if (docked) intro.markDocked()
@@ -119,6 +121,7 @@ export default function BrandPreloader() {
     }
   }, [phase, intro.holdMs, reduce, active, intro.runId])
 
+  if (intro.mode !== 'dock') return null
   if (phase === 'done') return null
   if (!intro.enabled && !intro.preview) return null
 

@@ -1,3 +1,29 @@
+## 2026-09-17 — Mobile pass + aperture intro (dock archived)
+
+- **WORKING-MODE-MOBILE.md ACTIVE** until Zachary says switch to desktop.
+- Mobile: center hero copy; touch press-drag parallax; SectionFocus keeps enter, no exit shrink; HIW shell title opacity earlier.
+- Intro: white Maximus dock archived (`BrandPreloader` + FUTURE-LOADING.md). Live intro = GSAP aperture (`ApertureIntro`). Restore phrase documented there.
+- Desktop exception: Home icon on both navbars; aperture intro; video files untouched (CSS scale only on hero root).
+
+
+- Zachary caught two things from the prior entry below: (1) he did NOT want the 4K masters re-encoded down to 1080p, wanted native quality kept, and (2) he was worried it got pushed to GitHub. Confirmed the second one is a non-issue: `git log` shows the v3 checkpoint commits are 2 commits ahead of `origin/main` and were never pushed, `origin/main` is still sitting on the old pre-V3 rebrand commit — everything's been local the whole time.
+- Copied the native masters (`Hero-quicktime-handbrake.webm` 8.8MB, `Hero-MP4FALLBACK-handbrake.mp4` 7.6MB) straight from repo root into `v3/public/` — checked SHA256 before/after, byte-identical, zero re-encode. Swapped the two `<source>` paths in `HeroVideoBackground.tsx` to point at them. Nothing else in that file touched.
+- Old 1080p re-encode (`v3/public/video/hero.mp4`/`.webm`/`hero-poster.jpg`) left on disk, just unreferenced now — not deleting anything without asking first per the new rule.
+- Verified in a fresh mobile-viewport + iPhone-UA load: video decodes fine (readyState 4, plays through), layout holds at 390px wide, left-aligned copy still readable. Noted honestly in `HERO-VIDEO-BG.md`: that's Chrome's decoder under a spoofed UA, not a guarantee for real low-end Android hardware at 4K60 — flagged as a known tradeoff, not fixed unilaterally.
+- New standing rule written into `HERO-VIDEO-BG.md`: don't touch/re-encode/delete anything video-related in `public/` without asking first.
+
+## 2026-09-17 — Checkpoint + hero left layout + video bg trial
+
+- **Checkpoint commit `ee734dd`** = whole v3 folder as it stood right before this. `git checkout ee734dd -- v3` fully reverts if the hero trial below doesn't land. (v3 had never been committed before — this is its first commit, so it's the earliest revert point period.)
+- HIW fillets: baked the Leva-approved numbers into the defaults (size 48, left/right X ±47, Y 46, rotate -180 both) so a fresh browser matches what Zachary tuned. Screenshotted both corners zoomed in — mirror and smooth, no gap/seam.
+- Nav: removed the redundant "Start" text link (the "Get started" pill already goes to `/start`). Added a "Portal" link (About / Work / Portal) using the same door icon as the hero CTA.
+- "Let's get started" glow: bumped opacity slightly per request (still subtle).
+- **Hero layout trial** (Leva: Hero layout & copy → Layout trial): copy is now left-aligned with CTAs below, capped at 560px wide so it doesn't run into the right side. Rotating line now reads as one flowing sentence ("I want Maximus to build my website") instead of stem-then-phrase stacked — turned out `HeroKineticText`'s branch picker had `stacked || !singleLine` instead of just `stacked`, which is why it kept centering; fixed that one line.
+- **Hero video bg**: swapped the mesh-gradient bg for Zachary's After Effects loop (`/public/video/hero.mp4` + `.webm`, native `<video>`, muted/loop/playsInline, poster frame). Mesh gradient is NOT deleted — Leva toggle "video bg (vs mesh)" flips back to it instantly, no rebuild needed. Full research + the "why two video files" explainer: `HERO-VIDEO-BG.md`.
+- Text color/size for the new left layout only: white/cream stem+phrase (was espresso), fontSize default dropped 72→52 (a 72px sentence doesn't fit a 560px left column). Old center-hero look is one Leva flip away (`heroAlign: center`) — colors/size are shared fields though, so flipping back means re-tuning those two by hand if we ever fully revert (or just `git checkout` the commit above).
+- Fixed two latent TS errors from last session (unrelated to this ask, found while type-checking): `AboutTunerContext.tsx` importing a `StoreType` that leva doesn't export, and `StartPage.tsx`'s `loadStart()` losing its return type — both were harmless at runtime (Vite doesn't type-check) but broke `tsc`/CI builds.
+- Deferred: "section identity" (making each scroll section feel distinct) — flagged by Zachary as next-up, not started this pass.
+
 ## 2026-09-15 — HIW fillet Leva + stacked brands + Cal embed
 
 - How it works fillets: Leva size/X/Y/rotate left+right. About words stacked (not letters). Process text bigger.

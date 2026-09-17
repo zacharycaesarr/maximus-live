@@ -4,6 +4,7 @@ import { LevaPanel, useCreateStore } from 'leva'
 import DirectNav from '@/components/nav/DirectNav'
 import DirectHero from '@/components/hero/DirectHero'
 import BrandPreloader from '@/components/hero/BrandPreloader'
+import ApertureIntro from '@/components/hero/ApertureIntro'
 import PageSections from '@/components/sections/PageSections'
 import SmoothScroll from '@/components/SmoothScroll'
 import ScrollToTop from '@/components/ScrollToTop'
@@ -33,6 +34,7 @@ import { LayoutModeProvider } from '@/context/LayoutModeContext'
 import { FaqTunerProvider } from '@/context/FaqTunerContext'
 import { HowItWorksTunerProvider } from '@/context/HowItWorksTunerContext'
 import { FooterTunerProvider } from '@/context/FooterTunerContext'
+import TubelightNav from '@/components/nav/TubelightNav'
 
 function HomePage() {
   const store = useCreateStore()
@@ -49,6 +51,9 @@ function HomePage() {
       'mr-v3-hero-text-tuner-v16',
       'mr-v3-hero-text-tuner-v17',
       'mr-v3-hero-text-tuner-v18',
+      'mr-v3-hero-text-tuner-v20',
+      'mr-v3-hero-text-tuner-v21',
+      'mr-v3-hero-text-tuner-v22',
       'mr-v3-hero-layout-v5',
       'mr-v3-hero-layout-v6',
       'mr-v3-hero-layout-v7',
@@ -58,8 +63,18 @@ function HomePage() {
       'mr-v3-hero-layout-v11',
       'mr-v3-hero-layout-v12',
       'mr-v3-hero-layout-v13',
+      'mr-v3-hero-layout-v16',
+      'mr-v3-hero-layout-v17',
       'mr-v3-nav-tuner-v5',
       'mr-v3-bg-tuner-v5',
+      'mr-v3-how-it-works-v1',
+      'mr-v3-how-it-works-v2',
+      'mr-v3-how-it-works-v3',
+      'mr-v3-how-it-works-v4',
+      'mr-hero-text-tuner-v1',
+      'mr-how-it-works-v3',
+      'mr-v3-intro-tuner-v2',
+      'mr-v3-intro-tuner-v3',
     ]
     obsolete.forEach((k) => {
       try {
@@ -71,11 +86,11 @@ function HomePage() {
     })
     // Strip sticky preloader preview if an older session left it on
     try {
-      const raw = localStorage.getItem('mr-v3-intro-tuner-v2')
+      const raw = localStorage.getItem('mr-v3-intro-tuner-v3')
       if (raw) {
         const parsed = JSON.parse(raw) as Record<string, unknown>
         if (parsed.preview) {
-          localStorage.setItem('mr-v3-intro-tuner-v2', JSON.stringify({ ...parsed, preview: false }))
+          localStorage.setItem('mr-v3-intro-tuner-v3', JSON.stringify({ ...parsed, preview: false }))
         }
       }
     } catch {
@@ -99,9 +114,10 @@ function HomePage() {
                             <FooterTunerProvider store={store}>
                             <GetStartedHoverProvider>
                               <SmoothScroll>
+                                <ApertureIntro />
                                 <div id="top" className="relative min-h-screen">
                                   <BrandPreloader />
-                                  <DirectNav />
+                                  <DirectNav overlay />
                                   <DirectHero />
                                   <PageSections />
                                 </div>
@@ -148,6 +164,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      {/* Mobile-only bottom nav — md:hidden inside component */}
+      <TubelightNav />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />

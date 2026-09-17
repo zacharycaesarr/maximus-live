@@ -16,6 +16,6 @@ export function Door01Icon({ size = 24, ...props }: SVGProps<SVGSVGElement> & { 
 }
 
 /** Alias used across nav + CTA */
-export function PortalIcon({ size = 14, className }: { size?: number; className?: string }) {
-  return <Door01Icon size={size} className={className} aria-hidden />
+export function PortalIcon({ size = 14, className, ...rest }: SVGProps<SVGSVGElement> & { size?: number }) {
+  return <Door01Icon size={size} className={className} aria-hidden {...rest} />
 }

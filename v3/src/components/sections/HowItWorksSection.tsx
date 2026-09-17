@@ -142,8 +142,12 @@ export default function HowItWorksSection() {
   const cardsX = useTransform(p, [0, 1], [isMobile ? 0 : -14, 0])
   const card2Y = useTransform(p, [0, 1], [isMobile ? 0 : 6, 0])
   const card3Y = useTransform(p, [0, 1], [isMobile ? 0 : 12, 0])
-  const titleInShellOpacity = useTransform(p, [0.35, 0.85], [0, 1])
-  const approachTitleOpacity = useTransform(p, [0, 0.5], [1, 0])
+  const titleInShellOpacity = useTransform(
+    p,
+    isMobile ? [0.12, 0.42] : [0.35, 0.85],
+    [0, 1],
+  )
+  const approachTitleOpacity = useTransform(p, isMobile ? [0, 0.32] : [0, 0.5], [1, 0])
 
   if (!t.enabled) return null
 

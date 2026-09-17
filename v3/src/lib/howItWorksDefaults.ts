@@ -1,4 +1,4 @@
-export const HOW_IT_WORKS_STORAGE_KEY = 'mr-v3-how-it-works-v3'
+export const HOW_IT_WORKS_STORAGE_KEY = 'mr-v3-how-it-works-v5'
 
 export const defaultHowItWorks = {
   enabled: true,
@@ -12,13 +12,13 @@ export const defaultHowItWorks = {
   /** Scrub feel — higher = snappier follow */
   scrubStiffness: 90,
   /** Elbow fillets — tune in Leva until the curve looks right */
-  filletSize: 48,
-  filletLeftX: 0,
-  filletLeftY: 0,
-  filletLeftRotate: 0,
-  filletRightX: 0,
-  filletRightY: 0,
-  filletRightRotate: 0,
+  filletSize: 50,
+  filletLeftX: -50,
+  filletLeftY: 50,
+  filletLeftRotate: -180,
+  filletRightX: 48,
+  filletRightY: 50,
+  filletRightRotate: 180,
   card1Tag: '01',
   card1Title: 'Spot the Bleed & Map the Blueprint',
   card1Body:

@@ -23,6 +23,38 @@ export function HeroLayoutTunerProvider({
     {
       'Hero layout & copy': folder(
         {
+          'Layout trial': folder(
+            {
+              heroAlign: {
+                value: initial.heroAlign,
+                options: { 'Left (new)': 'left', 'Center (old)': 'center' },
+                label: 'copy align',
+              },
+              bgVideoEnabled: { value: initial.bgVideoEnabled, label: 'video bg (vs mesh)' },
+              heroVideoOverlay: {
+                value: initial.heroVideoOverlay,
+                min: 0,
+                max: 1,
+                step: 0.02,
+                label: 'video dark wash',
+              },
+              heroVideoOffsetYDesktop: {
+                value: initial.heroVideoOffsetYDesktop,
+                min: -120,
+                max: 120,
+                step: 1,
+                label: 'video Y desktop (+ down)',
+              },
+              heroVideoOffsetYMobile: {
+                value: initial.heroVideoOffsetYMobile,
+                min: -120,
+                max: 120,
+                step: 1,
+                label: 'video Y mobile (+ down)',
+              },
+            },
+            { collapsed: true },
+          ),
           showEyebrow: initial.showEyebrow,
           eyebrow: initial.eyebrow,
           subhead: { value: initial.subhead, label: 'body (use | for lines)' },

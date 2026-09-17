@@ -1,7 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useControls, folder, button } from 'leva'
 import type { LevaStore } from '@/lib/levaStore'
-import { defaultIntroTuner, INTRO_STORAGE_KEY, loadIntroTuner, type IntroTuner } from '@/lib/introDefaults'
+import {
+  clearIntroSeenThisSession,
+  defaultIntroTuner,
+  INTRO_STORAGE_KEY,
+  loadIntroTuner,
+  type IntroTuner,
+} from '@/lib/introDefaults'
 
 type IntroCtx = IntroTuner & {
   ready: boolean
@@ -25,10 +31,22 @@ export function IntroTunerProvider({ store, children }: { store: LevaStore; chil
       Preloader: folder(
         {
           enabled: { value: initial.enabled, label: 'cinematic intro' },
+          mode: {
+            value: initial.mode,
+            options: { Aperture: 'aperture', 'Dock (archived)': 'dock' },
+            label: 'intro mode',
+          },
           preview: { value: initial.preview, label: 'preview / hold overlay' },
-          word: { value: initial.word, label: 'word' },
-          bg: { value: initial.bg, label: 'bg' },
-          color: { value: initial.color, label: 'text color' },
+          apertureMs: {
+            value: initial.apertureMs,
+            min: 800,
+            max: 2800,
+            step: 50,
+            label: 'aperture ms',
+          },
+          word: { value: initial.word, label: 'dock word (archived)' },
+          bg: { value: initial.bg, label: 'cover bg' },
+          color: { value: initial.color, label: 'mark color' },
           fontFamily: {
             value: initial.fontFamily,
             options: { 'Neue Haas': 'nhg', Tiempos: 'tiempos', Druk: 'druk' },
@@ -47,11 +65,19 @@ export function IntroTunerProvider({ store, children }: { store: LevaStore; chil
             step: 10,
             label: 'fade stagger ms',
           },
+          chromeDelayMs: {
+            value: initial.chromeDelayMs,
+            min: 0,
+            max: 600,
+            step: 10,
+            label: 'chrome delay after unlock',
+          },
           easeX1: { value: initial.easeX1, min: 0, max: 1, step: 0.01 },
           easeY1: { value: initial.easeY1, min: 0, max: 2, step: 0.01 },
           easeX2: { value: initial.easeX2, min: 0, max: 1, step: 0.01 },
           easeY2: { value: initial.easeY2, min: 0, max: 2, step: 0.01 },
           'Replay intro': button(() => {
+            clearIntroSeenThisSession()
             setReady(false)
             setShowChrome(false)
             setRunId((n) => n + 1)
@@ -108,6 +134,7 @@ export function IntroTunerProvider({ store, children }: { store: LevaStore; chil
   const markDocked = useCallback(() => setShowChrome(true), [])
   const markReady = useCallback(() => setReady(true), [])
   const replay = useCallback(() => {
+    clearIntroSeenThisSession()
     setReady(false)
     setShowChrome(false)
     setRunId((n) => n + 1)

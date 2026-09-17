@@ -65,18 +65,21 @@ export default function SectionFocus({
   const origin =
     align === 'left' ? 'left center' : align === 'right' ? 'right center' : 'center center'
 
-  // Longer idle tails + sharp focus band so Proof clearly returns right/small
-  const rawScale = useTransform(
-    scrollYProgress,
-    [0, 0.18, 0.38, 0.55, 0.78, 1],
-    [scaleIdle, scaleIdle, focusScale, focusScale, scaleIdle, scaleIdle],
-  )
-  const rawX = useTransform(
-    scrollYProgress,
-    [0, 0.18, 0.38, 0.55, 0.78, 1],
-    [xIdle, xIdle, 0, 0, xIdle, xIdle],
-  )
-  const rawY = useTransform(scrollYProgress, [0, 0.38, 0.55, 1], [28, 0, 0, 28])
+  // Longer idle tails + sharp focus band so Proof clearly returns right/small (desktop).
+  // Mobile: enter + hold focus, no exit shrink/slide-back.
+  const scaleKeyframes =
+    isMobile && mobileSimplify
+      ? [scaleIdle, scaleIdle, focusScale, focusScale, focusScale, focusScale]
+      : [scaleIdle, scaleIdle, focusScale, focusScale, scaleIdle, scaleIdle]
+  const xKeyframes =
+    isMobile && mobileSimplify
+      ? [xIdle, xIdle, 0, 0, 0, 0]
+      : [xIdle, xIdle, 0, 0, xIdle, xIdle]
+  const yKeyframes = isMobile && mobileSimplify ? [28, 0, 0, 0] : [28, 0, 0, 28]
+
+  const rawScale = useTransform(scrollYProgress, [0, 0.18, 0.38, 0.55, 0.78, 1], scaleKeyframes)
+  const rawX = useTransform(scrollYProgress, [0, 0.18, 0.38, 0.55, 0.78, 1], xKeyframes)
+  const rawY = useTransform(scrollYProgress, [0, 0.38, 0.55, 1], yKeyframes)
 
   const scale = useSpring(rawScale, {
     stiffness: springStiffness,

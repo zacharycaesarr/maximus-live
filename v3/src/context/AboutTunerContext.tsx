@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { folder, useControls, button, type StoreType as LevaStore } from 'leva'
+import { folder, useControls, button } from 'leva'
+import type { LevaStore } from '@/lib/levaStore'
 import { ABOUT_STORAGE_KEY, defaultAboutTuner, loadAboutTuner, type AboutTuner } from '@/lib/aboutDefaults'
 
 const Ctx = createContext<AboutTuner>(defaultAboutTuner)

@@ -10,5 +10,6 @@
 8. Speak simply. Prefer short updates.
 9. Performance first — keep the site fast and lag-free (see `FUTURE-PERFORMANCE.md`).
 10. Mobile first — most visitors will be on phones; design and test phone layouts first.
+10b. When `WORKING-MODE-MOBILE.md` says ACTIVE: edit mobile only unless Zachary lists an exception.
 11. **Verify in the live browser before calling a fix done.** Open the page, screenshot, and actually test hover/Leva/resize. Do not trust code-only reasoning or DOM guesses. If it looks wrong on screen, it is not done.
 12. **Human-coded look.** Never make code or visitor copy look AI-generated. No em dashes in visitor copy. Write like Zachary coded it.

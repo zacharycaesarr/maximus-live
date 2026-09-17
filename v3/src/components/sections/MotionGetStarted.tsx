@@ -110,10 +110,10 @@ export default function MotionGetStarted() {
       aria-label="Get started"
     >
       <div
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80vh,640px)] -translate-y-1/2 opacity-80 blur-[90px]"
+        className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80vh,640px)] -translate-y-1/2 opacity-90 blur-[90px]"
         style={{
           background:
-            'radial-gradient(ellipse 85% 70% at 50% 50%, rgba(196,165,116,0.28) 0%, rgba(239,234,226,0.38) 42%, rgba(247,247,245,0) 78%)',
+            'radial-gradient(ellipse 85% 70% at 50% 50%, rgba(196,165,116,0.4) 0%, rgba(239,234,226,0.46) 42%, rgba(247,247,245,0) 78%)',
         }}
         aria-hidden
       />

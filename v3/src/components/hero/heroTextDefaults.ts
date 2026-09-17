@@ -1,4 +1,4 @@
-export const HERO_TEXT_TUNER_STORAGE_KEY = 'mr-v3-hero-text-tuner-v20'
+export const HERO_TEXT_TUNER_STORAGE_KEY = 'mr-v3-hero-text-tuner-v23'
 
 export const defaultHeroPhrases = [
   'build my website',
@@ -40,15 +40,15 @@ export const defaultPhraseBadges = [
 export const defaultHeroTextTuner = {
   stemText: 'I want Maximus to',
   phrases: defaultHeroPhrases.join('|'),
-  fontSize: 72,
-  maxWidth: 920,
+  fontSize: 52,
+  maxWidth: 740,
   singleLine: false,
   stemWeight: 400,
   phraseWeight: 700,
-  stemColor: '#1a1612',
-  phraseColor: '#1a1612',
+  stemColor: '#FCFAF2',
+  phraseColor: '#FCFAF2',
   glowColor: '#000000',
-  glowStrength: 0.06,
+  glowStrength: 0.2,
   /** Extra space after "to" (em). Stem already includes a trailing space. */
   spaceAfterTo: 0.05,
   letterSpacing: -0.03,

@@ -69,11 +69,29 @@ export default function HeroContentParallax({ children, className }: Props) {
       ty.set(py * layout.parallaxStrength * mul)
     }
 
+    let touchDown = false
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType === 'touch') return
+      // Desktop mouse: always track. Mobile: only while finger is down (tap/drag on models).
+      if (e.pointerType === 'touch' && !touchDown) return
       apply(e.clientX, e.clientY)
     }
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return
+      const rect = root.getBoundingClientRect()
+      if (e.clientY < rect.top || e.clientY > rect.bottom) return
+      touchDown = true
+      apply(e.clientX, e.clientY)
+    }
+    const onPointerUp = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return
+      touchDown = false
+      rx.set(0)
+      ry.set(0)
+      tx.set(0)
+      ty.set(0)
+    }
     const onLeaveWindow = () => {
+      touchDown = false
       rx.set(0)
       ry.set(0)
       tx.set(0)
@@ -95,6 +113,9 @@ export default function HeroContentParallax({ children, className }: Props) {
 
     // Window listeners: pointerleave on section was killing parallax mid-hover in some browsers
     window.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('pointerdown', onPointerDown, { passive: true })
+    window.addEventListener('pointerup', onPointerUp, { passive: true })
+    window.addEventListener('pointercancel', onPointerUp, { passive: true })
     window.addEventListener('blur', onLeaveWindow)
     document.addEventListener('mouseleave', onLeaveWindow)
 
@@ -123,6 +144,9 @@ export default function HeroContentParallax({ children, className }: Props) {
 
     return () => {
       window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
       window.removeEventListener('blur', onLeaveWindow)
       document.removeEventListener('mouseleave', onLeaveWindow)
       window.removeEventListener('deviceorientation', onOrient)
