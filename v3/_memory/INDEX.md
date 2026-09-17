@@ -31,7 +31,7 @@ Read `RULES.md` first, then open only what the task needs.
 
 | Checkpoint | Path |
 |---|---|
-| Hero framing + intro polish (2026-09-17) | git commit `CHECKPOINT_HASH` — `git checkout CHECKPOINT_HASH -- v3` to fully revert |
+| Hero framing + intro polish (2026-09-17) | git commit `beeec7c` — `git checkout beeec7c -- v3` to fully revert |
 | Portal wrap-up (2026-09-14) | `checkpoints/2026-09-14-portal-wrap/` |
 
 Only create `checkpoints/` files when Zachary asks for a save point.
