@@ -1,0 +1,202 @@
+/* Portal-only tokens. Marketing site ignores these. */
+
+html[data-portal='1'] body {
+  background: var(--portal-bg, #0c0c0d);
+  color: var(--portal-fg, #f5f5f5);
+}
+
+.portal-root {
+  --portal-accent: #f97316;
+  --portal-bg: #0c0c0d;
+  --portal-fg: #f5f5f5;
+  --portal-muted: rgba(255, 255, 255, 0.55);
+  --portal-faint: rgba(255, 255, 255, 0.35);
+  --portal-card-bg: rgba(255, 255, 255, 0.02);
+  --portal-card-border: rgba(255, 255, 255, 0.08);
+  --portal-input-bg: rgba(0, 0, 0, 0.4);
+  --portal-card-radius: 12px;
+  --portal-label-opacity: 0.7;
+  --portal-grain-opacity: 0.055;
+  position: relative;
+  isolation: isolate;
+  background: var(--portal-bg);
+  color: var(--portal-fg);
+  font-feature-settings: 'ss01' on, 'cv11' on;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+/* Static grain: CSS only, no JS. Behind content, mobile-safe. */
+.portal-root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--portal-grain-opacity);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.35) 0.5px, transparent 0.6px),
+    radial-gradient(circle at 70% 55%, rgba(255, 255, 255, 0.28) 0.5px, transparent 0.6px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.22) 0.4px, transparent 0.55px),
+    radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.3) 0.45px, transparent 0.55px);
+  background-size: 48px 48px, 62px 62px, 54px 54px, 70px 70px;
+  background-repeat: repeat;
+}
+
+/* Light theme: cream bg + dark text everywhere */
+html[data-portal-theme='light'] .portal-root {
+  --portal-bg: #f3efe6;
+  --portal-fg: #1a1714;
+  --portal-muted: rgba(26, 23, 20, 0.62);
+  --portal-faint: rgba(26, 23, 20, 0.42);
+  --portal-card-bg: #ffffff;
+  --portal-card-border: rgba(26, 23, 20, 0.12);
+  --portal-input-bg: rgba(255, 255, 255, 0.95);
+  --portal-grain-opacity: 0.04;
+}
+
+html[data-portal-theme='light'] .portal-root::before {
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(26, 23, 20, 0.45) 0.5px, transparent 0.6px),
+    radial-gradient(circle at 70% 55%, rgba(26, 23, 20, 0.35) 0.5px, transparent 0.6px),
+    radial-gradient(circle at 40% 80%, rgba(26, 23, 20, 0.28) 0.4px, transparent 0.55px),
+    radial-gradient(circle at 85% 15%, rgba(26, 23, 20, 0.38) 0.45px, transparent 0.55px);
+}
+
+.portal-header {
+  border-color: var(--portal-card-border);
+  background: color-mix(in srgb, var(--portal-bg) 90%, transparent);
+}
+
+.portal-card {
+  border: 1px solid var(--portal-card-border);
+  border-radius: var(--portal-card-radius);
+  background: var(--portal-card-bg);
+  color: var(--portal-fg);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.portal-card:hover {
+  background: color-mix(in srgb, var(--portal-card-bg) 92%, var(--portal-fg) 8%);
+}
+
+.portal-card-label {
+  opacity: var(--portal-label-opacity);
+  color: var(--portal-fg);
+}
+
+/*
+  Hardcoded Tailwind whites break light mode. Remap them under light theme
+  so text, tabs, and bento content stay readable without rewriting every file.
+*/
+html[data-portal-theme='light'] .portal-root .text-white {
+  color: #1a1714 !important;
+}
+html[data-portal-theme='light'] .portal-root .text-white\/90,
+html[data-portal-theme='light'] .portal-root .text-white\/85 {
+  color: rgba(26, 23, 20, 0.9) !important;
+}
+html[data-portal-theme='light'] .portal-root .text-white\/70,
+html[data-portal-theme='light'] .portal-root .text-white\/75 {
+  color: rgba(26, 23, 20, 0.88) !important;
+}
+html[data-portal-theme='light'] .portal-root .text-white\/55,
+html[data-portal-theme='light'] .portal-root .text-white\/50,
+html[data-portal-theme='light'] .portal-root .text-white\/45 {
+  color: rgba(26, 23, 20, 0.82) !important;
+}
+html[data-portal-theme='light'] .portal-root .text-white\/40,
+html[data-portal-theme='light'] .portal-root .text-white\/35 {
+  color: rgba(26, 23, 20, 0.62) !important;
+}
+html[data-portal-theme='light'] .portal-root .text-white\/30,
+html[data-portal-theme='light'] .portal-root .text-white\/25 {
+  color: rgba(26, 23, 20, 0.48) !important;
+}
+
+/* Section blurbs / titles that should read as real body copy in light mode */
+html[data-portal-theme='light'] .portal-root .portal-card p.font-nhg.text-sm {
+  color: rgba(26, 23, 20, 0.88) !important;
+}
+html[data-portal-theme='light'] .portal-root .portal-card span.font-nhg.text-sm,
+html[data-portal-theme='light'] .portal-root .portal-card label.font-nhg.text-sm,
+html[data-portal-theme='light'] .portal-root .portal-card li.font-nhg.text-sm,
+html[data-portal-theme='light'] .portal-root .portal-card div.font-nhg.text-sm {
+  color: rgba(26, 23, 20, 0.88) !important;
+}
+
+html[data-portal-theme='light'] .portal-root .border-white\/10,
+html[data-portal-theme='light'] .portal-root .border-white\/\[0\.08\],
+html[data-portal-theme='light'] .portal-root .border-white\/\[0\.1\],
+html[data-portal-theme='light'] .portal-root .border-white\/15 {
+  border-color: rgba(26, 23, 20, 0.14) !important;
+}
+
+html[data-portal-theme='light'] .portal-root .bg-black\/40,
+html[data-portal-theme='light'] .portal-root .bg-black\/30,
+html[data-portal-theme='light'] .portal-root .bg-black\/20 {
+  background-color: #fff !important;
+  color: #1a1714 !important;
+}
+
+html[data-portal-theme='light'] .portal-root .bg-white\/\[0\.02\],
+html[data-portal-theme='light'] .portal-root .bg-white\/\[0\.03\],
+html[data-portal-theme='light'] .portal-root .bg-white\/\[0\.06\],
+html[data-portal-theme='light'] .portal-root .bg-white\/5 {
+  background-color: rgba(26, 23, 20, 0.04) !important;
+}
+
+html[data-portal-theme='light'] .portal-root .placeholder\:text-white\/25::placeholder {
+  color: rgba(26, 23, 20, 0.35) !important;
+}
+
+/* Keep solid white CTAs readable: flip to dark chip on light bg */
+html[data-portal-theme='light'] .portal-root button.bg-white,
+html[data-portal-theme='light'] .portal-root a.bg-white {
+  background-color: #1a1714 !important;
+  color: #f3efe6 !important;
+}
+
+html[data-portal-theme='light'] .portal-root button.bg-white *,
+html[data-portal-theme='light'] .portal-root a.bg-white * {
+  color: inherit !important;
+}
+
+html[data-portal-theme='light'] .portal-root .text-\[\#0c0c0d\] {
+  color: #f3efe6 !important;
+}
+
+/* Toggle chips (Venmo / Cash App): deeper so they read on cream */
+html[data-portal-theme='light'] .portal-root .portal-btn-secondary {
+  border-color: rgba(26, 23, 20, 0.45) !important;
+  color: #1a1714 !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: inset 0 0 0 1px rgba(26, 23, 20, 0.06);
+}
+
+html[data-portal-theme='light'] .portal-root .portal-btn-secondary:hover {
+  border-color: rgba(26, 23, 20, 0.65) !important;
+  color: #0c0c0d !important;
+  background-color: #fff !important;
+}
+
+html[data-portal-theme='light'] .portal-root .portal-btn-secondary-on {
+  border-color: rgba(4, 120, 87, 0.7) !important;
+  background-color: rgba(16, 185, 129, 0.28) !important;
+  color: #064e3b !important;
+  font-weight: 600;
+}
+
+html[data-portal-theme='light'] .portal-root .portal-btn-secondary-on * {
+  color: inherit !important;
+}
+
+/* Open Venmo / Cash App: solid mint chip, not a washed pill */
+html[data-portal-theme='light'] .portal-root .portal-btn-fee-free {
+  background-color: #059669 !important;
+  color: #f3efe6 !important;
+  box-shadow: none;
+}
+
+html[data-portal-theme='light'] .portal-root .portal-btn-fee-free * {
+  color: inherit !important;
+}

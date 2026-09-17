@@ -1,0 +1,144 @@
+@import './styles/fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --c-cream: #fcfaf2;
+  --c-warm-cream: #f5f0e6;
+  --c-tan: #d9c3b0;
+  --c-mocha: #8b6950;
+  --c-espresso: #2c2520;
+  --c-nav: #0a0a0a;
+  --c-cta: #c4a574;
+  --ff-display: 'Neue Haas Grotesk Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  max-width: 100%;
+}
+
+html {
+  width: 100%;
+  /* clip not hidden — overflow-x:hidden on html kills Lenis wheel smoothing in Chrome */
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ff-display);
+  color: var(--c-espresso);
+  background: #fcfaf7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  width: 100%;
+  position: relative;
+}
+
+#root {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* Kill horizontal rubber-band / transform spill */
+#top,
+main {
+  overflow-x: clip;
+  max-width: 100%;
+  width: 100%;
+}
+
+.hero-blur-word {
+  display: inline-block;
+  margin-right: 0.22em;
+  overflow: visible;
+  will-change: transform, filter, opacity;
+}
+
+.hero-type-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.88em;
+  margin-left: 3px;
+  vertical-align: baseline;
+  animation: heroTypeBlink 0.9s step-end infinite;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Leva panel: keep native scroll usable with Lenis */
+.mr-v3-leva-host {
+  pointer-events: none;
+}
+.mr-v3-leva-host > * {
+  pointer-events: auto;
+}
+.mr-v3-leva-host [class*='leva-c-'] {
+  overscroll-behavior: contain;
+}
+
+
+@keyframes heroTypeBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes mr-v3-bou-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes mr-v3-bou-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-14px);
+    filter: blur(8px);
+  }
+}
+
+
