@@ -33,6 +33,15 @@ html {
   width: 100%;
   /* clip not hidden — overflow-x:hidden on html kills Lenis wheel smoothing in Chrome */
   overflow-x: clip;
+  /* Reserve scrollbar space so intro overflow:hidden → scroll doesn't shove layout left */
+  scrollbar-gutter: stable;
+}
+
+@supports (scrollbar-gutter: stable) {
+  html {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
 }
 
 body {
@@ -93,15 +102,28 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Leva panel: keep native scroll usable with Lenis */
+/* Leva: desktop only. On a real phone it shoved the whole page sideways. */
 .mr-v3-leva-host {
   pointer-events: none;
+}
+@media (max-width: 767px) {
+  .mr-v3-leva-host {
+    display: none !important;
+  }
 }
 .mr-v3-leva-host > * {
   pointer-events: auto;
 }
 .mr-v3-leva-host [class*='leva-c-'] {
   overscroll-behavior: contain;
+}
+
+/* Capability pages: hard stop horizontal drift on iOS */
+.mr-caps-page {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  position: relative;
 }
 
 

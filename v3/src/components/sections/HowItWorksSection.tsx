@@ -170,7 +170,7 @@ export default function HowItWorksSection() {
         className="relative z-10 mx-auto mb-5 w-full max-w-6xl px-5 md:mb-6 md:px-8"
         style={{ opacity: approachTitleOpacity }}
       >
-        <p className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-espresso/40">
+        <p className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-espresso/45">
           03
         </p>
         <h2 className="m-0 bg-gradient-to-br from-[#1a1612] via-[#2C2520] to-[#6b5a4a] bg-clip-text font-nhg text-[clamp(1.85rem,4vw,2.75rem)] font-semibold tracking-tight text-transparent">

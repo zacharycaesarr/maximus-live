@@ -1,3 +1,23 @@
+## 2026-09-20 — Web Dev stretch fix + Safari chrome + cap pages cleanup
+
+- Checkpoint: branch `checkpoint/2026-09-20-caps-pages` @ `0e43737`.
+- StretchText is React/Leva driven (no GSAP fighting sliders). Full Roboto Flex TTF. Headline stretch folder. Storage `mr-v3-web-dev-v5`.
+- How we build: real 21st.dev Safari chrome, URL `yourwebsite.com`, step 4 grows taller.
+- CTA calm, grain, testimonial glass ~11px, footer flicker gone, caps dropdown 1.6s stay-open.
+- Ads: lead-quality deck gone, spinning ring gone, stretch kept. Creative: stretch kept, tickers off.
+- Brand sheet: `v3/BRAND.md`. Hero video still locked.
+
+## 2026-09-18 — Capabilities split + Web Development page rebuild
+
+- Replaced single Work page with **Capabilities** nav dropdown: Web Development, Ad Management, Creative Studio (last).
+- Routes: `/capabilities/web-development`, `/ad-management`, `/creative-studio`. `/work` redirects to web-dev.
+- Web page: Uproute-style hero (Tiempos), mobile-first accordion + phone mockups (rise from blur desktop; scroll shrink + flash mobile), magnetic cursor on interactive bits, kept WebDevShowcase under "Selected builds."
+- Ads + Creative are stubs. Creative later = scroll-morph-hero. Start page AE 5s loop noted in NEED-TO-IMPLEMENT + FINAL-WRAPUP.
+
+## 2026-09-17 — Reach Further nav + one-line hero + page scroll BG trial
+
+- Nav stacked lockup: Reach / Further (logo unchanged). Hero `singleLine` default on; Leva “one sentence” off restores wrap. `scrollbar-gutter: stable` for intro scroll jump. Shared Axis Blend gradient under homepage sections (mocha trial; 21st blue archived). Hero video untouched. See `PAGE-SCROLL-BG.md`, `PROMPT-REMINDERS.md`.
+
 ## 2026-09-17 — Mobile pass + aperture intro (dock archived)
 
 - **WORKING-MODE-MOBILE.md ACTIVE** until Zachary says switch to desktop.

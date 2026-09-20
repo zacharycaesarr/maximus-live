@@ -1,4 +1,4 @@
-export const PROOF_STORAGE_KEY = 'mr-v3-proof-fan-v2'
+export const PROOF_STORAGE_KEY = 'mr-v3-proof-fan-v3'
 
 export type ProofCategory = 'web' | 'ads' | 'creative'
 export type ProofVisualType = 'autoscroll' | 'ads-cockpit' | 'lottie'
@@ -77,7 +77,7 @@ export const defaultProofTuner = {
   enabled: true,
   flipPhraseA: 'See it in action?',
   flipPhraseB: 'Proof comes next.',
-  flipColor: '#2C2520',
+  flipColor: '#FCFAF2',
   autoplayMs: 2800,
   backBlurPx: 8,
   backOpacity: 0.55,

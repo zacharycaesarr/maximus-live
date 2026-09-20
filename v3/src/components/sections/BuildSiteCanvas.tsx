@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { cn } from '@/lib/utils'
+import { Safari } from '@/components/ui/safari'
 
 type Props = {
   activeStep: number
@@ -16,7 +17,7 @@ const STAGE = [
   { w: 58, ratio: 1.0, chrome: 0.12 }, // direction: small square, barely a window
   { w: 82, ratio: 0.8, chrome: 0.75 }, // structure
   { w: 94, ratio: 0.7, chrome: 0.92 }, // trust
-  { w: 94, ratio: 0.88, chrome: 1 }, // finish: grows taller, not wider
+  { w: 94, ratio: 0.82, chrome: 1 }, // finish: taller than step 3, clipped by parent max-height
 ]
 
 const IMG_HERO =
@@ -169,41 +170,9 @@ export function BuildSiteCanvas({
       <div data-el="stage" className="relative mx-auto" style={{ width: '58%' }}>
         {/* ratio box */}
         <div data-el="ratio" className="relative w-full" style={{ paddingTop: '100%' }}>
-          <div className="absolute inset-0 overflow-hidden rounded-[12px] border border-espresso/12 bg-[#efece6] shadow-[0_30px_70px_-40px_rgba(44,37,32,0.55)]">
-            {/* Safari-style chrome (21st.dev dillionverma/safari) — fades in via --chrome */}
-            <div
-              className="absolute inset-x-0 top-0 z-20 flex h-10 items-center gap-2 border-b border-black/[0.06] bg-[#f3f1ec] px-3"
-              style={{ opacity: 'calc(var(--chrome, 0) * 1)' }}
-            >
-              {/* traffic lights */}
-              <div className="flex items-center gap-1.5">
-                <span className="h-[10px] w-[10px] rounded-full bg-[#ff5f57]" />
-                <span className="h-[10px] w-[10px] rounded-full bg-[#febc2e]" />
-                <span className="h-[10px] w-[10px] rounded-full bg-[#28c840]" />
-              </div>
-              {/* nav arrows */}
-              <div className="ml-1 hidden items-center gap-2 text-espresso/35 sm:flex">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="opacity-50"><path d="M9 18l6-6-6-6" /></svg>
-              </div>
-              {/* address bar with lock, centered */}
-              <div
-                className="mx-auto flex h-[22px] w-[58%] min-w-0 items-center justify-center gap-1.5 rounded-[7px] bg-black/[0.05] px-3 font-nhg text-[10px] tracking-wide text-espresso/50"
-                style={{ transform: 'scaleX(calc(0.5 + var(--chrome, 0) * 0.5))' }}
-              >
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                <span className="truncate">{url}</span>
-              </div>
-              {/* share + tabs */}
-              <div className="hidden items-center gap-2.5 text-espresso/35 sm:flex">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12M8 7l4-4 4 4" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" /></svg>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="3" /><rect x="8" y="8" width="13" height="13" rx="2" /></svg>
-              </div>
-            </div>
-
-            {/* page area */}
-            <div className="absolute inset-x-0 bottom-0 top-10 bg-[#f8f6f1] [container-type:inline-size]">
+          <div className="absolute inset-0">
+            <Safari url={url} className="h-full">
+            <div className="absolute inset-0 h-full [container-type:inline-size]">
               {/* step 0 — direction: crop marks + a single point that becomes a line */}
               <div data-el="guides" data-s="0" className="absolute inset-0">
                 <div className="absolute inset-[9%] rounded-[6px] border border-dashed border-espresso/15" />
@@ -365,6 +334,7 @@ export function BuildSiteCanvas({
                 <path d="M5 3l14 8-6 1.5L9.5 19 5 3z" fill="#FCFAF2" stroke="#2C2520" strokeWidth="1.4" />
               </svg>
             </div>
+            </Safari>
           </div>
         </div>
       </div>

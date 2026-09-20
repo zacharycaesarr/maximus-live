@@ -1,7 +1,18 @@
-import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+} from 'react'
 import { useControls, folder, button } from 'leva'
 import type { LevaStore } from '@/lib/levaStore'
-import type { StretchFont, StretchCurve } from '@/components/ui/StretchText'
+import {
+  normalizeCurve,
+  type StretchFont,
+  type StretchCurve,
+} from '@/components/ui/StretchText'
 
 export type WebDevTuner = {
   heroEyebrow: string
@@ -45,7 +56,8 @@ export type WebDevTuner = {
   ctaLabel: string
 }
 
-export const WEB_DEV_STORAGE_KEY = 'mr-v3-web-dev-v3'
+/** bump clears stale localStorage that blocked live stretch edits */
+export const WEB_DEV_STORAGE_KEY = 'mr-v3-web-dev-v6'
 
 export const defaultWebDevTuner: WebDevTuner = {
   heroEyebrow: 'Capabilities · Web',
@@ -53,14 +65,14 @@ export const defaultWebDevTuner: WebDevTuner = {
   heroBlurb:
     'A site that looks like your business and gives you room to grow. Built mobile-first, then scaled up.',
   stretchEnabled: true,
-  stretchTarget: 'Reach',
+  stretchTarget: 'Development',
   stretchFont: 'roboto-flex',
   stretchCurve: 'ramp',
-  baseWidth: 100,
+  baseWidth: 78,
   peakWidth: 151,
-  customWidths: '100,112,128,140,151',
-  weight: 700,
-  letterSpacing: -0.01,
+  customWidths: '78,96,118,136,151,145,140,130,120,110,100',
+  weight: 720,
+  letterSpacing: -0.025,
   opticalSize: 120,
   stretchStagger: 0.05,
   stickyEyebrow: 'How we build',
@@ -88,7 +100,7 @@ export const defaultWebDevTuner: WebDevTuner = {
   testimonialTitle: 'Words from people we built with.',
   submitLabel: 'Have we worked together?',
   boxRadius: 11,
-  grainOpacity: 0.045,
+  grainOpacity: 0.07,
   ctaHeadline: 'Ready when you are.',
   ctaBlurb: 'Tell me what you need. I map the build from there.',
   ctaLabel: 'Start a project',
@@ -97,10 +109,76 @@ export const defaultWebDevTuner: WebDevTuner = {
 export function loadWebDevTuner(): WebDevTuner {
   try {
     const raw = localStorage.getItem(WEB_DEV_STORAGE_KEY)
-    if (!raw) return defaultWebDevTuner
+    if (!raw) return { ...defaultWebDevTuner }
     return { ...defaultWebDevTuner, ...JSON.parse(raw) }
   } catch {
-    return defaultWebDevTuner
+    return { ...defaultWebDevTuner }
+  }
+}
+
+function num(v: unknown, fallback: number) {
+  const n = typeof v === 'number' ? v : Array.isArray(v) ? Number(v[0]) : Number(v)
+  return Number.isFinite(n) ? n : fallback
+}
+
+function pick(raw: Record<string, unknown>, key: string): unknown {
+  if (key in raw) return raw[key]
+  for (const val of Object.values(raw)) {
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      const hit = pick(val as Record<string, unknown>, key)
+      if (hit !== undefined) return hit
+    }
+  }
+  return undefined
+}
+
+function buildTuner(raw: Record<string, unknown>, base: WebDevTuner): WebDevTuner {
+  const g = <K extends keyof WebDevTuner>(key: K, fallback: WebDevTuner[K]): WebDevTuner[K] => {
+    const v = pick(raw, key as string)
+    return (v === undefined ? fallback : v) as WebDevTuner[K]
+  }
+
+  return {
+    ...base,
+    heroEyebrow: String(g('heroEyebrow', base.heroEyebrow)),
+    heroTitle: String(g('heroTitle', base.heroTitle)),
+    heroBlurb: String(g('heroBlurb', base.heroBlurb)),
+    stretchEnabled: Boolean(g('stretchEnabled', base.stretchEnabled)),
+    stretchTarget: String(g('stretchTarget', base.stretchTarget)),
+    stretchFont: (g('stretchFont', base.stretchFont) as StretchFont) || 'roboto-flex',
+    stretchCurve: normalizeCurve(g('stretchCurve', base.stretchCurve)),
+    baseWidth: num(g('baseWidth', base.baseWidth), base.baseWidth),
+    peakWidth: num(g('peakWidth', base.peakWidth), base.peakWidth),
+    customWidths: String(g('customWidths', base.customWidths)),
+    weight: num(g('weight', base.weight), base.weight),
+    letterSpacing: num(g('letterSpacing', base.letterSpacing), base.letterSpacing),
+    opticalSize: num(g('opticalSize', base.opticalSize), base.opticalSize),
+    stretchStagger: num(g('stretchStagger', base.stretchStagger), base.stretchStagger),
+    stickyEyebrow: String(g('stickyEyebrow', base.stickyEyebrow)),
+    stickyTitle: String(g('stickyTitle', base.stickyTitle)),
+    step1Label: String(g('step1Label', base.step1Label)),
+    step1Heading: String(g('step1Heading', base.step1Heading)),
+    step1Body: String(g('step1Body', base.step1Body)),
+    step2Label: String(g('step2Label', base.step2Label)),
+    step2Heading: String(g('step2Heading', base.step2Heading)),
+    step2Body: String(g('step2Body', base.step2Body)),
+    step3Label: String(g('step3Label', base.step3Label)),
+    step3Heading: String(g('step3Heading', base.step3Heading)),
+    step3Body: String(g('step3Body', base.step3Body)),
+    step4Label: String(g('step4Label', base.step4Label)),
+    step4Heading: String(g('step4Heading', base.step4Heading)),
+    step4Body: String(g('step4Body', base.step4Body)),
+    proofEyebrow: String(g('proofEyebrow', base.proofEyebrow)),
+    proofTitle: String(g('proofTitle', base.proofTitle)),
+    proofHint: String(g('proofHint', base.proofHint)),
+    testimonialEyebrow: String(g('testimonialEyebrow', base.testimonialEyebrow)),
+    testimonialTitle: String(g('testimonialTitle', base.testimonialTitle)),
+    submitLabel: String(g('submitLabel', base.submitLabel)),
+    boxRadius: num(g('boxRadius', base.boxRadius), base.boxRadius),
+    grainOpacity: num(g('grainOpacity', base.grainOpacity), base.grainOpacity),
+    ctaHeadline: String(g('ctaHeadline', base.ctaHeadline)),
+    ctaBlurb: String(g('ctaBlurb', base.ctaBlurb)),
+    ctaLabel: String(g('ctaLabel', base.ctaLabel)),
   }
 }
 
@@ -115,196 +193,196 @@ export function WebDevTunerProvider({
 }) {
   const initial = useMemo(() => loadWebDevTuner(), [])
 
-  const values = useControls(
+  // Stretch controls are FLAT (no nested folder return shape). This is what
+  // made Leva edits fail before when folders swallowed the values.
+  const stretch = useControls(
+    'Headline stretch',
     {
-      'Web Dev page': folder(
+      stretchEnabled: { value: initial.stretchEnabled, label: 'enabled' },
+      stretchTarget: { value: initial.stretchTarget, label: 'stretch word' },
+      stretchFont: {
+        value: initial.stretchFont,
+        options: {
+          'Roboto Flex (wide stretch)': 'roboto-flex',
+          'Mona Sans (smoother, max 125)': 'mona-sans',
+        },
+        label: 'stretch font',
+      },
+      stretchCurve: {
+        value: initial.stretchCurve,
+        options: ['ramp', 'tail', 'peak', 'valley', 'flat', 'custom'],
+        label: 'curve',
+      },
+      baseWidth: {
+        value: initial.baseWidth,
+        min: 25,
+        max: 151,
+        step: 1,
+        label: 'base width',
+      },
+      peakWidth: {
+        value: initial.peakWidth,
+        min: 25,
+        max: 151,
+        step: 1,
+        label: 'peak width',
+      },
+      customWidths: {
+        value: initial.customWidths,
+        label: 'custom per letter',
+      },
+      stretchStagger: {
+        value: initial.stretchStagger,
+        min: 0,
+        max: 0.2,
+        step: 0.005,
+        label: 'intro stagger',
+      },
+      weight: { value: initial.weight, min: 300, max: 900, step: 1 },
+      letterSpacing: {
+        value: initial.letterSpacing,
+        min: -0.08,
+        max: 0.2,
+        step: 0.001,
+        label: 'letter spacing',
+      },
+      opticalSize: {
+        value: initial.opticalSize,
+        min: 8,
+        max: 144,
+        step: 1,
+        label: 'optical size',
+      },
+    },
+    { store },
+  )
+
+  const page = useControls(
+    'Web Dev page',
+    {
+      Hero: folder(
         {
-          Hero: folder(
-            {
-              heroEyebrow: { value: initial.heroEyebrow, label: 'eyebrow' },
-              heroTitle: { value: initial.heroTitle, label: 'title' },
-              heroBlurb: { value: initial.heroBlurb, label: 'blurb' },
-            },
-            { collapsed: true },
-          ),
-          'Headline stretch': folder(
-            {
-              stretchEnabled: { value: initial.stretchEnabled, label: 'enabled' },
-              stretchTarget: {
-                value: initial.stretchTarget,
-                label: 'stretch word',
-              },
-              stretchFont: {
-                value: initial.stretchFont,
-                options: {
-                  'Roboto Flex (wide stretch)': 'roboto-flex',
-                  'Mona Sans (smoother, max 125)': 'mona-sans',
-                },
-                label: 'stretch font',
-              },
-              stretchCurve: {
-                value: initial.stretchCurve,
-                options: {
-                  'Ramp (narrow → wide)': 'ramp',
-                  'Tail (last letters reach)': 'tail',
-                  'Peak (middle widest)': 'peak',
-                  'Valley (ends widest)': 'valley',
-                  'Flat (all same)': 'flat',
-                  'Custom (type widths)': 'custom',
-                },
-                label: 'curve',
-              },
-              baseWidth: {
-                value: initial.baseWidth,
-                min: 25,
-                max: 151,
-                step: 1,
-                label: 'base width',
-              },
-              peakWidth: {
-                value: initial.peakWidth,
-                min: 25,
-                max: 151,
-                step: 1,
-                label: 'peak width',
-              },
-              customWidths: {
-                value: initial.customWidths,
-                label: 'custom per letter',
-              },
-              stretchStagger: {
-                value: initial.stretchStagger,
-                min: 0,
-                max: 0.2,
-                step: 0.005,
-                label: 'intro stagger',
-              },
-              weight: { value: initial.weight, min: 300, max: 900, step: 1 },
-              letterSpacing: {
-                value: initial.letterSpacing,
-                min: -0.08,
-                max: 0.2,
-                step: 0.001,
-                label: 'letter spacing',
-              },
-              opticalSize: {
-                value: initial.opticalSize,
-                min: 8,
-                max: 144,
-                step: 1,
-                label: 'optical size',
-              },
-            },
-            { collapsed: false },
-          ),
-          Sticky: folder(
-            {
-              stickyEyebrow: { value: initial.stickyEyebrow, label: 'eyebrow' },
-              stickyTitle: { value: initial.stickyTitle, label: 'title' },
-              step1Label: { value: initial.step1Label, label: 's1 label' },
-              step1Heading: { value: initial.step1Heading, label: 's1 heading' },
-              step1Body: { value: initial.step1Body, label: 's1 body' },
-              step2Label: { value: initial.step2Label, label: 's2 label' },
-              step2Heading: { value: initial.step2Heading, label: 's2 heading' },
-              step2Body: { value: initial.step2Body, label: 's2 body' },
-              step3Label: { value: initial.step3Label, label: 's3 label' },
-              step3Heading: { value: initial.step3Heading, label: 's3 heading' },
-              step3Body: { value: initial.step3Body, label: 's3 body' },
-              step4Label: { value: initial.step4Label, label: 's4 label' },
-              step4Heading: { value: initial.step4Heading, label: 's4 heading' },
-              step4Body: { value: initial.step4Body, label: 's4 body' },
-            },
-            { collapsed: true },
-          ),
-          Proof: folder(
-            {
-              proofEyebrow: { value: initial.proofEyebrow, label: 'eyebrow' },
-              proofTitle: { value: initial.proofTitle, label: 'title' },
-              proofHint: { value: initial.proofHint, label: 'hint' },
-            },
-            { collapsed: true },
-          ),
-          Testimonials: folder(
-            {
-              testimonialEyebrow: {
-                value: initial.testimonialEyebrow,
-                label: 'eyebrow',
-              },
-              testimonialTitle: { value: initial.testimonialTitle, label: 'title' },
-              submitLabel: { value: initial.submitLabel, label: 'submit btn' },
-              boxRadius: {
-                value: initial.boxRadius,
-                min: 0,
-                max: 24,
-                step: 1,
-                label: 'box roundness',
-              },
-            },
-            { collapsed: true },
-          ),
-          Texture: folder(
-            {
-              grainOpacity: {
-                value: initial.grainOpacity,
-                min: 0,
-                max: 0.15,
-                step: 0.005,
-                label: 'grain',
-              },
-            },
-            { collapsed: true },
-          ),
-          CTA: folder(
-            {
-              ctaHeadline: { value: initial.ctaHeadline, label: 'headline' },
-              ctaBlurb: { value: initial.ctaBlurb, label: 'blurb' },
-              ctaLabel: { value: initial.ctaLabel, label: 'button' },
-            },
-            { collapsed: true },
-          ),
-          Persist: folder(
-            {
-              'Remember web-dev': button(() => {
-                try {
-                  localStorage.setItem(
-                    `${WEB_DEV_STORAGE_KEY}:remember`,
-                    localStorage.getItem(WEB_DEV_STORAGE_KEY) ?? '',
-                  )
-                } catch {
-                  /* ignore */
-                }
-              }),
-              'Revert web-dev': button(() => {
-                try {
-                  const raw = localStorage.getItem(`${WEB_DEV_STORAGE_KEY}:remember`)
-                  if (!raw) return
-                  localStorage.setItem(WEB_DEV_STORAGE_KEY, raw)
-                  window.location.reload()
-                } catch {
-                  /* ignore */
-                }
-              }),
-            },
-            { collapsed: true },
-          ),
+          heroEyebrow: { value: initial.heroEyebrow, label: 'eyebrow' },
+          heroTitle: { value: initial.heroTitle, label: 'title' },
+          heroBlurb: { value: initial.heroBlurb, label: 'blurb' },
+        },
+        { collapsed: true },
+      ),
+      Sticky: folder(
+        {
+          stickyEyebrow: { value: initial.stickyEyebrow, label: 'eyebrow' },
+          stickyTitle: { value: initial.stickyTitle, label: 'title' },
+          step1Label: { value: initial.step1Label, label: 's1 label' },
+          step1Heading: { value: initial.step1Heading, label: 's1 heading' },
+          step1Body: { value: initial.step1Body, label: 's1 body' },
+          step2Label: { value: initial.step2Label, label: 's2 label' },
+          step2Heading: { value: initial.step2Heading, label: 's2 heading' },
+          step2Body: { value: initial.step2Body, label: 's2 body' },
+          step3Label: { value: initial.step3Label, label: 's3 label' },
+          step3Heading: { value: initial.step3Heading, label: 's3 heading' },
+          step3Body: { value: initial.step3Body, label: 's3 body' },
+          step4Label: { value: initial.step4Label, label: 's4 label' },
+          step4Heading: { value: initial.step4Heading, label: 's4 heading' },
+          step4Body: { value: initial.step4Body, label: 's4 body' },
+        },
+        { collapsed: true },
+      ),
+      Proof: folder(
+        {
+          proofEyebrow: { value: initial.proofEyebrow, label: 'eyebrow' },
+          proofTitle: { value: initial.proofTitle, label: 'title' },
+          proofHint: { value: initial.proofHint, label: 'hint' },
+        },
+        { collapsed: true },
+      ),
+      Testimonials: folder(
+        {
+          testimonialEyebrow: { value: initial.testimonialEyebrow, label: 'eyebrow' },
+          testimonialTitle: { value: initial.testimonialTitle, label: 'title' },
+          submitLabel: { value: initial.submitLabel, label: 'submit btn' },
+          boxRadius: {
+            value: initial.boxRadius,
+            min: 0,
+            max: 24,
+            step: 1,
+            label: 'box roundness',
+          },
+        },
+        { collapsed: true },
+      ),
+      Texture: folder(
+        {
+          grainOpacity: {
+            value: initial.grainOpacity,
+            min: 0,
+            max: 0.2,
+            step: 0.005,
+            label: 'grain',
+          },
         },
         { collapsed: false },
+      ),
+      CTA: folder(
+        {
+          ctaHeadline: { value: initial.ctaHeadline, label: 'headline' },
+          ctaBlurb: { value: initial.ctaBlurb, label: 'blurb' },
+          ctaLabel: { value: initial.ctaLabel, label: 'button' },
+        },
+        { collapsed: true },
+      ),
+      Persist: folder(
+        {
+          'Remember web-dev': button(() => {
+            try {
+              localStorage.setItem(
+                `${WEB_DEV_STORAGE_KEY}:remember`,
+                localStorage.getItem(WEB_DEV_STORAGE_KEY) ?? '',
+              )
+            } catch {
+              /* ignore */
+            }
+          }),
+          'Revert web-dev': button(() => {
+            try {
+              const raw = localStorage.getItem(`${WEB_DEV_STORAGE_KEY}:remember`)
+              if (!raw) return
+              localStorage.setItem(WEB_DEV_STORAGE_KEY, raw)
+              window.location.reload()
+            } catch {
+              /* ignore */
+            }
+          }),
+        },
+        { collapsed: true },
       ),
     },
     { store },
   )
 
-  const flat = { ...defaultWebDevTuner, ...(values as Partial<WebDevTuner>) }
+  const flat = useMemo(
+    () =>
+      buildTuner(
+        { ...(stretch as Record<string, unknown>), ...(page as Record<string, unknown>) },
+        initial,
+      ),
+    [stretch, page, initial],
+  )
 
+  const json = JSON.stringify(flat)
+  const stable = useMemo(() => flat, [json])
+
+  const saved = useRef('')
   useEffect(() => {
+    if (saved.current === json) return
+    saved.current = json
     try {
-      localStorage.setItem(WEB_DEV_STORAGE_KEY, JSON.stringify(flat))
+      localStorage.setItem(WEB_DEV_STORAGE_KEY, json)
     } catch {
       /* ignore */
     }
-  }, [flat])
+  }, [json])
 
-  return <Ctx.Provider value={flat}>{children}</Ctx.Provider>
+  return <Ctx.Provider value={stable}>{children}</Ctx.Provider>
 }
 
 export function useWebDevTuner() {

@@ -1,4 +1,4 @@
-export const NAV_STORAGE_KEY = 'mr-v3-nav-tuner-v6'
+export const NAV_STORAGE_KEY = 'mr-v3-nav-tuner-v7'
 
 export const defaultNavTuner = {
   barHeight: 64,
@@ -16,6 +16,8 @@ export const defaultNavTuner = {
   logoOffsetX: 0,
   logoOffsetY: 0,
   logoGap: 8,
+  /** short = new mark (default). smooth = alternate trial. */
+  logoStyle: 'short' as 'short' | 'smooth',
   /** flat = full-bleed; notch = V2 curved; glass = see-through → pill menu on scroll */
   barShape: 'glass' as 'flat' | 'notch' | 'glass',
   notchRadius: 18,

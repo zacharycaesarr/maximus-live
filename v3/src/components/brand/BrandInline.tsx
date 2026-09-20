@@ -19,10 +19,10 @@ export function BrandInline({ className, tone = 'dark', stacked = false }: Props
           color,
           className,
         )}
-        aria-label="Maximus Reach"
+        aria-label="Reach Further"
       >
-        <span className="text-[12px] md:text-[13px]">Maximus</span>
         <span className="text-[12px] md:text-[13px]">Reach</span>
+        <span className="text-[12px] md:text-[13px]">Further</span>
       </span>
     )
   }

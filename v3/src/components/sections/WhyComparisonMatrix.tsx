@@ -201,7 +201,7 @@ export default function WhyComparisonMatrix() {
           {/* Traditional column */}
           <div
             className={cn(
-              'rounded-2xl border border-espresso/10 bg-[#18181b]/35 p-4 md:rounded-l-none md:border-l-0 md:p-5',
+              'rounded-2xl border border-espresso/10 bg-[#efeae2]/90 p-4 md:rounded-l-none md:border-l-0 md:p-5',
               mobileTab !== 'traditional' && 'hidden md:block',
             )}
           >

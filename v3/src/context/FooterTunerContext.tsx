@@ -33,8 +33,6 @@ export function FooterTunerProvider({ store, children }: { store: LevaStore; chi
               col2Links: { value: initial.col2Links, label: 'col 2 links' },
               col3Title: { value: initial.col3Title, label: 'col 3 title' },
               col3Links: { value: initial.col3Links, label: 'col 3 links' },
-              flickerText: { value: initial.flickerText, label: 'flicker text' },
-              flickerTextMobile: { value: initial.flickerTextMobile, label: 'flicker mobile' },
               copyright: { value: initial.copyright, label: 'copyright' },
             },
             { collapsed: true },

@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import {
   motion,
   AnimatePresence,
-  useScroll,
-  useTransform,
   useReducedMotion,
 } from 'framer-motion'
 import { Plus, Minus } from 'lucide-react'
@@ -114,9 +112,23 @@ export default function MobileFirstSection({ phones }: MobileFirstSectionProps) 
         <DesktopPhoneRise phones={phones} reduced={!!reduced} />
       </div>
 
-      {/* mobile scroll stage */}
+      {/* mobile: simple stack. No 220vh sticky scrub (that blanked real iPhones). */}
       <div className="md:hidden">
-        <MobilePhoneScroll phones={phones} reduced={!!reduced} />
+        <div className="overflow-x-clip px-5 py-14">
+          <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+            Built for phones first
+          </p>
+          <h2 className="mt-3 font-tiempos text-[1.85rem] font-light leading-tight text-espresso">
+            Mobile-first. Then everything else.
+          </h2>
+          <p className="mt-3 max-w-sm font-serotiva text-[14px] font-medium leading-relaxed text-espresso/55">
+            Most visitors land on a phone. We design that screen first.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <PhoneMockups images={phones} />
+          </div>
+          <AccordionBlock />
+        </div>
       </div>
     </section>
   )
@@ -154,84 +166,6 @@ function DesktopPhoneRise({
       >
         <PhoneMockups images={phones} />
       </motion.div>
-    </div>
-  )
-}
-
-function MobilePhoneScroll({
-  phones,
-  reduced,
-}: {
-  phones: PhoneImage[]
-  reduced: boolean
-}) {
-  const stageRef = useRef<HTMLDivElement>(null)
-  const [flashed, setFlashed] = useState(false)
-  const { scrollYProgress } = useScroll({
-    target: stageRef,
-    offset: ['start start', 'end end'],
-  })
-
-  // 0–0.2 hold large, 0.2–0.55 shrink+move, 0.55–1 settle + copy
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.55, 1], [1.15, 1.15, 0.72, 0.72])
-  const y = useTransform(scrollYProgress, [0, 0.2, 0.55, 1], [40, 40, -80, -80])
-  const flashOp = useTransform(scrollYProgress, [0.18, 0.22, 0.28], [0, 1, 0])
-  const copyOp = useTransform(scrollYProgress, [0.5, 0.7], [0, 1])
-  const copyY = useTransform(scrollYProgress, [0.5, 0.7], [24, 0])
-
-  useEffect(() => {
-    if (reduced) return
-    const unsub = scrollYProgress.on('change', (v) => {
-      if (v > 0.2 && !flashed) setFlashed(true)
-    })
-    return () => unsub()
-  }, [scrollYProgress, flashed, reduced])
-
-  if (reduced) {
-    return (
-      <div className="px-6 py-16">
-        <p className="font-nhg text-[11px] uppercase tracking-[0.18em] text-espresso/40">
-          Built for phones first
-        </p>
-        <h2 className="mt-3 font-tiempos text-[2rem] font-light text-espresso">Mobile-first.</h2>
-        <div className="mt-8 flex justify-center">
-          <PhoneMockups images={phones} />
-        </div>
-        <AccordionBlock />
-      </div>
-    )
-  }
-
-  return (
-    <div ref={stageRef} className="relative h-[220vh]">
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
-        <motion.div style={{ scale, y }} className="relative z-10">
-          <PhoneMockups images={phones} bare />
-          {/* screenshot flash */}
-          <motion.div
-            className="pointer-events-none absolute inset-0 z-30 rounded-[2.4rem] bg-white"
-            style={{ opacity: flashOp }}
-            aria-hidden
-          />
-        </motion.div>
-
-        <motion.div style={{ opacity: copyOp, y: copyY }} className="relative z-10 mt-6 max-w-sm text-center">
-          <p className="font-nhg text-[11px] uppercase tracking-[0.18em] text-espresso/40">
-            Built for phones first
-          </p>
-          <h2 className="mt-2 font-tiempos text-[1.85rem] font-light leading-tight text-espresso">
-            Mobile-first. Then everything else.
-          </h2>
-          <p className="mt-3 font-nhg text-sm leading-relaxed text-espresso/55">
-            Most visitors land on a phone. We design that screen first.
-          </p>
-        </motion.div>
-      </div>
-
-      {/* accordion after the sticky stage ends */}
-      <div className="relative z-20 bg-[#f3f1ec] px-6 pb-16 pt-4">
-        <AccordionBlock />
-      </div>
     </div>
   )
 }

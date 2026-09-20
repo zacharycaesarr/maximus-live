@@ -13,6 +13,7 @@ export default {
       fontFamily: {
         nhg: ['"Neue Haas Grotesk Display"', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
         tiempos: ['"Tiempos Headline"', 'Georgia', 'Times New Roman', 'serif'],
+        serotiva: ['Serotiva', '"Neue Haas Grotesk Display"', 'Helvetica Neue', 'sans-serif'],
         druk: ['"Druk Condensed"', 'Druk', 'Impact', 'sans-serif'],
         'druk-wide': ['"Druk Wide"', 'Druk', 'Impact', 'sans-serif'],
       },

@@ -50,6 +50,14 @@ export function NavTunerProvider({ store, children }: { store: LevaStore; childr
           Logo: folder(
             {
               showLogo: initial.showLogo,
+              logoStyle: {
+                value: initial.logoStyle ?? 'short',
+                options: {
+                  'Short (new mark)': 'short',
+                  'Classic SVG (smooth trial)': 'smooth',
+                },
+                label: 'logo mark',
+              },
               logoSize: { value: initial.logoSize, min: 12, max: 48, step: 1, label: 'size (px)' },
               logoGap: { value: initial.logoGap, min: 0, max: 24, step: 1, label: 'gap to wordmark' },
               logoOffsetX: { value: initial.logoOffsetX, min: -24, max: 24, step: 1, label: 'offset X' },

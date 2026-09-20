@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { LevaPanel, useCreateStore } from 'leva'
 import DirectNav from '@/components/nav/DirectNav'
 import DirectHero from '@/components/hero/DirectHero'
@@ -10,7 +10,10 @@ import SmoothScroll from '@/components/SmoothScroll'
 import ScrollToTop from '@/components/ScrollToTop'
 import AboutPage from '@/pages/AboutPage'
 import StartPage from '@/pages/StartPage'
-import WorkPage from '@/pages/WorkPage'
+import WorkMockPage from '@/pages/WorkMockPage'
+import WebDevelopmentPage from '@/pages/WebDevelopmentPage'
+import AdManagementPage from '@/pages/AdManagementPage'
+import CreativeStudioPage from '@/pages/CreativeStudioPage'
 import { PrivacyPage, TermsPage } from '@/pages/LegalPages'
 import PortalLayout from '@/portal/PortalLayout'
 import PortalIndex from '@/portal/pages/PortalIndex'
@@ -34,6 +37,7 @@ import { LayoutModeProvider } from '@/context/LayoutModeContext'
 import { FaqTunerProvider } from '@/context/FaqTunerContext'
 import { HowItWorksTunerProvider } from '@/context/HowItWorksTunerContext'
 import { FooterTunerProvider } from '@/context/FooterTunerContext'
+import { PageScrollBgTunerProvider } from '@/context/PageScrollBgTunerContext'
 import TubelightNav from '@/components/nav/TubelightNav'
 
 function HomePage() {
@@ -54,6 +58,7 @@ function HomePage() {
       'mr-v3-hero-text-tuner-v20',
       'mr-v3-hero-text-tuner-v21',
       'mr-v3-hero-text-tuner-v22',
+      'mr-v3-hero-text-tuner-v23',
       'mr-v3-hero-layout-v5',
       'mr-v3-hero-layout-v6',
       'mr-v3-hero-layout-v7',
@@ -67,6 +72,8 @@ function HomePage() {
       'mr-v3-hero-layout-v17',
       'mr-v3-nav-tuner-v5',
       'mr-v3-bg-tuner-v5',
+      'mr-v3-proof-fan-v1',
+      'mr-v3-proof-fan-v2',
       'mr-v3-how-it-works-v1',
       'mr-v3-how-it-works-v2',
       'mr-v3-how-it-works-v3',
@@ -75,6 +82,9 @@ function HomePage() {
       'mr-how-it-works-v3',
       'mr-v3-intro-tuner-v2',
       'mr-v3-intro-tuner-v3',
+      'mr-v3-page-scroll-bg-v1',
+      'mr-v3-page-scroll-bg-v2',
+      'mr-v3-page-scroll-bg-v3',
     ]
     obsolete.forEach((k) => {
       try {
@@ -112,6 +122,7 @@ function HomePage() {
                         <HowItWorksTunerProvider store={store}>
                           <FaqTunerProvider store={store}>
                             <FooterTunerProvider store={store}>
+                            <PageScrollBgTunerProvider store={store}>
                             <GetStartedHoverProvider>
                               <SmoothScroll>
                                 <ApertureIntro />
@@ -144,6 +155,7 @@ function HomePage() {
                                 </div>
                               )}
                             </GetStartedHoverProvider>
+                            </PageScrollBgTunerProvider>
                             </FooterTunerProvider>
                           </FaqTunerProvider>
                         </HowItWorksTunerProvider>
@@ -170,7 +182,11 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/start" element={<StartPage />} />
-        <Route path="/work" element={<WorkPage />} />
+        <Route path="/capabilities/web-development" element={<WebDevelopmentPage />} />
+        <Route path="/capabilities/ad-management" element={<AdManagementPage />} />
+        <Route path="/capabilities/creative-studio" element={<CreativeStudioPage />} />
+        <Route path="/work" element={<Navigate to="/capabilities/web-development" replace />} />
+        <Route path="/work/mock/:slug/:version" element={<WorkMockPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route

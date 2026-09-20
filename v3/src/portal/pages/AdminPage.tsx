@@ -11,6 +11,7 @@ import AdminHistoryPanel from '@/portal/admin/AdminHistoryPanel'
 import AdminActivityPanel from '@/portal/admin/AdminActivityPanel'
 import AdminMetaSyncPanel from '@/portal/admin/AdminMetaSyncPanel'
 import AdminOnboardPanel from '@/portal/admin/AdminOnboardPanel'
+import AdminTestimonialsPanel from '@/portal/admin/AdminTestimonialsPanel'
 import {
   ALL_PACKAGES,
   focusFromPackages,
@@ -455,6 +456,10 @@ export default function AdminPage() {
         selectedId={selectedId}
         onDone={() => void loadClients()}
       />
+
+      <div className="mt-6">
+        <AdminTestimonialsPanel />
+      </div>
 
       <motion.form
         onSubmit={inviteClient}

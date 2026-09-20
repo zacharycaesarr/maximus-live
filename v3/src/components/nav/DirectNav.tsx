@@ -1,12 +1,18 @@
-import { useEffect, useState, type CSSProperties } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Briefcase, Home, Menu, User, X } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Home, Menu, User, X } from 'lucide-react'
 import { BrandInline } from '@/components/brand/BrandInline'
 import { PortalIcon } from '@/components/ui/icons-portal'
 import { useNavTuner } from '@/context/NavTunerContext'
 import { useIntroTuner } from '@/context/IntroTunerContext'
 import { cn } from '@/lib/utils'
+
+const CAPABILITIES = [
+  { label: 'Web Development', href: '/capabilities/web-development' },
+  { label: 'Ad Management', href: '/capabilities/ad-management' },
+  { label: 'Creative Studio', href: '/capabilities/creative-studio' },
+]
 
 function NotchEar({ side, color }: { side: 'left' | 'right'; color: string }) {
   const d =
@@ -29,12 +35,26 @@ function NotchEar({ side, color }: { side: 'left' | 'right'; color: string }) {
 export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
   const nav = useNavTuner()
   const intro = useIntroTuner()
+  const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
+  const [capsOpen, setCapsOpen] = useState(false)
+  // grace period so the dropdown doesn't vanish the moment the mouse slips off
+  const capsCloseTimer = useRef<number | undefined>(undefined)
+  const openCaps = () => {
+    window.clearTimeout(capsCloseTimer.current)
+    setCapsOpen(true)
+  }
+  const closeCapsSoon = () => {
+    window.clearTimeout(capsCloseTimer.current)
+    capsCloseTimer.current = window.setTimeout(() => setCapsOpen(false), 1600)
+  }
+  useEffect(() => () => window.clearTimeout(capsCloseTimer.current), [])
   const [scrolled, setScrolled] = useState(false)
   const isNotch = nav.barShape === 'notch'
   const isGlass = nav.barShape === 'glass'
   const chromeVisible = intro.showChrome || (!intro.enabled && !intro.preview)
   const fadeSec = Math.max(0.2, intro.fadeInMs / 1000)
+  const capsActive = pathname.startsWith('/capabilities')
 
   useEffect(() => {
     const threshold = nav.scrollSolidAt ?? 48
@@ -57,25 +77,86 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
   const links = [
     { label: 'Home', href: '/', Icon: Home, route: true },
     { label: 'About', href: '/about', Icon: User, route: true },
-    { label: 'Work', href: '/work', Icon: Briefcase, route: true },
     { label: 'Portal', href: '/portal', Icon: PortalIcon, route: true },
   ]
 
   const brandTone = overlay && !scrolled ? 'light' : isGlass && !scrolled ? 'dark' : 'light'
   const linkColorOverride = overlay && !scrolled ? '#ffffff' : nav.linkColor
 
+  const CapsDropdown = ({ tone }: { tone: 'light' | 'dark' }) => (
+    <div
+      className="relative"
+      onMouseEnter={openCaps}
+      onMouseLeave={closeCapsSoon}
+    >
+      <button
+        type="button"
+        className={cn(
+          'inline-flex items-center gap-1 font-serotiva text-[13px] font-medium tracking-wide transition-opacity hover:opacity-70',
+          capsActive ? 'opacity-100' : 'opacity-90',
+          tone === 'dark' && 'text-espresso/80',
+        )}
+        style={{ color: tone === 'light' ? linkColorOverride : undefined }}
+        aria-expanded={capsOpen}
+        aria-haspopup="menu"
+        onClick={() => setCapsOpen((v) => !v)}
+      >
+        Capabilities
+        <ChevronDown
+          size={13}
+          className={cn('transition-transform duration-200', capsOpen && 'rotate-180')}
+        />
+      </button>
+      <AnimatePresence>
+        {capsOpen && (
+          /* pt-3 keeps a hover bridge so the gap doesn't close the menu before you click */
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-1/2 top-full z-50 w-[240px] -translate-x-1/2 pt-5"
+            role="menu"
+          >
+            <div className="overflow-hidden rounded-[11px] border border-white/55 bg-[#f7f7f5]/92 py-1.5 shadow-[0_16px_40px_rgba(26,22,18,0.14)] backdrop-blur-[8px]">
+              {CAPABILITIES.map((c) => (
+                <Link
+                  key={c.href}
+                  to={c.href}
+                  role="menuitem"
+                  onClick={() => setCapsOpen(false)}
+                  className={cn(
+                    'block px-4 py-2.5 font-serotiva text-[13px] font-medium no-underline transition-colors',
+                    pathname === c.href
+                      ? 'bg-espresso/[0.06] text-espresso'
+                      : 'text-espresso/70 hover:bg-espresso/[0.04] hover:text-espresso',
+                  )}
+                >
+                  {c.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+
+  const logoSrc =
+    nav.logoStyle === 'smooth' ? '/assets/mm-logo.svg' : '/assets/mrlogo-short.jpg'
+
   const brand = (
     <Link
       to="/"
       className="inline-flex shrink-0 items-center no-underline"
       style={{ gap: nav.logoGap }}
-      aria-label="Maximus Reach home"
+      aria-label="Reach Further home"
     >
       {nav.showLogo && (
         <img
-          src="/assets/mm-logo.svg"
+          src={logoSrc}
           alt=""
-          className={cn('shrink-0', brandTone === 'dark' ? 'brightness-0' : 'brightness-0 invert')}
+          className={cn('shrink-0 object-contain', brandTone === 'dark' ? 'brightness-0' : 'brightness-0 invert')}
           width={nav.logoSize}
           height={nav.logoSize}
           style={{
@@ -119,14 +200,22 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
     >
       {brand}
       <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 md:flex">
-        {links.map((link) => (
-          <NavLink
-            key={link.href}
-            link={link}
-            className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
-            style={{ color: linkColorOverride }}
-          />
-        ))}
+        <NavLink
+          link={links[0]}
+          className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
+          style={{ color: linkColorOverride }}
+        />
+        <NavLink
+          link={links[1]}
+          className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
+          style={{ color: linkColorOverride }}
+        />
+        <CapsDropdown tone="light" />
+        <NavLink
+          link={links[2]}
+          className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
+          style={{ color: linkColorOverride }}
+        />
       </nav>
       <div className="flex items-center gap-2">
         <Link
@@ -164,7 +253,7 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
         className="w-full max-w-3xl"
       >
         <div
-          className="flex items-center justify-between gap-3 rounded-full border border-espresso/10 px-4 py-2.5 shadow-[0_12px_40px_rgba(44,37,32,0.12)] backdrop-blur-xl md:px-5"
+          className="flex items-center justify-between gap-3 overflow-visible rounded-full border border-espresso/10 px-4 py-2.5 shadow-[0_12px_40px_rgba(44,37,32,0.12)] backdrop-blur-xl md:px-5"
           style={
             {
               background: `color-mix(in srgb, ${nav.glassMenuBg} ${Math.round((nav.glassMenuOpacity ?? 0.92) * 100)}%, transparent)`,
@@ -175,13 +264,21 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
             <BrandInline tone="dark" className="text-[14px]" />
           </Link>
           <nav className="hidden items-center gap-5 md:flex">
-            {links.map((link) => (
-              <NavLink
-                key={`pill-${link.href}`}
-                link={link}
-                className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium text-espresso/80 no-underline transition-opacity hover:opacity-100"
-              />
-            ))}
+            <NavLink
+              link={links[0]}
+              className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium text-espresso/80 no-underline transition-opacity hover:opacity-100"
+            />
+            <NavLink
+              link={links[1]}
+              className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium text-espresso/80 no-underline transition-opacity hover:opacity-100"
+            />
+            <div className="relative text-espresso/80">
+              <CapsDropdown tone="dark" />
+            </div>
+            <NavLink
+              link={links[2]}
+              className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium text-espresso/80 no-underline transition-opacity hover:opacity-100"
+            />
           </nav>
           <Link
             to="/start"
@@ -211,14 +308,22 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
             : 'absolute left-1/2 hidden -translate-x-1/2 items-center gap-7 md:flex'
         }`}
       >
-        {links.map((link) => (
-          <NavLink
-            key={link.href}
-            link={link}
-            className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
-            style={{ color: nav.linkColor }}
-          />
-        ))}
+        <NavLink
+          link={links[0]}
+          className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
+          style={{ color: nav.linkColor }}
+        />
+        <NavLink
+          link={links[1]}
+          className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
+          style={{ color: nav.linkColor }}
+        />
+        <CapsDropdown tone="light" />
+        <NavLink
+          link={links[2]}
+          className="inline-flex items-center gap-1.5 font-nhg text-[13px] font-medium tracking-wide no-underline transition-opacity hover:opacity-70"
+          style={{ color: nav.linkColor }}
+        />
       </nav>
       <div className="flex items-center gap-2">
         <Link
@@ -291,42 +396,68 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
               </div>
 
               {/* nav items */}
-              <nav className="flex flex-1 flex-col justify-center px-6 pb-24">
-                {links.map((link, i) => (
+              <nav className="flex flex-1 flex-col justify-center overflow-y-auto px-6 pb-24">
+                {[links[0], links[1]].map((link, i) => (
                   <motion.div
                     key={link.href}
                     initial={{ opacity: 0, x: -14 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.08 + i * 0.07, duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                    className="border-b border-white/10 last:border-b-0"
+                    className="border-b border-white/10"
                   >
-                    {link.route ? (
-                      <Link
-                        to={link.href}
-                        className="flex w-full items-center gap-4 py-6 font-nhg text-[1.7rem] font-light text-white/70 no-underline transition-colors hover:text-white"
-                        onClick={() => setOpen(false)}
-                      >
-                        <link.Icon size={22} aria-hidden />
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={link.href}
-                        className="flex w-full items-center gap-4 py-6 font-nhg text-[1.7rem] font-light text-white/70 no-underline transition-colors hover:text-white"
-                        onClick={() => setOpen(false)}
-                      >
-                        <link.Icon size={22} aria-hidden />
-                        {link.label}
-                      </a>
-                    )}
+                    <Link
+                      to={link.href}
+                      className="flex w-full items-center gap-4 py-6 font-nhg text-[1.7rem] font-light text-white/70 no-underline transition-colors hover:text-white"
+                      onClick={() => setOpen(false)}
+                    >
+                      <link.Icon size={22} aria-hidden />
+                      {link.label}
+                    </Link>
                   </motion.div>
                 ))}
+
+                <motion.div
+                  initial={{ opacity: 0, x: -14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.22, duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="border-b border-white/10"
+                >
+                  <p className="pt-6 font-nhg text-[11px] uppercase tracking-[0.18em] text-white/30">
+                    Capabilities
+                  </p>
+                  {CAPABILITIES.map((c) => (
+                    <Link
+                      key={c.href}
+                      to={c.href}
+                      className="block py-3.5 font-nhg text-[1.35rem] font-light text-white/70 no-underline transition-colors hover:text-white"
+                      onClick={() => setOpen(false)}
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.36, duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="border-b border-white/10"
+                >
+                  <Link
+                    to={links[2].href}
+                    className="flex w-full items-center gap-4 py-6 font-nhg text-[1.7rem] font-light text-white/70 no-underline transition-colors hover:text-white"
+                    onClick={() => setOpen(false)}
+                  >
+                    <PortalIcon size={22} aria-hidden />
+                    Portal
+                  </Link>
+                </motion.div>
 
                 {/* CTA at bottom of overlay */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 + links.length * 0.07 + 0.05, duration: 0.3 }}
+                  transition={{ delay: 0.45, duration: 0.3 }}
                   className="mt-8"
                 >
                   <Link
@@ -390,7 +521,7 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
             className="absolute left-0 right-0 top-full border-t border-white/10 bg-black px-4 py-4 md:hidden"
           >
             <div className="flex flex-col gap-3">
-              {links.map((link) => (
+              {links.slice(0, 2).map((link) => (
                 <NavLink
                   key={link.href}
                   link={link}
@@ -398,6 +529,24 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
                   onClick={() => setOpen(false)}
                 />
               ))}
+              <p className="mt-1 font-nhg text-[10px] uppercase tracking-[0.16em] text-white/35">
+                Capabilities
+              </p>
+              {CAPABILITIES.map((c) => (
+                <Link
+                  key={c.href}
+                  to={c.href}
+                  className="font-nhg text-base text-white/85 no-underline"
+                  onClick={() => setOpen(false)}
+                >
+                  {c.label}
+                </Link>
+              ))}
+              <NavLink
+                link={links[2]}
+                className="mt-1 inline-flex items-center gap-2 font-nhg text-base text-white no-underline"
+                onClick={() => setOpen(false)}
+              />
               <Link
                 to="/start"
                 className="mt-2 inline-flex items-center justify-center gap-1.5 rounded-[8px] px-4 py-3 font-nhg text-sm font-medium no-underline"

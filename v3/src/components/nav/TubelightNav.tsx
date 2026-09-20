@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Home, User, Briefcase } from 'lucide-react'
+import { Home, User, Layers } from 'lucide-react'
 import { PortalIcon } from '@/components/ui/icons-portal'
 import { cn } from '@/lib/utils'
 
 const items = [
-  { name: 'Home', url: '/', Icon: Home },
-  { name: 'About', url: '/about', Icon: User },
-  { name: 'Work', url: '/work', Icon: Briefcase },
-  { name: 'Portal', url: '/portal', Icon: PortalIcon },
+  { name: 'Home', url: '/', Icon: Home, match: (p: string) => p === '/' },
+  { name: 'About', url: '/about', Icon: User, match: (p: string) => p.startsWith('/about') },
+  {
+    name: 'Work',
+    url: '/capabilities/web-development',
+    Icon: Layers,
+    match: (p: string) => p.startsWith('/capabilities') || p.startsWith('/work'),
+  },
+  { name: 'Portal', url: '/portal', Icon: PortalIcon, match: (p: string) => p.startsWith('/portal') },
 ]
 
 const GOLD = '#c4a574'
@@ -18,7 +23,7 @@ const BROWN = 'rgba(44, 37, 32, 0.9)'
 
 export default function TubelightNav() {
   const { pathname } = useLocation()
-  const active = items.find((i) => i.url === pathname)?.name ?? items[0].name
+  const active = items.find((i) => i.match(pathname))?.name ?? items[0].name
   const [ready, setReady] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 

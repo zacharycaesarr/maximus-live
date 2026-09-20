@@ -1,21 +1,17 @@
 import {
   createElement,
+  useLayoutEffect,
   useEffect,
   useRef,
   type CSSProperties,
   type ElementType,
 } from 'react'
-import gsap from 'gsap'
 import { cn } from '@/lib/utils'
 
 /**
- * Editorial per-letter stretch. Each letter gets its own wdth value
- * along a curve, so the word looks art-directed, not scaled.
- * Real variable-font axes only. No scaleX.
- *
- * Roboto Flex is self-hosted (public/fonts/RobotoFlex-Variable.woff2).
- * Live edits from Leva are applied on every render; the intro animation
- * runs once and never fights the sliders.
+ * Per-letter stretch via Roboto Flex wdth.
+ * Leva always wins: every slider change snaps to the DOM immediately.
+ * Intro animation is optional and never blocks live edits.
  */
 
 export type StretchFont = 'roboto-flex' | 'mona-sans'
@@ -37,7 +33,6 @@ function clamp(n: number, min: number, max: number) {
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 2.2)
 
-/** width per letter index along the chosen curve */
 export function letterWidths(
   count: number,
   base: number,
@@ -86,153 +81,120 @@ export type StretchTextProps = {
   baseWidth?: number
   peakWidth?: number
   curve?: StretchCurve
-  /** "100,112,128,140,151" per-letter overrides when curve = custom */
   customWidths?: string
   weight?: number
   letterSpacing?: number
   opticalSize?: number
   stretchFont?: StretchFont
-  /** letters expand from narrow when scrolled into view (runs once) */
   animateIn?: boolean
   stagger?: number
   hoverBreathe?: boolean
+}
+
+/** Leva sometimes returns the option LABEL instead of the value. Normalize. */
+export function normalizeCurve(raw: unknown): StretchCurve {
+  const s = String(raw ?? 'ramp').toLowerCase()
+  if (s === 'ramp' || s === 'tail' || s === 'peak' || s === 'valley' || s === 'flat' || s === 'custom') {
+    return s
+  }
+  if (s.includes('custom')) return 'custom'
+  if (s.includes('tail')) return 'tail'
+  if (s.includes('peak') || s.includes('middle')) return 'peak'
+  if (s.includes('valley') || s.includes('ends')) return 'valley'
+  if (s.includes('flat') || s.includes('same')) return 'flat'
+  return 'ramp'
 }
 
 export function StretchText({
   text,
   as: Tag = 'span',
   className = '',
-  baseWidth = 100,
-  peakWidth = 140,
+  baseWidth = 78,
+  peakWidth = 151,
   curve = 'ramp',
   customWidths,
-  weight = 650,
-  letterSpacing = -0.01,
+  weight = 720,
+  letterSpacing = -0.02,
   opticalSize = 96,
   stretchFont = 'roboto-flex',
   animateIn = true,
-  stagger = 0.045,
+  stagger = 0.04,
   hoverBreathe = true,
 }: StretchTextProps) {
   const axes = FONT_AXES[stretchFont]
+  const curveNorm = normalizeCurve(curve)
   const letters = Array.from(text)
-  const widths = letterWidths(
-    letters.length,
-    clamp(baseWidth, axes.min, axes.max),
-    clamp(peakWidth, axes.min, axes.max),
-    curve,
-    customWidths,
-  ).map((w) => clamp(w, axes.min, axes.max))
-  const wght = clamp(weight, 100, 1000)
-  const opsz = clamp(opticalSize, 8, 144)
+  const base = clamp(Number(baseWidth) || 78, axes.min, axes.max)
+  const peak = clamp(Number(peakWidth) || 151, axes.min, axes.max)
+  const widths = letterWidths(letters.length, base, peak, curveNorm, String(customWidths ?? '')).map(
+    (w) => clamp(w, axes.min, axes.max),
+  )
+  const wght = clamp(Number(weight) || 720, 100, 1000)
+  const opsz = clamp(Number(opticalSize) || 96, 8, 144)
 
   const rootRef = useRef<HTMLElement>(null)
-  const introDone = useRef(false)
-  // latest values for the intro/hover closures
-  const live = useRef({ widths, wght, opsz, axes })
-  live.current = { widths, wght, opsz, axes }
+  const skipIntro = useRef(false)
+  const widthsKey = `${curveNorm}|${widths.join(',')}|${wght}|${opsz}|${stretchFont}`
 
-  const fvs = (w: number, wg = live.current.wght, os = live.current.opsz) =>
-    live.current.axes.hasOpsz
-      ? `"wght" ${wg}, "wdth" ${w}, "opsz" ${os}`
-      : `"wght" ${wg}, "wdth" ${w}`
+  const fvs = (w: number) =>
+    axes.hasOpsz
+      ? `"wght" ${wght}, "wdth" ${w}, "opsz" ${opsz}`
+      : `"wght" ${wght}, "wdth" ${w}`
 
-  const applyLive = () => {
+  const paint = (useWidths: number[], withTransition: boolean) => {
     const root = rootRef.current
     if (!root) return
-    root.querySelectorAll<HTMLElement>('[data-letter]').forEach((s, i) => {
-      const w = live.current.widths[Math.min(i, live.current.widths.length - 1)]
-      s.style.fontVariationSettings = fvs(w)
-      s.style.fontStretch = `${w}%`
+    root.querySelectorAll<HTMLElement>('[data-letter]').forEach((el, i) => {
+      const w = useWidths[Math.min(i, useWidths.length - 1)]
+      el.style.transition = withTransition
+        ? `font-variation-settings 0.85s cubic-bezier(0.22, 1, 0.36, 1) ${i * stagger}s, font-stretch 0.85s cubic-bezier(0.22, 1, 0.36, 1) ${i * stagger}s`
+        : 'none'
+      el.style.fontVariationSettings = fvs(w)
+      el.style.fontStretch = `${w}%`
     })
   }
 
-  // intro: runs exactly once when the word first scrolls in
+  // ALWAYS apply current Leva widths. Instant. Never blocked by intro.
+  useLayoutEffect(() => {
+    skipIntro.current = true
+    paint(widths, false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [widthsKey, letterSpacing])
+
+  // Soft intro only on first paint if nothing has edited yet
   useEffect(() => {
+    document.fonts.load(`${wght} 64px "Roboto Flex"`).catch(() => {})
+    if (!animateIn) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const root = rootRef.current
-    if (!root || !animateIn || introDone.current) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      introDone.current = true
-      return
-    }
-    const spans = Array.from(root.querySelectorAll<HTMLElement>('[data-letter]'))
-    if (!spans.length) return
+    if (!root) return
 
-    const startW = Math.max(live.current.axes.min, live.current.widths[0] - 30)
-    spans.forEach((s) => {
-      s.style.fontVariationSettings = fvs(startW)
-      s.style.fontStretch = `${startW}%`
-    })
+    // brief delay: if Leva already wrote, skip
+    const t0 = window.setTimeout(() => {
+      if (skipIntro.current) return
+      const startW = widths.map((w) => Math.max(axes.min, w - 45))
+      paint(startW, false)
+      void root.offsetWidth
+      paint(widths, true)
+      window.setTimeout(() => paint(widths, false), 1100)
+    }, 40)
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting) || introDone.current) return
-        introDone.current = true
-        spans.forEach((s, i) => {
-          const st = { w: startW }
-          gsap.to(st, {
-            w: live.current.widths[i],
-            duration: 1.1,
-            delay: i * stagger,
-            ease: 'expo.out',
-            onUpdate: () => {
-              s.style.fontVariationSettings = fvs(st.w)
-              s.style.fontStretch = `${st.w}%`
-            },
-            onComplete: applyLive,
-          })
-        })
-        io.disconnect()
-      },
-      { threshold: 0.3 },
-    )
-    io.observe(root)
-    return () => io.disconnect()
-    // intentionally mount-only: intro must never re-run on Leva edits
+    return () => window.clearTimeout(t0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Leva / prop edits: always push the current values to the DOM
-  // (after the intro has claimed the letters, or immediately if no intro)
-  useEffect(() => {
-    if (animateIn && !introDone.current) return
-    applyLive()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [widths.join(','), wght, opsz, stretchFont, animateIn])
-
   const onEnter = () => {
-    if (!hoverBreathe || !rootRef.current || !introDone.current) return
+    if (!hoverBreathe) return
     if (window.matchMedia('(hover: none)').matches) return
-    rootRef.current.querySelectorAll<HTMLElement>('[data-letter]').forEach((s, i) => {
-      const base = live.current.widths[i]
-      const st = { w: base }
-      gsap.to(st, {
-        w: clamp(base + 6, live.current.axes.min, live.current.axes.max),
-        duration: 0.5,
-        delay: i * 0.02,
-        ease: 'power2.out',
-        onUpdate: () => {
-          s.style.fontVariationSettings = fvs(st.w)
-          s.style.fontStretch = `${st.w}%`
-        },
-      })
-    })
+    paint(
+      widths.map((w) => clamp(w + 8, axes.min, axes.max)),
+      true,
+    )
   }
   const onLeave = () => {
-    if (!hoverBreathe || !rootRef.current || !introDone.current) return
-    rootRef.current.querySelectorAll<HTMLElement>('[data-letter]').forEach((s, i) => {
-      const base = live.current.widths[i]
-      const st = { w: base + 6 }
-      gsap.to(st, {
-        w: base,
-        duration: 0.6,
-        ease: 'power2.out',
-        onUpdate: () => {
-          s.style.fontVariationSettings = fvs(st.w)
-          s.style.fontStretch = `${st.w}%`
-        },
-      })
-    })
+    if (!hoverBreathe) return
+    paint(widths, true)
+    window.setTimeout(() => paint(widths, false), 600)
   }
 
   const rootStyle: CSSProperties = {
@@ -253,6 +215,9 @@ export function StretchText({
       className: cn('stretch-text', className),
       style: rootStyle,
       'aria-label': text,
+      'data-stretch-curve': curveNorm,
+      'data-stretch-peak': String(peak),
+      'data-stretch-base': String(base),
       onMouseEnter: onEnter,
       onMouseLeave: onLeave,
     },
@@ -265,9 +230,10 @@ export function StretchText({
           'aria-hidden': true,
           style: {
             display: 'inline-block',
+            fontFamily: FONT_STACK[stretchFont],
+            fontWeight: wght,
             fontStretch: `${widths[i]}%`,
-            fontVariationSettings: fvs(widths[i], wght, opsz),
-            willChange: 'font-variation-settings',
+            fontVariationSettings: fvs(widths[i]),
           },
         },
         ch === ' ' ? '\u00A0' : ch,

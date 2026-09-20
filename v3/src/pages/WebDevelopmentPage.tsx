@@ -119,9 +119,15 @@ const TESTIMONIALS: WebTestimonial[] = [
 function WebDevMain() {
   const t = useWebDevTuner()
   const stickySteps = buildStickySteps(t)
+  const [desktopCursor, setDesktopCursor] = useState(false)
 
   useEffect(() => {
     document.title = 'Web Development · Maximus Reach'
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const sync = () => setDesktopCursor(mq.matches)
+    sync()
+    mq.addEventListener?.('change', sync)
+    return () => mq.removeEventListener?.('change', sync)
   }, [])
 
   const titleParts = t.heroTitle.split(/\s+/)
@@ -138,29 +144,18 @@ function WebDevMain() {
     stagger: t.stretchStagger,
   }
 
-  return (
-    <MagneticCursor
-      hoverStyle="outline"
-      outlineColor="#2C2520"
-      cursorColor="#2C2520"
-      blendMode="normal"
-      pullElements={false}
-      magneticFactor={0.12}
-      cursorSize={18}
-      hoverPadding={6}
-      contrastBoost={1}
-    >
-      <div className="min-h-screen bg-[#f6f4ef] md:cursor-none">
-        <GrainOverlay opacity={t.grainOpacity} />
+  const page = (
+      <div className="mr-caps-page min-h-screen bg-[#f3efe8] md:cursor-none">
+        <GrainOverlay opacity={Math.max(0.055, t.grainOpacity)} />
         <DirectNav />
 
-        <section className="px-6 pb-14 pt-28 md:pb-20 md:pt-36">
-          <div className="mx-auto flex max-w-6xl flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-16">
+        <section className="relative overflow-x-clip px-5 pb-12 pt-24 md:px-6 md:pb-20 md:pt-36">
+          <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-16">
             <Reveal>
-              <p className="mb-3 font-nhg text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+              <p className="mb-3 font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
                 {t.heroEyebrow}
               </p>
-              <h1 className="m-0 font-tiempos text-[clamp(2.6rem,7vw,4.75rem)] font-light leading-[0.95] tracking-tight text-espresso">
+              <h1 className="m-0 max-w-[18ch] text-[clamp(2.4rem,8vw,4.75rem)] font-light leading-[0.95] tracking-tight text-espresso">
                 {titleParts.map((word, i) => {
                   const isStretch =
                     t.stretchEnabled &&
@@ -176,33 +171,15 @@ function WebDevMain() {
                           className="align-baseline"
                         />
                       ) : (
-                        word
+                        <span className="font-tiempos">{word}</span>
                       )}
                     </span>
                   )
                 })}
               </h1>
-              {/* Brand wordmark. Letters reach wider one by one (Leva: Headline stretch) */}
-              {t.stretchEnabled && (
-                <div className="mt-8">
-                  <p className="mb-2 font-nhg text-[10px] uppercase tracking-[0.18em] text-espresso/35">
-                    Brand stretch
-                  </p>
-                  <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-espresso">
-                    <span className="font-nhg text-[clamp(1.4rem,3.5vw,2rem)] font-medium tracking-tight">
-                      Maximus
-                    </span>
-                    <StretchText
-                      text="REACH"
-                      {...stretchProps}
-                      className="text-[clamp(1.6rem,4.5vw,2.75rem)] leading-none text-espresso"
-                    />
-                  </p>
-                </div>
-              )}
             </Reveal>
             <Reveal delay={0.08}>
-              <p className="m-0 max-w-sm font-nhg text-[15px] leading-relaxed text-espresso/55 md:pb-2">
+              <p className="m-0 max-w-sm font-serotiva text-[15px] font-medium leading-relaxed text-espresso/55 md:pb-2">
                 {t.heroBlurb}
               </p>
             </Reveal>
@@ -211,11 +188,11 @@ function WebDevMain() {
 
         <MobileFirstSection phones={PHONES} />
 
-        <section className="border-t border-espresso/8 bg-[#f7f7f5] px-6 py-16 md:py-24">
+        <section className="overflow-x-clip border-t border-espresso/8 bg-[#f7f7f5]/80 px-5 py-14 md:px-6 md:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <Reveal>
-                <p className="font-nhg text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+                <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
                   {t.proofEyebrow}
                 </p>
                 <h2 className="mt-2 font-tiempos text-[clamp(1.75rem,3.5vw,2.5rem)] font-light tracking-tight text-espresso">
@@ -223,7 +200,7 @@ function WebDevMain() {
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
-                <p className="max-w-xs font-nhg text-sm text-espresso/50">{t.proofHint}</p>
+                <p className="max-w-xs font-serotiva text-sm font-medium text-espresso/50">{t.proofHint}</p>
               </Reveal>
             </div>
             <WebDevShowcase />
@@ -249,6 +226,24 @@ function WebDevMain() {
 
         <SiteFooter />
       </div>
+  )
+
+  if (!desktopCursor) return page
+
+  return (
+    <MagneticCursor
+      hoverStyle="outline"
+      outlineColor="#2C2520"
+      cursorColor="#2C2520"
+      blendMode="normal"
+      pullElements={false}
+      magneticFactor={0.12}
+      cursorSize={18}
+      hoverPadding={6}
+      contrastBoost={1}
+      disableOnTouch
+    >
+      {page}
     </MagneticCursor>
   )
 }

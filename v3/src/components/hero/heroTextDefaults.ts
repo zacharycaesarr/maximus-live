@@ -1,4 +1,4 @@
-export const HERO_TEXT_TUNER_STORAGE_KEY = 'mr-v3-hero-text-tuner-v23'
+export const HERO_TEXT_TUNER_STORAGE_KEY = 'mr-v3-hero-text-tuner-v24'
 
 export const defaultHeroPhrases = [
   'build my website',
@@ -41,8 +41,9 @@ export const defaultHeroTextTuner = {
   stemText: 'I want Maximus to',
   phrases: defaultHeroPhrases.join('|'),
   fontSize: 52,
-  maxWidth: 740,
-  singleLine: false,
+  maxWidth: 920,
+  /** true = one sentence L→R. Toggle off in Leva ("one sentence") to wrap like before. */
+  singleLine: true,
   stemWeight: 400,
   phraseWeight: 700,
   stemColor: '#FCFAF2',

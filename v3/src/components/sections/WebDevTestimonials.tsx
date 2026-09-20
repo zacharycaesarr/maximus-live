@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useState, type FormEvent } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { MessageCircleHeart, Send, X } from 'lucide-react'
 import { getSupabase, supabaseConfigured } from '@/lib/supabase'
 import { Reveal } from '@/components/ui/reveal'
@@ -42,49 +42,16 @@ export default function WebDevTestimonials({
   cardRadius = 11,
 }: Props) {
   const [activeId, setActiveId] = useState(items[0]?.id ?? '')
-  const [paused, setPaused] = useState(false)
   const [formOpen, setFormOpen] = useState(false)
-  const reduced = useReducedMotion()
-  const trackRef = useRef<HTMLDivElement>(null)
-  const offsetRef = useRef(0)
-  const rafRef = useRef(0)
 
   const active = items.find((t) => t.id === activeId) ?? items[0]
 
-  // subtle horizontal autoplay
-  useEffect(() => {
-    if (reduced || paused || items.length < 2) return
-    const el = trackRef.current
-    if (!el) return
-    const loop = () => {
-      offsetRef.current -= 0.35
-      const w = el.scrollWidth / 2
-      if (Math.abs(offsetRef.current) >= w) offsetRef.current += w
-      el.style.transform = `translate3d(${offsetRef.current}px,0,0)`
-      rafRef.current = requestAnimationFrame(loop)
-    }
-    rafRef.current = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [reduced, paused, items.length])
-
-  // soft auto-advance featured when not hovering
-  useEffect(() => {
-    if (reduced || paused || items.length < 2) return
-    const id = window.setInterval(() => {
-      setActiveId((cur) => {
-        const i = items.findIndex((t) => t.id === cur)
-        return items[(i + 1) % items.length].id
-      })
-    }, 5200)
-    return () => window.clearInterval(id)
-  }, [reduced, paused, items])
-
   return (
-    <section className="border-t border-espresso/8 bg-[#efeae2]/55 py-16 md:py-24">
-      <div className="mx-auto max-w-6xl px-6">
+    <section className="overflow-x-clip border-t border-espresso/8 bg-[#ebe4da] py-14 md:py-24">
+      <div className="mx-auto max-w-6xl px-5 md:px-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <Reveal>
-            <p className="font-nhg text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+            <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
               {eyebrow}
             </p>
             <h2 className="mt-3 font-tiempos text-[clamp(1.85rem,3.5vw,2.75rem)] font-light tracking-tight text-espresso">
@@ -95,16 +62,16 @@ export default function WebDevTestimonials({
             type="button"
             data-magnetic
             onClick={() => setFormOpen(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-espresso/15 bg-white/80 px-4 py-2.5 font-nhg text-[13px] text-espresso transition hover:border-espresso/30"
+            className="inline-flex items-center gap-2 rounded-[11px] border border-white/55 bg-white/35 px-4 py-2.5 font-serotiva text-[13px] font-medium text-espresso shadow-[0_8px_24px_-12px_rgba(44,37,32,0.3)] backdrop-blur-[6px] transition hover:bg-white/50"
           >
             <MessageCircleHeart size={15} className="text-[#c4a574]" />
             {submitLabel}
           </button>
         </div>
 
-        {/* featured panel — subtle glass */}
+        {/* featured — glass you can actually see */}
         <div
-          className="mt-10 min-h-[200px] border border-white/50 bg-white/[0.35] p-6 shadow-[0_12px_32px_-12px_rgba(26,22,18,0.25)] backdrop-blur-[5px] md:p-10"
+          className="mt-10 min-h-[200px] border border-white/55 bg-[rgba(255,255,255,0.22)] p-6 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.35)] backdrop-blur-[8px] md:p-10"
           style={{ borderRadius: cardRadius }}
         >
           <AnimatePresence mode="wait">
@@ -154,57 +121,36 @@ export default function WebDevTestimonials({
         </div>
       </div>
 
-      {/* horizontal rail */}
-      <div
-        className="relative mt-8 overflow-hidden"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onFocusCapture={() => setPaused(true)}
-        onBlurCapture={() => setPaused(false)}
-      >
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16"
-          style={{ background: 'linear-gradient(to right, #efeae2, transparent)' }}
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16"
-          style={{ background: 'linear-gradient(to left, #efeae2, transparent)' }}
-        />
-        <div
-          ref={trackRef}
-          className="flex w-max gap-4 px-6 will-change-transform"
-          style={{ transform: 'translate3d(0,0,0)' }}
-        >
-          {[...items, ...items].map((t, i) => {
-            const isActive = t.id === activeId
-            return (
-              <button
-                key={`${t.id}-${i}`}
-                type="button"
-                data-magnetic
-                onMouseEnter={() => setActiveId(t.id)}
-                onFocus={() => setActiveId(t.id)}
-                onClick={() => setActiveId(t.id)}
-                className={cn(
-                  'w-[260px] shrink-0 border px-4 py-4 text-left backdrop-blur-[5px] transition',
-                  isActive
-                    ? 'border-white/60 bg-white/70 shadow-[0_12px_32px_-12px_rgba(26,22,18,0.35)]'
-                    : 'border-white/40 bg-white/[0.32] hover:border-white/60 hover:bg-white/50',
-                )}
-                style={{ borderRadius: cardRadius }}
-              >
-                <p className="font-nhg text-[10px] uppercase tracking-[0.12em] text-espresso/35">
-                  {t.category}
-                </p>
-                <p className="mt-2 line-clamp-3 font-nhg text-[13px] leading-relaxed text-espresso/70">
-                  “{t.excerpt}”
-                </p>
-                <p className="mt-3 font-nhg text-[12px] font-medium text-espresso">{t.name}</p>
-                <p className="font-nhg text-[11px] text-espresso/40">{t.company}</p>
-              </button>
-            )
-          })}
-        </div>
+      <div className="mx-auto mt-8 grid max-w-6xl gap-3 px-6 sm:grid-cols-2 md:grid-cols-4">
+        {items.map((t) => {
+          const isActive = t.id === activeId
+          return (
+            <button
+              key={t.id}
+              type="button"
+              data-magnetic
+              onMouseEnter={() => setActiveId(t.id)}
+              onFocus={() => setActiveId(t.id)}
+              onClick={() => setActiveId(t.id)}
+              className={cn(
+                'border border-white/55 bg-[rgba(255,255,255,0.18)] px-4 py-4 text-left shadow-[0_12px_32px_-12px_rgba(26,22,18,0.28)] backdrop-blur-[8px] transition',
+                isActive
+                  ? 'bg-[rgba(255,255,255,0.42)]'
+                  : 'hover:bg-[rgba(255,255,255,0.32)]',
+              )}
+              style={{ borderRadius: cardRadius }}
+            >
+              <p className="font-nhg text-[10px] uppercase tracking-[0.12em] text-espresso/35">
+                {t.category}
+              </p>
+              <p className="mt-2 line-clamp-3 font-nhg text-[13px] leading-relaxed text-espresso/70">
+                “{t.excerpt}”
+              </p>
+              <p className="mt-3 font-nhg text-[12px] font-medium text-espresso">{t.name}</p>
+              <p className="font-nhg text-[11px] text-espresso/40">{t.company}</p>
+            </button>
+          )
+        })}
       </div>
 
       <AnimatePresence>
