@@ -32,12 +32,13 @@ import { LenisTunerProvider } from '@/context/LenisTunerContext'
 import { GetStartedHoverProvider } from '@/context/GetStartedHoverContext'
 import { ProofTunerProvider } from '@/context/ProofTunerContext'
 import { IntroTunerProvider } from '@/context/IntroTunerContext'
-import { DemoCanvasTunerProvider } from '@/context/DemoCanvasTunerContext'
 import { LayoutModeProvider } from '@/context/LayoutModeContext'
 import { FaqTunerProvider } from '@/context/FaqTunerContext'
 import { HowItWorksTunerProvider } from '@/context/HowItWorksTunerContext'
 import { FooterTunerProvider } from '@/context/FooterTunerContext'
 import { PageScrollBgTunerProvider } from '@/context/PageScrollBgTunerContext'
+import { ServicesOverviewTunerProvider } from '@/context/ServicesOverviewTunerContext'
+import { HomeLevaStoreProvider } from '@/context/HomeLevaStoreContext'
 import TubelightNav from '@/components/nav/TubelightNav'
 
 function HomePage() {
@@ -45,6 +46,11 @@ function HomePage() {
   const isDev = import.meta.env.DEV
   const [panelCollapsed, setPanelCollapsed] = useState(true)
   const [panelMountKey, setPanelMountKey] = useState(0)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-home', '1')
+    return () => document.documentElement.removeAttribute('data-home')
+  }, [])
 
   useEffect(() => {
     document.title = 'Maximus Reach · V3'
@@ -59,6 +65,7 @@ function HomePage() {
       'mr-v3-hero-text-tuner-v21',
       'mr-v3-hero-text-tuner-v22',
       'mr-v3-hero-text-tuner-v23',
+      'mr-v3-hero-text-tuner-v25',
       'mr-v3-hero-layout-v5',
       'mr-v3-hero-layout-v6',
       'mr-v3-hero-layout-v7',
@@ -70,6 +77,8 @@ function HomePage() {
       'mr-v3-hero-layout-v13',
       'mr-v3-hero-layout-v16',
       'mr-v3-hero-layout-v17',
+      'mr-v3-hero-layout-v21',
+      'mr-v3-hero-layout-v22',
       'mr-v3-nav-tuner-v5',
       'mr-v3-bg-tuner-v5',
       'mr-v3-proof-fan-v1',
@@ -85,6 +94,7 @@ function HomePage() {
       'mr-v3-page-scroll-bg-v1',
       'mr-v3-page-scroll-bg-v2',
       'mr-v3-page-scroll-bg-v3',
+      'mr-v3-page-scroll-bg-v4',
     ]
     obsolete.forEach((k) => {
       try {
@@ -118,11 +128,12 @@ function HomePage() {
                 <HeroTextTunerProvider store={store}>
                   <ProofTunerProvider store={store}>
                     <IntroTunerProvider store={store}>
-                      <DemoCanvasTunerProvider store={store}>
                         <HowItWorksTunerProvider store={store}>
                           <FaqTunerProvider store={store}>
                             <FooterTunerProvider store={store}>
                             <PageScrollBgTunerProvider store={store}>
+                            <ServicesOverviewTunerProvider store={store}>
+                            <HomeLevaStoreProvider store={store}>
                             <GetStartedHoverProvider>
                               <SmoothScroll>
                                 <ApertureIntro />
@@ -155,11 +166,12 @@ function HomePage() {
                                 </div>
                               )}
                             </GetStartedHoverProvider>
+                            </HomeLevaStoreProvider>
+                            </ServicesOverviewTunerProvider>
                             </PageScrollBgTunerProvider>
                             </FooterTunerProvider>
                           </FaqTunerProvider>
                         </HowItWorksTunerProvider>
-                      </DemoCanvasTunerProvider>
                     </IntroTunerProvider>
                   </ProofTunerProvider>
                 </HeroTextTunerProvider>
