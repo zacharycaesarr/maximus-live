@@ -38,7 +38,7 @@ function Layer({
           cx={`${x}%`}
           cy={`${y}%`}
           r={rBase + (i % 3) * 0.15}
-          fill="#F3EFE7"
+          fill="var(--home-text-dark)"
           fillOpacity={0.22 + (i % 5) * 0.08}
         />
       ))}
@@ -50,8 +50,10 @@ function Layer({
  * Absolute star field locked to the Services layout band on #page-sections.
  * Does not live inside SectionFocus, so card scale/parallax does not drag the stars.
  */
-export default function ServicesStarField() {
+export default function ServicesStarField({ opacity = 1, fadeEnd = 100 }: { opacity?: number; fadeEnd?: number }) {
   const ref = useRef<HTMLDivElement>(null)
+  const fadeStart = Math.max(35, fadeEnd - 30)
+  const mask = `linear-gradient(to bottom, #000 0%, #000 ${fadeStart}%, transparent ${fadeEnd}%)`
 
   useEffect(() => {
     const page = document.getElementById('page-sections')
@@ -98,8 +100,9 @@ export default function ServicesStarField() {
       style={{
         top: 0,
         height: 0,
-        maskImage: 'linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%)',
+        opacity,
+        maskImage: mask,
+        WebkitMaskImage: mask,
       }}
     >
       <svg

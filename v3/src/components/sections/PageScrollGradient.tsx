@@ -1,107 +1,78 @@
-import { useEffect, useRef } from 'react'
-import { pageScrollGrainDataUrl, type PageScrollBgTuner } from '@/lib/pageScrollBgDefaults'
+import { useLayoutEffect, type RefObject } from 'react'
+import type { PageScrollBgTuner } from '@/lib/pageScrollBgDefaults'
 
 type Props = {
   settings: PageScrollBgTuner
+  targetRef?: RefObject<HTMLElement | null>
 }
 
-/**
- * 21st Axis Blend under homepage sections.
- * Exact grain SVG + overlay blend from the Custom gradient prompt.
- * Sticky unlock. Hero video untouched.
- */
-export default function PageScrollGradient({ settings }: Props) {
-  const elRef = useRef<HTMLDivElement>(null)
-  const unlockedRef = useRef(false)
-  const t0Ref = useRef<number | null>(null)
-  const darkenRef = useRef(0)
-  const lastAngleRef = useRef(settings.angle)
+function layoutBox(content: HTMLElement, element: HTMLElement) {
+  let segment: HTMLElement = element
+  while (segment.parentElement && segment.parentElement !== content) segment = segment.parentElement
+  return { top: segment.offsetTop, bottom: segment.offsetTop + segment.offsetHeight }
+}
 
-  useEffect(() => {
-    if (!settings.enabled) return undefined
+function grainTile(opacity: number) {
+  const alpha = Math.max(0, Math.min(0.06, opacity / 100))
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><g fill="#080909" fill-opacity="${alpha}"><circle cx="2" cy="3" r=".3"/><circle cx="12" cy="2" r=".25"/><circle cx="7" cy="9" r=".3"/><circle cx="15" cy="13" r=".25"/><circle cx="3" cy="15" r=".2"/></g></svg>`
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+}
 
-    const onScroll = () => {
-      const hero = document.querySelector('[data-hero-root]') as HTMLElement | null
-      const heroH = hero?.offsetHeight ?? window.innerHeight
-      const y = window.scrollY || document.documentElement.scrollTop
-      if (y >= heroH * settings.unlockAfterHero) unlockedRef.current = true
+/** Static CSS paint; ResizeObserver only updates stops when section geometry changes. */
+export default function PageScrollGradient({ settings, targetRef }: Props) {
+  useLayoutEffect(() => {
+    const page = targetRef?.current ?? document.getElementById('page-sections')
+    if (!page) return undefined
+    const services = page.querySelector<HTMLElement>('[data-services-band]')
+    const why = page.querySelector<HTMLElement>('#why-maximus')
+    const faq = page.querySelector<HTMLElement>('#faq')
+    const cta = page.querySelector<HTMLElement>('#get-started')
+    const content = services?.parentElement
+    if (!services || !why || !faq || !cta || !content) return undefined
 
-      const sections = document.getElementById('page-sections')
-      if (!sections) {
-        darkenRef.current = 0
-        return
-      }
-      const rect = sections.getBoundingClientRect()
-      const total = Math.max(1, sections.offsetHeight - window.innerHeight)
-      const traveled = Math.min(total, Math.max(0, -rect.top))
-      darkenRef.current = (traveled / total) * settings.scrollDarkenMax
+    const previousImage = page.style.backgroundImage
+    const previousSize = page.style.backgroundSize
+    const previousPosition = page.style.backgroundPosition
+    const sync = () => {
+      const vh = window.innerHeight / 100
+      const servicesEnd = layoutBox(content, services).bottom
+      const faqEnd = layoutBox(content, faq).bottom
+      const whyTop = layoutBox(content, why).top
+      const ctaTop = layoutBox(content, cta).top
+      const lightStart = Math.max(0, servicesEnd + settings.lightTransitionStart * vh)
+      const lightEnd = Math.max(lightStart + 120, servicesEnd + settings.lightTransitionEnd * vh)
+      const darkStart = Math.max(lightEnd + 200, faqEnd + settings.darkReturnStart * vh)
+      const darkEnd = Math.max(darkStart + 120, faqEnd + settings.darkReturnEnd * vh, ctaTop + 20)
+      const creamAlpha = Math.max(0, Math.min(0.25, settings.creamLightStrength / 100))
+      const speckleAlpha = Math.max(0, Math.min(0.12, settings.speckleOpacity / 100))
+      const speckleSize = Math.max(24, 125 - settings.speckleDensity)
+
+      page.style.backgroundImage = [
+        grainTile(settings.grainOpacity),
+        `radial-gradient(circle at 2px 4px, rgba(8,9,9,${speckleAlpha}) 0 0.45px, transparent 0.7px)`,
+        `radial-gradient(circle at 13px 17px, rgba(8,9,9,${speckleAlpha * 0.65}) 0 0.35px, transparent 0.6px)`,
+        `linear-gradient(to bottom, transparent 0px, transparent ${darkStart}px, var(--home-bg-dark) ${darkEnd}px, var(--home-bg-dark) 100%)`,
+        `radial-gradient(ellipse 70% 680px at 25% ${whyTop}px, rgba(248,245,238,${creamAlpha}) 0%, transparent 75%)`,
+        `radial-gradient(ellipse 65% 560px at 80% ${Math.round((whyTop + faqEnd) / 2)}px, rgba(235,230,220,${creamAlpha * 0.5}) 0%, transparent 76%)`,
+        `linear-gradient(to bottom, var(--home-bg-dark) 0px, var(--home-bg-dark) ${lightStart}px, var(--home-bg-light) ${lightEnd}px, var(--home-bg-light) 100%)`,
+      ].join(', ')
+      page.style.backgroundSize = `17px 17px, ${speckleSize}px ${speckleSize + 13}px, ${speckleSize + 31}px ${speckleSize + 7}px, auto, auto, auto, auto`
+      page.style.backgroundPosition = '0 0, 0 0, 19px 23px, 0 0, 0 0, 0 0, 0 0'
     }
 
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    sync()
+    const observer = new ResizeObserver(sync)
+    observer.observe(content)
+    for (const element of [services, why, faq, cta]) observer.observe(element)
+    window.addEventListener('resize', sync)
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+      observer.disconnect()
+      window.removeEventListener('resize', sync)
+      page.style.backgroundImage = previousImage
+      page.style.backgroundSize = previousSize
+      page.style.backgroundPosition = previousPosition
     }
-  }, [settings.enabled, settings.unlockAfterHero, settings.scrollDarkenMax])
+  }, [settings, targetRef])
 
-  useEffect(() => {
-    const el = elRef.current
-    if (!el || !settings.enabled) return undefined
-
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const dir = settings.motionReverse ? -1 : 1
-    const amt = Math.max(0, Math.min(1, settings.motionAmount / 100))
-    const speedScale = (settings.speed || 55) / 55
-    let raf = 0
-
-    const paint = (angleDeg: number, darken: number) => {
-      lastAngleRef.current = angleDeg
-      const vig = Math.max(0, Math.min(1, settings.vignette / 100))
-      // 21st CSS approximation layers: grain + vignette + linear
-      const grain = pageScrollGrainDataUrl(settings.grain)
-      const vignette = `radial-gradient(circle at 50% 50%, rgba(0,0,0,0) ${52 - vig * 18}%, rgba(0,0,0,${0.18 + vig * 0.4}) 100%)`
-      const scrollWash = `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,${darken}) 100%)`
-      const linear = `linear-gradient(${angleDeg}deg, ${settings.color0} 0%, ${settings.color1} 100%)`
-      el.style.backgroundColor = settings.backdrop || settings.color0
-      el.style.backgroundImage = `${grain}, ${vignette}, ${scrollWash}, ${linear}`
-      el.style.backgroundSize = '120px 120px, auto, auto, auto'
-      el.style.backgroundBlendMode = 'overlay, normal, normal, normal'
-    }
-
-    paint(settings.angle, 0)
-
-    if (reduce) return undefined
-
-    const tick = (now: number) => {
-      if (!unlockedRef.current) {
-        paint(lastAngleRef.current, darkenRef.current)
-        raf = window.requestAnimationFrame(tick)
-        return
-      }
-      if (t0Ref.current == null) t0Ref.current = now
-      const t = (now - t0Ref.current) / 1000
-      const ph = t * 0.55 * speedScale
-      const spin = ph * dir
-      const angle = settings.angle + spin * 40 * amt
-      paint(angle, darkenRef.current)
-      raf = window.requestAnimationFrame(tick)
-    }
-
-    raf = window.requestAnimationFrame(tick)
-    return () => window.cancelAnimationFrame(raf)
-  }, [settings])
-
-  if (!settings.enabled) return null
-
-  return (
-    <div
-      ref={elRef}
-      className="pointer-events-none absolute inset-0 z-0"
-      aria-hidden
-      data-page-scroll-gradient
-      style={{ backgroundColor: settings.backdrop || settings.color0 }}
-    />
-  )
+  return null
 }

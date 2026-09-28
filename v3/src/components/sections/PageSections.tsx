@@ -8,6 +8,7 @@ import ServicesOverviewCards from '@/components/sections/ServicesOverviewCards'
 import { useServicesOverviewTuner } from '@/context/ServicesOverviewTunerContext'
 import WhyComparisonMatrix from '@/components/sections/WhyComparisonMatrix'
 import MotionGetStarted from '@/components/sections/MotionGetStarted'
+import DynamicWaveCanvas from '@/components/sections/DynamicWaveCanvas'
 import SiteFooter from '@/components/sections/SiteFooter'
 import SectionBreak from '@/components/sections/SectionBreak'
 import PageScrollGradient from '@/components/sections/PageScrollGradient'
@@ -17,12 +18,13 @@ import { useProofTuner } from '@/context/ProofTunerContext'
 import { useFaqTuner } from '@/context/FaqTunerContext'
 import { usePageScrollBgTuner } from '@/context/PageScrollBgTunerContext'
 import { useHomeLevaStore } from '@/context/HomeLevaStoreContext'
+import { NearMount } from '@/components/NearMount'
 import { cn } from '@/lib/utils'
 
-/** Section titles on night floor — white */
-const titleOnNight = 'text-white'
-const eyebrowNight =
-  'font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-white/50'
+/** Section titles on dark environment */
+const titleOnDark = 'text-home-on-dark'
+const eyebrowOnDark =
+  'font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-muted'
 
 /** Invisible layout anchor for Reach Beacon */
 function BeaconAnchor({ id, className }: { id: string; className?: string }) {
@@ -52,29 +54,40 @@ export default function PageSections() {
       id="page-sections"
       ref={rootRef}
       className="relative w-full overflow-x-clip"
-      style={{ backgroundColor: pageBg.enabled ? pageBg.backdrop : '#000000' }}
+      style={{ backgroundColor: 'var(--home-bg-dark)' }}
     >
       <PageScrollGradient settings={pageBg} targetRef={rootRef} />
-      <ServicesStarField />
+      <ServicesStarField opacity={pageBg.starsOpacity} fadeEnd={pageBg.starsFadeEnd} />
       <ReachBeacon store={store} />
 
       <div className="relative z-10">
         <div data-services-band>
-        <SectionFocus align="left" idleScale={0.76} focusScale={1.04} idleOffsetX={56}>
+        {/*
+          Equal 3-up cards already fill max-w-6xl. Keep focusScale at 1 so the
+          left-origin Z animation does not grow the row past overflow-x-clip
+          and shear the right edge of card 3.
+        */}
+        <SectionFocus
+          align="left"
+          idleScale={0.76}
+          focusScale={1}
+          idleOffsetX={56}
+          className="py-16 md:py-24"
+        >
           <SectionParallax>
             <section
               id="services"
               data-parallax-pause
-              className="relative w-full overflow-x-clip py-14 md:py-20"
+              className="relative w-full py-14 md:py-20"
               aria-label="Services overview"
             >
               <div className="relative z-[1] mx-auto w-full max-w-6xl px-5">
                 <BeaconAnchor id="services" className="left-1/2 top-2 -translate-x-1/2" />
-                <p className={cn('mb-2 text-left', eyebrowNight)}>01</p>
+                <p className={cn('mb-2 text-left', eyebrowOnDark)}>01</p>
                 <h2
                   className={cn(
                     'm-0 mb-10 text-left font-nhg text-[clamp(1.85rem,4vw,2.75rem)] font-semibold tracking-tight',
-                    titleOnNight,
+                    titleOnDark,
                   )}
                 >
                   {services.sectionTitle}
@@ -95,21 +108,25 @@ export default function PageSections() {
               className="relative w-full overflow-x-clip px-4 py-10 md:py-16"
               aria-label="Proof of work"
             >
-              <p className={cn('mb-2 text-center', eyebrowNight)}>02 · Proof of work</p>
+              <p className={cn('mb-2 text-center', eyebrowOnDark)}>02 · Proof of work</p>
               {proof.enabled && (
                 <>
                   <div className="relative mx-auto w-full max-w-4xl">
                     <BeaconAnchor id="work" className="left-[8%] top-1/2 -translate-y-1/2 md:left-[18%]" />
-                    <DepthFlipText
-                      phrases={[proof.flipPhraseA, proof.flipPhraseB]}
-                      textColor={proof.flipColor}
-                      backgroundColor="transparent"
-                      fontClassName="font-nhg"
-                      loop
-                      compact
-                    />
+                    <NearMount minHeight={160}>
+                      <DepthFlipText
+                        phrases={[proof.flipPhraseA, proof.flipPhraseB]}
+                        textColor={proof.flipColor === 'var(--home-text-dark)' ? 'var(--home-text-light)' : proof.flipColor}
+                        backgroundColor="transparent"
+                        fontClassName="font-nhg"
+                        loop
+                        compact
+                      />
+                    </NearMount>
                   </div>
-                  <ImageFanCarousel />
+                  <NearMount minHeight={420}>
+                    <ImageFanCarousel />
+                  </NearMount>
                 </>
               )}
             </section>
@@ -131,13 +148,13 @@ export default function PageSections() {
               className="relative mx-auto w-full max-w-6xl overflow-x-clip px-5 py-10 md:py-16"
               aria-label="Why Maximus Reach"
             >
-              <p className={cn('mb-1.5 text-right md:mb-2', eyebrowNight)}>04</p>
+              <p className={cn('mb-1.5 text-right md:mb-2', eyebrowOnDark)}>04</p>
               <div className="relative mb-5 md:mb-10">
                 <BeaconAnchor id="why-maximus" className="left-0 top-1/2 -translate-y-1/2 md:left-[8%]" />
                 <h2
                   className={cn(
                     'm-0 text-right font-nhg text-[clamp(1.85rem,4vw,2.75rem)] font-semibold tracking-tight',
-                    titleOnNight,
+                    'text-home-on-light',
                   )}
                 >
                   Why Maximus Reach?
@@ -157,13 +174,13 @@ export default function PageSections() {
               className="relative mx-auto w-full max-w-3xl overflow-x-clip px-5 py-10 md:py-16"
               aria-label="FAQ"
             >
-              <p className={cn('mb-2 text-left', eyebrowNight)}>05</p>
+              <p className={cn('mb-2 text-left', eyebrowOnDark)}>05</p>
               <div className="relative mb-8">
                 <BeaconAnchor id="faq" className="right-0 top-1/2 -translate-y-1/2 md:right-[12%]" />
                 <h2
                   className={cn(
                     'm-0 text-left font-nhg text-[clamp(1.85rem,4vw,2.75rem)] font-semibold tracking-tight',
-                    titleOnNight,
+                    'text-home-on-light',
                   )}
                 >
                   FAQ
@@ -182,6 +199,11 @@ export default function PageSections() {
 
         <div className="relative">
           <BeaconAnchor id="get-started" className="left-1/2 top-10 -translate-x-1/2" />
+          <DynamicWaveCanvas
+            waveSpeed={pageBg.waveSpeed}
+            waveStrength={pageBg.waveStrength}
+            waveAcidAmount={pageBg.waveAcidAmount}
+          />
           <MotionGetStarted />
         </div>
         <SiteFooter tone="onDark" />

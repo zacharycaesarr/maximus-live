@@ -1,9 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
-import { useControls, folder, button } from 'leva'
+import { useControls, folder } from 'leva'
 import type { LevaStore } from '@/lib/levaStore'
 import {
-  ARCHIVED_21ST_BLUE,
-  ARCHIVED_DUSK_SLUDGE,
   defaultPageScrollBg,
   loadPageScrollBg,
   PAGE_SCROLL_BG_STORAGE_KEY,
@@ -12,98 +10,32 @@ import {
 
 const Ctx = createContext<PageScrollBgTuner>(defaultPageScrollBg)
 
-export function PageScrollBgTunerProvider({
-  store,
-  children,
-}: {
-  store: LevaStore
-  children: ReactNode
-}) {
+export function PageScrollBgTunerProvider({ store, children }: { store: LevaStore; children: ReactNode }) {
   const initial = useMemo(() => loadPageScrollBg(), [])
+  const values = useControls({
+    'Homepage Background': folder({
+      starsOpacity: { value: initial.starsOpacity, min: 0, max: 1, step: 0.01, label: 'Stars Opacity' },
+      starsFadeEnd: { value: initial.starsFadeEnd, min: 55, max: 100, step: 1, label: 'Stars Fade End' },
+      lightTransitionStart: { value: initial.lightTransitionStart, min: -30, max: 50, step: 1, label: 'Light Transition Start (vh)' },
+      lightTransitionEnd: { value: initial.lightTransitionEnd, min: 5, max: 90, step: 1, label: 'Light Transition End (vh)' },
+      speckleOpacity: { value: initial.speckleOpacity, min: 0, max: 12, step: 1, label: 'Speckle Opacity' },
+      speckleDensity: { value: initial.speckleDensity, min: 25, max: 110, step: 1, label: 'Speckle Density' },
+      creamLightStrength: { value: initial.creamLightStrength, min: 0, max: 25, step: 1, label: 'Cream Light Strength' },
+      grainOpacity: { value: initial.grainOpacity, min: 0, max: 6, step: 1, label: 'Grain Opacity' },
+      darkReturnStart: { value: initial.darkReturnStart, min: -60, max: 15, step: 1, label: 'Dark Return Start (vh)' },
+      darkReturnEnd: { value: initial.darkReturnEnd, min: 5, max: 90, step: 1, label: 'Dark Return End (vh)' },
+      waveSpeed: { value: initial.waveSpeed, min: 0.1, max: 2, step: 0.05, label: 'Wave Speed' },
+      waveStrength: { value: initial.waveStrength, min: 0, max: 100, step: 1, label: 'Wave Strength' },
+      waveAcidAmount: { value: initial.waveAcidAmount, min: 0, max: 30, step: 1, label: 'Wave Acid Amount' },
+    }, { collapsed: true }),
+  }, { store })
 
-  const values = useControls(
-    {
-      'Page scroll BG': folder(
-        {
-          enabled: { value: initial.enabled, label: 'enabled' },
-          color0: { value: initial.color0, label: 'color top (0%)' },
-          color1: { value: initial.color1, label: 'color bottom (100%)' },
-          angle: { value: initial.angle, min: 0, max: 360, step: 1, label: 'angle' },
-          grain: { value: initial.grain, min: 0, max: 100, step: 1 },
-          vignette: { value: initial.vignette, min: 0, max: 100, step: 1 },
-          speed: { value: initial.speed, min: 0, max: 100, step: 1, label: 'motion speed' },
-          motionAmount: {
-            value: initial.motionAmount,
-            min: 0,
-            max: 100,
-            step: 1,
-            label: 'motion amount',
-          },
-          motionReverse: { value: initial.motionReverse, label: 'motion reverse' },
-          unlockAfterHero: {
-            value: initial.unlockAfterHero,
-            min: 0.5,
-            max: 1.2,
-            step: 0.02,
-            label: 'unlock after hero',
-          },
-          scrollDarkenMax: {
-            value: initial.scrollDarkenMax,
-            min: 0,
-            max: 0.6,
-            step: 0.02,
-            label: 'scroll darken max',
-          },
-          'Load sunset paper (live)': button(() => {
-            try {
-              localStorage.setItem(PAGE_SCROLL_BG_STORAGE_KEY, JSON.stringify(defaultPageScrollBg))
-              window.location.reload()
-            } catch {
-              /* ignore */
-            }
-          }),
-          'Load dusk sludge (archived)': button(() => {
-            try {
-              localStorage.setItem(
-                PAGE_SCROLL_BG_STORAGE_KEY,
-                JSON.stringify({ ...defaultPageScrollBg, ...ARCHIVED_DUSK_SLUDGE, enabled: true }),
-              )
-              window.location.reload()
-            } catch {
-              /* ignore */
-            }
-          }),
-          'Load 21st blue (archived)': button(() => {
-            try {
-              localStorage.setItem(
-                PAGE_SCROLL_BG_STORAGE_KEY,
-                JSON.stringify({ ...defaultPageScrollBg, ...ARCHIVED_21ST_BLUE, enabled: true }),
-              )
-              window.location.reload()
-            } catch {
-              /* ignore */
-            }
-          }),
-        },
-        { collapsed: true },
-      ),
-    },
-    { store },
-  )
-
-  const flat = { ...defaultPageScrollBg, ...(values as Partial<PageScrollBgTuner>) } as PageScrollBgTuner
-
+  const settings = useMemo(() => ({ ...defaultPageScrollBg, ...values }) as PageScrollBgTuner, [values])
   useEffect(() => {
-    try {
-      localStorage.setItem(PAGE_SCROLL_BG_STORAGE_KEY, JSON.stringify(flat))
-    } catch {
-      /* ignore */
-    }
-  }, [flat])
-
-  return <Ctx.Provider value={flat}>{children}</Ctx.Provider>
+    try { localStorage.setItem(PAGE_SCROLL_BG_STORAGE_KEY, JSON.stringify(settings)) }
+    catch { /* storage unavailable */ }
+  }, [settings])
+  return <Ctx.Provider value={settings}>{children}</Ctx.Provider>
 }
 
-export function usePageScrollBgTuner() {
-  return useContext(Ctx)
-}
+export function usePageScrollBgTuner() { return useContext(Ctx) }

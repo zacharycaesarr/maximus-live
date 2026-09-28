@@ -65,8 +65,8 @@ function Magnetic({
 }
 
 /**
- * 21st motion-footer cherry-pick: gradient headline + magnetic glass pills.
- * Theme: cream/mocha, NHG. No marquee / app-store / scroll-to-reveal wrapper.
+ * Get Started: gradient headline + magnetic pills.
+ * Colors follow Homepage Colors on #home-page.
  */
 export default function MotionGetStarted() {
   const t = useFooterTuner()
@@ -100,7 +100,7 @@ export default function MotionGetStarted() {
   if (!t.enabled) return null
 
   const pill =
-    'rounded-full border border-white/20 bg-white/90 px-8 py-4 font-nhg text-sm font-semibold text-espresso shadow-[0_12px_30px_rgba(0,0,0,0.25)] backdrop-blur-md transition-colors hover:border-white/40 hover:bg-white md:px-10 md:py-5 md:text-base'
+    'rounded-full border border-home-line/40 bg-home-surface-light px-8 py-4 font-nhg text-sm font-semibold text-home-on-light shadow-[0_12px_30px_rgba(0,0,0,0.25)] backdrop-blur-md transition-colors hover:border-home-line hover:opacity-95 md:px-10 md:py-5 md:text-base'
 
   return (
     <section
@@ -109,22 +109,13 @@ export default function MotionGetStarted() {
       className="relative overflow-visible px-5 py-20 md:py-28"
       aria-label="Get started"
     >
-      <div
-        className="pointer-events-none absolute inset-x-0 top-1/2 h-[min(80vh,640px)] -translate-y-1/2 opacity-90 blur-[90px]"
-        style={{
-          background:
-            'radial-gradient(ellipse 85% 70% at 50% 50%, rgba(196,165,116,0.28) 0%, rgba(26,22,18,0.2) 42%, rgba(26,22,18,0) 78%)',
-        }}
-        aria-hidden
-      />
-
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center overflow-visible text-center">
-        <p className="mb-3 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-white/45">
+        <p className="mb-3 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-muted">
           06
         </p>
         <h2
           ref={headingRef}
-          className="m-0 max-w-3xl overflow-visible bg-gradient-to-b from-[#FCFAF2] via-[#E8DFD4] to-[#C4A574] bg-clip-text pb-2 font-nhg text-[clamp(2.4rem,8vw,5.5rem)] font-semibold leading-[1.02] tracking-tight text-transparent"
+          className="m-0 max-w-3xl overflow-visible pb-2 font-nhg text-[clamp(2.4rem,8vw,5.5rem)] font-semibold leading-[1.02] tracking-tight text-home-on-dark"
           style={{ paddingBottom: '0.12em' }}
         >
           {t.headline}
@@ -132,11 +123,11 @@ export default function MotionGetStarted() {
 
         <div ref={linksRef} className="mt-10 flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Magnetic as={Link} to={t.primaryHref} className={cn(pill, 'inline-flex items-center gap-3 no-underline')}>
-            <StartProjectIcon size={22} className="text-espresso/70" />
+            <StartProjectIcon size={22} className="text-home-muted" />
             {t.primaryLabel}
           </Magnetic>
           <Magnetic as={Link} to={t.secondaryHref} className={cn(pill, 'inline-flex items-center gap-3 no-underline')}>
-            <AccountIcon size={22} className="text-espresso/70" />
+            <AccountIcon size={22} className="text-home-muted" />
             {t.secondaryLabel}
           </Magnetic>
         </div>
