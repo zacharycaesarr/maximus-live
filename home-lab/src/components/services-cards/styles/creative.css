@@ -1,0 +1,83 @@
+/* Creative Studio only. Approved Web and Ads selectors are not overridden. */
+.lab-artboard__live--creative .service-card__title { font-size: 28px; font-weight: 400; }
+.lab-artboard__live--creative .service-card__desc { max-width: none; font-size: 15px; line-height: 1.3; letter-spacing: -.025em; margin-bottom: 24px; }
+.lab-artboard__live--creative .service-card__cta { font-size: 15px; font-weight: 400; }
+.lab-artboard__live--creative .service-card__footer { padding-bottom: 26px; }
+.lab-artboard__live--creative .service-card__icon svg { width: 22px; height: 22px; }
+
+/*
+ * Card 3 panels tip past the shell. Open overflow only on Creative, and
+ * keep min-height:0 so the flex shell still locks to the 560px slot
+ * (otherwise the footer gets shoved out the bottom).
+ */
+.lab-artboard__live--creative .service-card {
+  overflow: visible;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+}
+
+.lab-artboard__live--creative .service-card__scene {
+  overflow: visible;
+  min-height: 0;
+}
+
+.lab-artboard__live--creative .service-card__header,
+.lab-artboard__live--creative .service-card__footer {
+  flex-shrink: 0;
+}
+
+.creative-scene { position: absolute; inset: 0; }
+.creative-stage { position: absolute; width: 378px; height: 340px; transform-origin: 50% 45%; }
+.creative-grid { position: absolute; inset: 0; pointer-events: none; opacity: var(--creative-grid-opacity);
+  background-image: linear-gradient(rgba(188,201,139,.15) 1px,transparent 1px),linear-gradient(90deg,rgba(188,201,139,.15) 1px,transparent 1px);
+  background-size: 22px 22px; mask-image: radial-gradient(ellipse at 50% 70%,#000,transparent 72%); }
+.creative-glow { position: absolute; transform: translate(-50%,-50%); background: radial-gradient(ellipse,rgba(196,217,51,.28),transparent 70%); filter: blur(17px); }
+.creative-cross { position: absolute; width: 21px; height: 21px; opacity: var(--creative-cross-opacity); }
+.creative-cross::before,.creative-cross::after { content: ''; position: absolute; background: #afb39b; }
+.creative-cross::before { height: 1px; width: 100%; top: 50%; }
+.creative-cross::after { width: 1px; height: 100%; left: 50%; }
+.creative-cross--left { left: 26px; top: 248px; }
+.creative-cross--right { right: 28px; top: 268px; }
+.creative-layer { position: absolute; inset: 0; perspective: var(--creative-perspective); perspective-origin: var(--creative-origin); pointer-events: none; }
+.creative-layer--video { z-index: 1; }
+.creative-layer--social { z-index: 2; }
+.creative-layer--brand { z-index: 3; }
+.creative-panel { position: absolute; transform-style: preserve-3d; transform-origin: center; }
+.creative-panel__back,.creative-panel__face { position: absolute; inset: 0; border-radius: inherit; }
+.creative-panel__back { transform: translate3d(1px,calc(var(--creative-depth) * -.4),calc(var(--creative-depth) * -1)); background: #22251b; border: 1px solid rgba(211,216,187,.18); }
+.creative-panel__face { transform: translateZ(0); background: #050605; border: 1px solid rgba(224,229,201,.25);
+  box-shadow: 5px 17px var(--creative-shadow-blur) rgba(0,0,0,var(--creative-shadow-opacity)); }
+.creative-panel__face::after { content: ''; position: absolute; inset: -1px; border-radius: inherit; border: 1px solid rgba(226,237,178,var(--creative-rim)); pointer-events: none; mask-image: linear-gradient(130deg,#000,rgba(0,0,0,.2) 60%,transparent); }
+.creative-media { position: absolute; inset: 0; }
+.creative-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.creative-video__visual { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; background: #070a06; }
+.creative-media--video { background: radial-gradient(ellipse at 54% 42%,rgba(149,176,42,.25),transparent 53%),linear-gradient(120deg,#151c0a,#030403 78%); }
+.creative-video__play { position: absolute; left: var(--creative-play-x); top: var(--creative-play-y); transform: translate(-50%,-50%); width: var(--creative-play-size); height: var(--creative-play-size); border-radius: 50%; border: 1.3px solid #f2f3ed; display: grid; place-items: center; background: rgba(0,0,0,.18); }
+.creative-video__play svg { width: 60%; height: 60%; fill: #fff; }
+.creative-video__duration { position: absolute; bottom: 10px; left: 10px; font-size: var(--creative-duration-size); font-weight: 400; color: #e4e7dc; }
+.creative-social .creative-panel__face { background: linear-gradient(135deg,#fafbf8,#d9dcd5); border-color: rgba(255,255,255,.65); color: #131610; }
+.creative-social .creative-panel__back { background: #9a9e90; border-color: rgba(255,255,255,.28); }
+.creative-social .creative-panel__face::after { border-color: rgba(255,255,255,.8); }
+.creative-social__header { height: var(--creative-social-header); padding: 7px var(--creative-social-padding) 5px; display: flex; align-items: center; gap: 5px; }
+.creative-social__avatar { width: var(--creative-avatar-size); height: var(--creative-avatar-size); flex: 0 0 auto; border-radius: 50%; background: #111608; color: var(--creative-accent); font-size: 13px; font-style: italic; font-weight: 500; display: grid; place-items: center; }
+.creative-social__account { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+.creative-social__account strong { font-size: var(--creative-name-size); font-weight: 500; white-space: nowrap; }
+.creative-social__account span { font-size: 5px; color: #85887e; }
+.creative-social__more { margin-left: auto; align-self: center; font-size: 13px; line-height: 1; color: #62665c; letter-spacing: .5px; }
+.creative-social__visual { position: absolute; left: var(--creative-social-padding); right: var(--creative-social-padding); top: var(--creative-social-header); bottom: var(--creative-social-footer); border-radius: 4px; overflow: hidden;
+  background: radial-gradient(ellipse at 76% 15%,#b5c75d,transparent 60%),linear-gradient(145deg,#141d06,#657b23 65%,#111607); }
+.creative-media--social { inset: 6%; }
+.creative-media--social { max-width: 88%; }
+.creative-social__avatar { position: relative; overflow: hidden; }
+.creative-media--avatar { inset: 0; padding: 4px; }
+.creative-media--avatar img { object-fit: contain; }
+.creative-media--brand { mask-image: linear-gradient(90deg, transparent, #000 18%); }
+.creative-media--social img { object-fit: contain; filter: drop-shadow(0 5px 3px rgba(0,0,0,.5)); }
+.creative-social__actions { position: absolute; bottom: 0; left: var(--creative-social-padding); right: var(--creative-social-padding); height: var(--creative-social-footer); display: flex; align-items: center; gap: 6px; color: #6a7063; }
+.creative-social__actions svg { width: var(--creative-action-size); height: var(--creative-action-size); stroke: currentColor; stroke-width: 1.1; stroke-linejoin: round; stroke-linecap: round; }
+.creative-social__bookmark { margin-left: auto; }
+.creative-brand__visual { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+.creative-media--brand { background: radial-gradient(ellipse 32% 110% at 91% 62%,rgba(187,210,48,.38),transparent 75%),linear-gradient(120deg,#070907 45%,#11170a); }
+.creative-brand__title { position: absolute; left: var(--creative-text-x); top: var(--creative-text-y); font-size: var(--creative-brand-title-size); font-weight: 400; line-height: 1.12; letter-spacing: -.04em; white-space: pre-line; color: #f1f3ed; }
+.creative-brand__details { position: absolute; left: var(--creative-text-x); bottom: var(--creative-detail-bottom); font-size: var(--creative-detail-size); font-weight: 400; line-height: 1.45; letter-spacing: .025em; color: #d4d9cc; }

@@ -1,0 +1,195 @@
+import { useControls, folder, button } from 'leva'
+import type { LevaStore } from '@/lib/levaStore'
+import { webDetailControls } from './WebDetailControls'
+import { persistedSchema } from './persistTuners'
+
+/** Web card Leva folders. Returns values mapped for CSS vars. */
+export function useLabTuners(onReplayIntro: () => void = () => {}, store?: LevaStore) {
+  return useControls(
+    '01 · Web Development',
+    persistedSchema('01 · Web Development', {
+      Scene: folder({
+        perspective: { value: 1100, min: 900, max: 1600, step: 10 },
+        perspectiveX: { value: 48, min: 35, max: 70, step: 1 },
+        perspectiveY: { value: 42, min: 20, max: 60, step: 1 },
+        sceneScale: { value: 1, min: 0.7, max: 1.35, step: 0.01 },
+      }),
+      Browser: folder({
+        browserX: { value: 19, min: 0, max: 40, step: 0.5 },
+        browserY: { value: 9, min: -10, max: 40, step: 0.5 },
+        browserW: { value: 70, min: 40, max: 90, step: 0.5 },
+        browserRx: { value: -14, min: -30, max: 30, step: 0.5 },
+        browserRy: { value: -25, min: -40, max: 20, step: 0.5 },
+        browserRz: { value: 8, min: -2, max: 22, step: 0.5 },
+        browserZ: { value: 0, min: -40, max: 100, step: 1 },
+        browserScale: { value: 1, min: 0.6, max: 1.4, step: 0.01 },
+      }),
+      'Tool rail': folder({
+        railX: { value: 9, min: -5, max: 30, step: 0.5 },
+        railY: { value: 7, min: 0, max: 55, step: 0.5 },
+        railZ: { value: 24, min: -20, max: 120, step: 1 },
+        railRx: { value: -14, min: -30, max: 30, step: 0.5 },
+        railRy: { value: -25, min: -40, max: 20, step: 0.5 },
+        railRz: { value: 7, min: -2, max: 22, step: 0.5 },
+        railScale: { value: 0.94, min: 0.6, max: 1.4, step: 0.01 },
+      }),
+      Analytics: folder({
+        analyticsX: { value: 54, min: 15, max: 75, step: 0.5 },
+        analyticsY: { value: 65, min: 20, max: 80, step: 0.5 },
+        analyticsZ: { value: 45, min: -20, max: 140, step: 1 },
+        analyticsRx: { value: -10, min: -30, max: 30, step: 0.5 },
+        analyticsRy: { value: -18, min: -40, max: 20, step: 0.5 },
+        analyticsRz: { value: 8, min: -2, max: 22, step: 0.5 },
+        analyticsScale: { value: 0.94, min: 0.6, max: 1.4, step: 0.01 },
+      }),
+      'Ground glow': folder({
+        glowX: { value: 3, min: 0, max: 80, step: 1 },
+        glowY: { value: 71, min: 20, max: 90, step: 1 },
+        glowWidth: { value: 68, min: 20, max: 90, step: 1 },
+        glowHeight: { value: 20, min: 8, max: 50, step: 1 },
+        glowBlur: { value: 11, min: 0, max: 40, step: 1 },
+        glowOpacity: { value: 0.8, min: 0, max: 1, step: 0.01 },
+      }),
+      Type: folder({
+        titleSize: { value: 31, min: 22, max: 40, step: 0.5 },
+        titleWeight: { value: 500, min: 100, max: 900, step: 100 },
+        titleTracking: { value: -0.035, min: -0.08, max: 0.02, step: 0.001 },
+      }),
+      Surface: folder({
+        cardRadius: { value: 28, min: 12, max: 48, step: 1 },
+        panelRadius: { value: 9, min: 8, max: 32, step: 1 },
+        shadowX: { value: 0, min: -40, max: 40, step: 1 },
+        shadowY: { value: 28, min: 0, max: 80, step: 1 },
+        shadowBlur: { value: 50, min: 0, max: 100, step: 1 },
+        shadowSpread: { value: -8, min: -30, max: 20, step: 1 },
+        shadowOpacity: { value: 0.32, min: 0, max: 0.9, step: 0.01 },
+      }),
+      Details: folder(webDetailControls(), { collapsed: true }),
+      Animation: folder({
+        webAnimationsOn: { value: true, label: 'Animations ON/OFF' },
+        'Replay Intro': button(onReplayIntro),
+        webIntroDuration: { value: .72, min: .25, max: 1.6, step: .01, label: 'Intro duration (s)' },
+        webIntroDistance: { value: 15, min: 0, max: 50, step: 1, label: 'Intro distance (px)' },
+        webIntroStagger: { value: .17, min: 0, max: .5, step: .01, label: 'Intro stagger (s)' },
+        webIdleBrowser: { value: 5.5, min: 0, max: 14, step: .1, label: 'Browser base drift (px)' },
+        webIdleRail: { value: 4.5, min: 0, max: 14, step: .1, label: 'Tool rail base drift (px)' },
+        webIdleAnalytics: { value: 6, min: 0, max: 14, step: .1, label: 'Analytics base drift (px)' },
+        webIdleBoost: { value: 1.8, min: .5, max: 3, step: .05, label: 'Overall float' },
+        webIdleSway: { value: .26, min: 0, max: .5, step: .01, label: 'Sideways sway' },
+        webIdleBrowserDuration: { value: 7.8, min: 6, max: 12, step: .1, label: 'Browser period (s)' },
+        webIdleRailDuration: { value: 8.7, min: 6, max: 12, step: .1, label: 'Rail period (s)' },
+        webIdleAnalyticsDuration: { value: 6.9, min: 6, max: 12, step: .1, label: 'Analytics period (s)' },
+      }, { collapsed: true }),
+    }),
+    { collapsed: true, store },
+  ) as unknown as Record<string, number | string>
+}
+
+export type LabTunerValues = ReturnType<typeof useLabTuners>
+
+export function tunersToCssVars(t: LabTunerValues) {
+  return {
+    '--lab-perspective': `${t.perspective}px`,
+    '--lab-perspective-x': `${t.perspectiveX}%`,
+    '--lab-perspective-y': `${t.perspectiveY}%`,
+    '--lab-scene-scale': String(t.sceneScale),
+    '--browser-x': `${t.browserX}%`,
+    '--browser-y': `${t.browserY}%`,
+    '--browser-w': `${t.browserW}%`,
+    '--browser-rx': `${t.browserRx}deg`,
+    '--browser-ry': `${t.browserRy}deg`,
+    '--browser-rz': `${t.browserRz}deg`,
+    '--browser-z': `${t.browserZ}px`,
+    '--browser-scale': String(t.browserScale),
+    '--rail-x': `${t.railX}%`,
+    '--rail-y': `${t.railY}%`,
+    '--rail-z': `${t.railZ}px`,
+    '--rail-rx': `${t.railRx}deg`,
+    '--rail-ry': `${t.railRy}deg`,
+    '--rail-rz': `${t.railRz}deg`,
+    '--rail-scale': String(t.railScale),
+    '--analytics-x': `${t.analyticsX}%`,
+    '--analytics-y': `${t.analyticsY}%`,
+    '--analytics-z': `${t.analyticsZ}px`,
+    '--analytics-rx': `${t.analyticsRx}deg`,
+    '--analytics-ry': `${t.analyticsRy}deg`,
+    '--analytics-rz': `${t.analyticsRz}deg`,
+    '--analytics-scale': String(t.analyticsScale),
+    '--glow-x': `${t.glowX}%`,
+    '--glow-y': `${t.glowY}%`,
+    '--glow-w': `${t.glowWidth}%`,
+    '--glow-h': `${t.glowHeight}%`,
+    '--glow-blur': `${t.glowBlur}px`,
+    '--glow-opacity': String(t.glowOpacity),
+    '--title-size': `${t.titleSize}px`,
+    '--title-weight': String(t.titleWeight),
+    '--title-tracking': `${t.titleTracking}em`,
+    '--lab-card-radius': `${t.cardRadius}px`,
+    '--lab-panel-radius': `${t.panelRadius}px`,
+    '--shadow-x': `${t.shadowX}px`,
+    '--shadow-y': `${t.shadowY}px`,
+    '--shadow-blur': `${t.shadowBlur}px`,
+    '--shadow-spread': `${t.shadowSpread}px`,
+    '--shadow-opacity': String(t.shadowOpacity),
+  } as const
+}
+
+/** Plain numbers for ChatGPT handoff (no CSS units). */
+export function tunersToSceneValues(t: LabTunerValues) {
+  return {
+    controls: t,
+    perspective: t.perspective,
+    perspectiveOrigin: `${t.perspectiveX}% ${t.perspectiveY}%`,
+    sceneScale: t.sceneScale,
+    browser: {
+      x: t.browserX,
+      y: t.browserY,
+      w: t.browserW,
+      rotateX: t.browserRx,
+      rotateY: t.browserRy,
+      rotateZ: t.browserRz,
+      translateZ: t.browserZ,
+      scale: t.browserScale,
+    },
+    toolRail: {
+      x: t.railX,
+      y: t.railY,
+      rotateX: t.railRx,
+      rotateY: t.railRy,
+      rotateZ: t.railRz,
+      translateZ: t.railZ,
+      scale: t.railScale,
+    },
+    analytics: {
+      x: t.analyticsX,
+      y: t.analyticsY,
+      rotateX: t.analyticsRx,
+      rotateY: t.analyticsRy,
+      rotateZ: t.analyticsRz,
+      translateZ: t.analyticsZ,
+      scale: t.analyticsScale,
+    },
+    groundGlow: {
+      x: t.glowX,
+      y: t.glowY,
+      width: t.glowWidth,
+      height: t.glowHeight,
+      blur: t.glowBlur,
+      opacity: t.glowOpacity,
+    },
+    type: {
+      titleSize: t.titleSize,
+      titleWeight: t.titleWeight,
+      titleTracking: t.titleTracking,
+    },
+    surface: {
+      cardRadius: t.cardRadius,
+      panelRadius: t.panelRadius,
+      shadowX: t.shadowX,
+      shadowY: t.shadowY,
+      shadowBlur: t.shadowBlur,
+      shadowSpread: t.shadowSpread,
+      shadowOpacity: t.shadowOpacity,
+    },
+  }
+}

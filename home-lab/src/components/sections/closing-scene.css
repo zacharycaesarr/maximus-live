@@ -1,0 +1,41 @@
+@font-face{font-family:'MR Tiempos';src:url('/fonts/timespos/TiemposHeadline-500-Medium-Italic.otf') format('opentype');font-display:swap;font-style:italic;font-weight:500}
+
+/* One rounded environment with art-directed images behind live CTA and footer content. */
+#page-sections{padding-bottom:clamp(8px,1.1vw,18px)}
+.mr-closing-scene{position:relative;isolation:isolate;overflow:hidden;margin:20px clamp(8px,1.1vw,18px) 0;border-radius:clamp(28px,3.7vw,58px);background:linear-gradient(180deg,#F3F0E8 0%,#080909 58%);box-shadow:0 28px 90px -58px rgba(18,42,21,.28)}
+.mr-closing-art,.mr-closing-art img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.mr-closing-art{z-index:0;pointer-events:none}
+.mr-closing-art img{object-fit:cover;object-position:50% 48%}
+.mr-closing-scene::after{content:'';position:absolute;z-index:1;inset:0;pointer-events:none;background:linear-gradient(180deg,#F3F0E8 0%,rgba(243,240,232,.45) 2%,transparent 8%),linear-gradient(180deg,transparent 65%,rgba(8,9,9,.08) 74%,rgba(8,9,9,.33) 88%,#080909 100%)}
+.mr-closing-cta{min-height:clamp(700px,82svh,870px);padding-top:105px;padding-bottom:70px}
+.mr-closing-content{padding-bottom:12px}
+.mr-closing-lockup{display:inline-flex;align-items:center;gap:9px;margin-bottom:30px;color:#142117;text-align:left}.mr-closing-lockup img{display:block;width:32px;height:32px;object-fit:contain}.mr-closing-lockup span{display:flex;flex-direction:column;gap:1px;font:600 13px/.92 'Neue Haas Grotesk Display',sans-serif;letter-spacing:-.025em}
+.mr-closing-headline{display:flex;flex-direction:column;align-items:center;font-family:'Neue Haas Grotesk Display',sans-serif;font-size:clamp(64px,8.5vw,137px);font-weight:600;line-height:.84;letter-spacing:-.082em}
+.mr-closing-headline span{display:block}.mr-closing-headline em{display:block;margin-top:.11em;font-family:'MR Tiempos',Georgia,serif;font-size:.93em;font-style:italic;font-weight:500;letter-spacing:-.065em;line-height:.96;white-space:nowrap}
+.mr-closing-button{transition:transform .3s ease,background .3s ease,border-color .3s ease,box-shadow .3s ease}.mr-closing-button:hover{box-shadow:0 19px 34px -18px rgba(18,36,19,.35)}
+.mr-closing-client-link{display:inline-flex;align-items:center;gap:7px;margin-top:20px;color:#253b2a;font:500 13px/1.2 'Neue Haas Grotesk Display',sans-serif;text-decoration:underline;text-decoration-color:rgba(37,59,42,.65);text-underline-offset:4px;transition:color .25s ease}.mr-closing-client-link:hover{color:#557c42}
+.mr-closing-footer{position:relative;z-index:10;width:100%;background:transparent;color:#f3f0e8}
+.mr-closing-footer-main{max-width:1000px;margin:0 auto;padding:30px 32px 28px}
+.mr-closing-footer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(30px,5vw,80px);max-width:650px;margin:0 auto 94px}
+.mr-closing-footer-list{margin:0;padding:0;list-style:none}.mr-closing-footer-list li+li{margin-top:12px}.mr-closing-footer-list li:first-child{margin-bottom:22px;color:#d5dbd4;font:600 11px/1.2 'Neue Haas Grotesk Display',sans-serif;letter-spacing:.09em;text-transform:uppercase}.mr-closing-footer-list a{color:#f3f0e8;font:500 14px/1.35 'Neue Haas Grotesk Display',sans-serif;text-decoration:none;transition:color .25s ease}.mr-closing-footer-list a:hover{color:#c8ff3d}
+.mr-closing-footer-bottom{display:flex;justify-content:space-between;gap:24px;color:#d5dbd4;font:500 11px/1.4 'Neue Haas Grotesk Display',sans-serif;letter-spacing:.025em}.mr-closing-footer-bottom p{margin:0}.mr-closing-footer-bottom span{text-align:right}
+.mr-closing-footer-signoff{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px}.mr-closing-footer-signoff span{display:inline-flex;align-items:center;gap:5px;opacity:.72}
+
+@media(max-width:767px){
+  #page-sections{padding-bottom:112px}
+  .mr-closing-scene{margin:56px 8px 0;border-radius:29px}
+  .mr-closing-art{height:730px;mask-image:linear-gradient(to bottom,#000 0%,#000 92%,transparent 100%)}
+  .mr-closing-art img{object-position:75% 50%}
+  .mr-closing-scene::after{background:linear-gradient(180deg,#F3F0E8 0%,rgba(243,240,232,.34) 2%,transparent 7%),linear-gradient(180deg,transparent 67%,rgba(8,9,9,.1) 77%,rgba(8,9,9,.36) 90%,#080909 100%)}
+  .mr-closing-cta{min-height:700px;padding:90px 18px 40px;align-items:flex-start}
+  .mr-closing-lockup{margin-bottom:27px}.mr-closing-lockup img{width:29px;height:29px}.mr-closing-lockup span{font-size:12px}
+  .mr-closing-headline{font-size:clamp(45px,12vw,72px);line-height:.91;letter-spacing:-.07em}.mr-closing-headline em{font-size:.9em;line-height:1;white-space:normal}
+  .mr-closing-support{max-width:340px}.mr-closing-actions{max-width:340px}.mr-closing-content .mr-closing-actions{margin-top:200px}.mr-closing-client-link{margin-top:21px}
+  .mr-closing-client-link{color:#FAF8F2;text-decoration-color:rgba(250,248,242,.7);text-shadow:0 1px 5px rgba(8,9,9,.7)}
+  .mr-closing-footer-main{padding:15px 25px 94px}.mr-closing-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 22px;max-width:350px;margin:0 auto 55px}.mr-closing-footer-list li+li{margin-top:10px}.mr-closing-footer-list li:first-child{margin-bottom:17px}.mr-closing-footer-list a{font-size:13px}
+  .mr-closing-footer-bottom{flex-direction:column;gap:8px;font-size:10px}.mr-closing-footer-bottom span{text-align:left}
+  .mr-closing-footer-signoff{flex-direction:column;align-items:flex-start;gap:5px}
+}
+@media(max-width:410px){.mr-closing-art{height:710px}.mr-closing-art img{object-position:68% 50%}}
+@media(max-width:359px){.mr-closing-headline{font-size:43px}.mr-closing-footer-main{padding-right:19px;padding-left:19px}}
+@media(prefers-reduced-motion:reduce){.mr-closing-button,.mr-closing-client-link{transition:none}}

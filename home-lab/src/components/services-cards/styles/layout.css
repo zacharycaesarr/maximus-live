@@ -1,0 +1,178 @@
+/*
+ * Homepage Services Overview row.
+ * Sandbox cards are designed at 380 × 560. Production content is narrower
+ * (max-w-6xl + side pad), so the three shells share the row equally and
+ * the live artboard scales from the 380 design size. Artwork poses stay put.
+ */
+
+.svc-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+  overflow: visible;
+}
+.svc-cards-wrap { position: relative; }
+.svc-swipe-hint { display: none; }
+
+.svc-card-slot {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 380 / 560;
+  container-type: inline-size;
+  container-name: svc-card;
+  overflow: visible;
+}
+.svc-card-slot::before {
+  content: '';
+  position: absolute;
+  inset: 4% 1%;
+  border-radius: var(--lab-card-radius);
+  background: radial-gradient(ellipse at 50% 55%, rgba(8, 9, 9, .16), rgba(8, 9, 9, .045) 48%, transparent 76%);
+  pointer-events: none;
+}
+
+/* Creative floats can paint outside its slot; keep it above neighbors. */
+.svc-card-slot:has(.lab-artboard__live--creative) {
+  z-index: 2;
+}
+
+/* Light shell with the original card's edge and surface depth restored in ink. */
+.svc-cards-row .service-card {
+  border: 1px solid rgba(8, 9, 9, .31);
+  background:
+    radial-gradient(ellipse 92% 82% at 102% 103%, rgba(8, 9, 9, .19), transparent 72%),
+    radial-gradient(ellipse 70% 48% at -8% -5%, rgba(255, 255, 255, .92), transparent 80%),
+    linear-gradient(145deg, #fbfaf6 0%, #f5f3ec 57%, #e7e5dd 100%);
+  box-shadow: 0 23px 48px -25px rgba(8, 9, 9, .38), 0 0 0 1px rgba(255,255,255,.48), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.svc-cards-row .service-card::after {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .95),
+    inset 1px 0 0 rgba(255, 255, 255, .65),
+    inset -24px -28px 55px rgba(8, 9, 9, .105),
+    inset 24px 20px 45px rgba(255, 255, 255, .33);
+}
+.svc-cards-row .service-card__num,
+.svc-cards-row .service-card__title,
+.svc-cards-row .service-card__icon { color: #080909; }
+.svc-cards-row .service-card__num-line { background: rgba(8, 9, 9, .45); }
+.svc-cards-row .service-card__icon { border-color: rgba(8, 9, 9, .24); background: rgba(250, 248, 242, .48); }
+.svc-cards-row .service-card__icon svg { color: #080909; }
+.svc-cards-row .service-card__desc { color: #303832; }
+.svc-cards-row .service-card__cta {
+  gap: 9px;
+  border: 1px solid rgba(8, 9, 9, .8);
+  border-radius: 8px;
+  background: #C8FF3D;
+  color: #080909;
+  padding: 8px 10px;
+}
+.svc-cards-row .scene-grid { --lab-grid: rgba(8, 9, 9, .2); opacity: .43; }
+.svc-cards-row .browser-ground-glow {
+  opacity: .8;
+  background: radial-gradient(ellipse at center, rgba(8, 9, 9, .4) 0%, rgba(8, 9, 9, .2) 30%, rgba(8, 9, 9, .06) 56%, transparent 75%);
+}
+.svc-cards-row .browser-ground-glow::after {
+  background: radial-gradient(ellipse, rgba(8, 9, 9, .28), transparent 70%);
+}
+.svc-cards-row .tool-rail::after,
+.svc-cards-row .mini-analytics::after { border-color: rgba(236, 238, 228, .88); }
+.svc-cards-row .ads-grid {
+  background-image: linear-gradient(rgba(8,9,9,.52) 1px, transparent 1px), linear-gradient(90deg, rgba(8,9,9,.52) 1px, transparent 1px);
+  opacity: max(var(--ads-grid-opacity), .3);
+}
+.svc-cards-row .ads-ambient {
+  background: radial-gradient(ellipse, rgba(8, 9, 9, .24), transparent 70%);
+}
+.svc-cards-row .ads-step { color: #151713; }
+.svc-cards-row .ads-step > svg { stroke: #151713; }
+.svc-cards-row .creative-grid {
+  background-image: linear-gradient(rgba(8,9,9,.58) 1px, transparent 1px), linear-gradient(90deg, rgba(8,9,9,.58) 1px, transparent 1px);
+  opacity: max(var(--creative-grid-opacity), .34);
+}
+.svc-cards-row .creative-cross::before,
+.svc-cards-row .creative-cross::after { background: rgba(8, 9, 9, .72); }
+.svc-cards-row .creative-glow {
+  background: radial-gradient(ellipse, rgba(8, 9, 9, .32), transparent 72%);
+}
+.svc-cards-row .ads-panel__face::after,
+.svc-cards-row .creative-panel__face::after { border-color: rgba(237, 239, 228, .72); }
+
+/*
+ * Keep the lab design size, then scale to the slot width.
+ * Poses / SVG / perspective stay 1:1 with the sandbox; only the shell shrinks.
+ */
+.lab-artboard__live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--lab-card-w);
+  height: var(--lab-card-h);
+  transform-origin: top left;
+  transform: scale(calc(100cqw / 380px));
+}
+
+.lab-artboard__live--web,
+.lab-artboard__live--ads,
+.lab-artboard__live--creative {
+  width: var(--lab-card-w);
+  height: var(--lab-card-h);
+}
+
+.lab-artboard__live--creative {
+  overflow: visible;
+}
+
+@media (max-width: 767px) {
+  .svc-swipe-hint {
+    position: absolute;
+    z-index: 5;
+    top: 44%;
+    right: -7px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(8, 9, 9, .28);
+    border-radius: 999px;
+    background: rgba(250, 248, 242, .9);
+    color: #080909;
+    box-shadow: 0 8px 24px rgba(8, 9, 9, .18);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none;
+  }
+  .svc-swipe-hint.is-visible { opacity: 1; transform: translateX(0); animation: svc-swipe-nudge .7s ease-in-out .35s 3 alternate; }
+  .svc-swipe-hint::after { content: ''; position: absolute; bottom: 6px; width: 5px; height: 5px; border-radius: 50%; background: #C8FF3D; }
+  @keyframes svc-swipe-nudge { to { translate: 7px 0; } }
+  .svc-cards-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    margin-top: -24px;
+    margin-bottom: -24px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .svc-cards-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .svc-card-slot {
+    flex: 0 0 auto;
+    width: min(var(--lab-card-w), 86vw);
+    aspect-ratio: 380 / 560;
+    height: auto;
+    scroll-snap-align: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) { .svc-swipe-hint.is-visible { animation: none; } }

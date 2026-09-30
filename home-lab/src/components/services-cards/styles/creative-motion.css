@@ -1,0 +1,10 @@
+/* New wrappers carry motion; the approved 3D panel poses remain untouched. */
+.creative-motion-layer, .creative-motion-idle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.creative-motion-detail { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+.creative-motion-layer--video { z-index: 1; }
+.creative-motion-layer--social { z-index: 2; }
+.creative-motion-layer--brand { z-index: 3; }

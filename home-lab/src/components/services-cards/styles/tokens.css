@@ -1,0 +1,69 @@
+/* Concept-dark tokens. Swap later for white Maximus cards. */
+:root {
+  --lab-acid: #c8ff3d;
+  --lab-acid-soft: rgba(200, 255, 61, 0.12);
+  --lab-page: #0a0b0a;
+  --lab-card-bg: #0a0c0b;
+  --lab-panel: #151715;
+  --lab-panel-2: #1a1c1a;
+  --lab-browser-face: #020202;
+  --lab-ink: #ffffff;
+  --lab-muted: #8a8e88;
+  --lab-border: rgba(255, 255, 255, 0.08);
+  --lab-border-strong: rgba(255, 255, 255, 0.14);
+  --lab-grid: rgba(200, 255, 61, 0.06);
+
+  --lab-card-w: 380px;
+  --lab-card-h: 560px;
+  --lab-card-radius: 28px;
+  --lab-panel-radius: 9px;
+
+  /* Camera slightly above + to the right of the browser */
+  --lab-perspective: 1100px;
+  --lab-perspective-x: 48%;
+  --lab-perspective-y: 42%;
+  --lab-scene-scale: 1;
+
+  /* Acid ground glow under browser */
+  --glow-x: 3%;
+  --glow-y: 71%;
+  --glow-w: 68%;
+  --glow-h: 20%;
+  --glow-blur: 11px;
+  --glow-opacity: 0.8;
+
+  --browser-x: 19%;
+  --browser-y: 9%;
+  --browser-w: 70%;
+  --browser-rx: -14deg;
+  --browser-ry: -25deg;
+  --browser-rz: 8deg;
+  --browser-z: 0px;
+  --browser-scale: 1;
+
+  --rail-x: 9%;
+  --rail-y: 7%;
+  --rail-z: 24px;
+  --rail-rx: -14deg;
+  --rail-ry: -25deg;
+  --rail-rz: 7deg;
+  --rail-scale: 0.94;
+
+  --analytics-x: 54%;
+  --analytics-y: 65%;
+  --analytics-z: 45px;
+  --analytics-rx: -10deg;
+  --analytics-ry: -18deg;
+  --analytics-rz: 8deg;
+  --analytics-scale: 0.94;
+
+  --title-size: 31px;
+  --title-weight: 500;
+  --title-tracking: -0.035em;
+
+  --shadow-x: 0px;
+  --shadow-y: 28px;
+  --shadow-blur: 50px;
+  --shadow-spread: -8px;
+  --shadow-opacity: 0.32;
+}
