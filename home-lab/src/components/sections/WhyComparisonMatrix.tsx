@@ -42,6 +42,8 @@ export default function WhyComparisonMatrix() {
   const [mobileActive, setMobileActive] = useState(0)
   const [desktopActive, setDesktopActive] = useState(0)
   const [testimonialsActive, setTestimonialsActive] = useState(false)
+  const desktopActiveRef = useRef(0)
+  const testimonialsActiveRef = useRef(false)
   const [panelWindows, setPanelWindows] = useState<[number, number][]>([])
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
   const reducedMotion = useReducedMotion()
@@ -83,8 +85,16 @@ export default function WhyComparisonMatrix() {
   }, [isMobile, reducedMotion, horizontalDistance])
 
   useMotionValueEvent(reelProgress, 'change', progress => {
-    setDesktopActive(Math.max(0, Math.min(4, Math.round(progress * 4))))
-    setTestimonialsActive(progress >= .86 && progress <= 1)
+    const nextActive = Math.max(0, Math.min(4, Math.round(progress * 4)))
+    if (nextActive !== desktopActiveRef.current) {
+      desktopActiveRef.current = nextActive
+      setDesktopActive(nextActive)
+    }
+    const nextTestimonialsActive = progress >= .86 && progress <= 1
+    if (nextTestimonialsActive !== testimonialsActiveRef.current) {
+      testimonialsActiveRef.current = nextTestimonialsActive
+      setTestimonialsActive(nextTestimonialsActive)
+    }
   })
 
   const selectMobile = (index: number) => {

@@ -100,7 +100,10 @@ function LaunchVisual({ progress }: { progress: MotionValue<number> }) {
 function CountNumber({ progress, target, suffix = '' }: { progress: MotionValue<number>; target: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const format = (value: number) => `${Math.round(target * Math.max(0, Math.min(1, (value - .12) / .68)))}${suffix}`
-  useMotionValueEvent(progress, 'change', value => { if (ref.current) ref.current.textContent = format(value) })
+  useMotionValueEvent(progress, 'change', value => {
+    const text = format(value)
+    if (ref.current && ref.current.textContent !== text) ref.current.textContent = text
+  })
   useEffect(() => { if (ref.current) ref.current.textContent = format(progress.get()) }, [progress])
   return <span ref={ref}>0{suffix}</span>
 }

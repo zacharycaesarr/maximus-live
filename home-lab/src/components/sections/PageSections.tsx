@@ -47,6 +47,8 @@ function CtaPaintedBeaconAnchor() {
     const picture = scene?.querySelector<HTMLElement>('.mr-closing-art')
     const image = picture?.querySelector('img')
     if (!anchor || !scene || !picture || !image) return undefined
+    // Prepare only the picture-selected artwork before its first visible paint.
+    void image.decode().catch(() => undefined)
     const measure = () => {
       if (!image.naturalWidth || !image.naturalHeight) return
       const mobile = window.matchMedia('(max-width: 767px)').matches

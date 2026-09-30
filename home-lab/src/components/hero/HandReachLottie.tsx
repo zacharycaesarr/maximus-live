@@ -52,12 +52,19 @@ export default function HandReachLottie() {
   useEffect(() => {
     if (!layout.handEnabled || isMobile) return undefined
 
+    const btn = document.querySelector('[data-get-started-btn]') as HTMLElement | null
+    if (!btn) return undefined
     let raf = 0
+    let visible = true
+    const hide = () => setDock((dock) => dock.ready ? { ...dock, ready: false } : dock)
+    const schedule = () => {
+      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(place)
+    }
     const place = () => {
-      const btn = document.querySelector('[data-get-started-btn]') as HTMLElement | null
-      if (!btn || btn.getAttribute('data-cta-armed') !== '1') {
-        setDock((d) => ({ ...d, ready: false }))
-        raf = requestAnimationFrame(place)
+      raf = 0
+      if (btn.getAttribute('data-cta-armed') !== '1') {
+        hide()
+        schedule()
         return
       }
 
@@ -68,8 +75,8 @@ export default function HandReachLottie() {
 
       const onScreen = br.bottom > 24 && br.top < vh - 24 && br.width > 8
       if (!onScreen) {
-        setDock((d) => ({ ...d, ready: false }))
-        raf = requestAnimationFrame(place)
+        hide()
+        schedule()
         return
       }
 
@@ -93,12 +100,35 @@ export default function HandReachLottie() {
         Math.max(4, br.top + br.height * 0.42 - width * 0.35 + (layout.handOffsetY || 0)),
       )
 
-      setDock({ top, left, width, ready: true })
-      raf = requestAnimationFrame(place)
+      setDock((dock) => dock.ready && dock.top === top && dock.left === left && dock.width === width
+        ? dock
+        : { top, left, width, ready: true })
+      schedule()
     }
 
-    raf = requestAnimationFrame(place)
-    return () => cancelAnimationFrame(raf)
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible) schedule()
+      else {
+        cancelAnimationFrame(raf)
+        raf = 0
+        hide()
+      }
+    }, { rootMargin: '-24px 0px -24px 0px' })
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      } else schedule()
+    }
+    observer.observe(btn)
+    document.addEventListener('visibilitychange', onVisibility)
+    schedule()
+    return () => {
+      observer.disconnect()
+      document.removeEventListener('visibilitychange', onVisibility)
+      cancelAnimationFrame(raf)
+    }
   }, [layout.handEnabled, layout.handOffsetX, layout.handOffsetY, layout.handSide, onRight, isMobile])
 
   useEffect(() => {
