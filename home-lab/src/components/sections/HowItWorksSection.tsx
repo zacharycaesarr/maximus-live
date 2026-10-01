@@ -223,7 +223,7 @@ export default function HowItWorksSection() {
   }, [])
 
   if (!t.enabled) return null
-  const fill = '#080909'
+  const fill = '#142117'
   const mobileCards: CardCopy[] = [
     { tag: t.card1Tag, title: t.card1Title, body: t.card1Body },
     { tag: t.card2Tag, title: t.card2Title, body: t.card2Body },
@@ -286,7 +286,7 @@ function DesktopHowItWorks({ t }: { t: ReturnType<typeof useHowItWorksTuner> }) 
   )
   const approachTitleOpacity = useTransform(p, [0, 0.5], [1, 0])
 
-  const fill = '#080909'
+  const fill = '#142117'
   const desktopCards: StepCardData[] = [
     {
       tag: t.card1Tag,

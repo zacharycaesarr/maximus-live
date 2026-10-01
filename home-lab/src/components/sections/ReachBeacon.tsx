@@ -39,10 +39,10 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
       scrub: { value: .7, min: .3, max: 1.2, step: .05 },
       glowOpacity: { value: .9, min: .2, max: 1, step: .05 },
       'CTA blend': folder({
-        ctaLeadMobile: { value: savedCtaValue('ctaLeadMobile', 0), min: -160, max: 160, step: 1, label: 'Mobile timing adjust (px)', onChange: saveCtaValue('ctaLeadMobile') },
-        ctaLeadDesktop: { value: savedCtaValue('ctaLeadDesktop', 0), min: 0, max: 360, step: 1, label: 'Desktop arrival lead (px)', onChange: saveCtaValue('ctaLeadDesktop') },
+        ctaLeadMobile: { value: savedCtaValue('ctaLeadMobile', 80), min: -160, max: 160, step: 1, label: 'Mobile timing adjust (px)', onChange: saveCtaValue('ctaLeadMobile') },
+        ctaLeadDesktop: { value: savedCtaValue('ctaLeadDesktop', 360), min: 0, max: 360, step: 1, label: 'Desktop arrival lead (px)', onChange: saveCtaValue('ctaLeadDesktop') },
         ctaLeadStart: { value: savedCtaValue('ctaLeadStart', .96), min: .5, max: 1.2, step: .01, label: 'Lead starts (viewport)', onChange: saveCtaValue('ctaLeadStart') },
-        ctaLeadEnd: { value: savedCtaValue('ctaLeadEnd', .34), min: .1, max: .5, step: .01, label: 'Lead fully on (viewport)', onChange: saveCtaValue('ctaLeadEnd') },
+        ctaLeadEnd: { value: savedCtaValue('ctaLeadEnd', .44), min: .1, max: .5, step: .01, label: 'Lead fully on (viewport)', onChange: saveCtaValue('ctaLeadEnd') },
         ctaOffsetX: { value: savedCtaValue('ctaOffsetX', 0), min: -80, max: 80, step: 1, label: 'Beacon X alignment (px)', onChange: saveCtaValue('ctaOffsetX') },
         ctaOffsetY: { value: savedCtaValue('ctaOffsetY', 0), min: -80, max: 80, step: 1, label: 'Beacon Y alignment (px)', onChange: saveCtaValue('ctaOffsetY') },
         ctaFadeBefore: { value: savedCtaValue('ctaFadeBefore', 12), min: 0, max: 120, step: 1, label: 'Fade before target (px)', onChange: saveCtaValue('ctaFadeBefore') },
@@ -58,10 +58,10 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
   const markers = Boolean((controls as { markers?: boolean }).markers) && isDev
   const scrub = Number((controls as { scrub?: number }).scrub ?? .7)
   const glowOpacity = Number((controls as { glowOpacity?: number }).glowOpacity ?? .9)
-  const ctaLeadMobile = Number((controls as { ctaLeadMobile?: number }).ctaLeadMobile ?? 0)
-  const ctaLeadDesktop = Number((controls as { ctaLeadDesktop?: number }).ctaLeadDesktop ?? 0)
+  const ctaLeadMobile = Number((controls as { ctaLeadMobile?: number }).ctaLeadMobile ?? 80)
+  const ctaLeadDesktop = Number((controls as { ctaLeadDesktop?: number }).ctaLeadDesktop ?? 360)
   const ctaLeadStart = Number((controls as { ctaLeadStart?: number }).ctaLeadStart ?? .96)
-  const ctaLeadEnd = Number((controls as { ctaLeadEnd?: number }).ctaLeadEnd ?? .34)
+  const ctaLeadEnd = Number((controls as { ctaLeadEnd?: number }).ctaLeadEnd ?? .44)
   const ctaOffsetX = Number((controls as { ctaOffsetX?: number }).ctaOffsetX ?? 0)
   const ctaOffsetY = Number((controls as { ctaOffsetY?: number }).ctaOffsetY ?? 0)
   const ctaFadeBefore = Number((controls as { ctaFadeBefore?: number }).ctaFadeBefore ?? 12)
