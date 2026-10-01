@@ -1,5 +1,5 @@
-import { motion, type Variants } from 'framer-motion'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { motion, useAnimate, useInView, type Variants, type AnimationPlaybackControls } from 'framer-motion'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { ChevronDown, Rocket } from 'lucide-react'
 import HeroKineticText from './HeroKineticText'
 import HeroBgParallax from './HeroBgParallax'
@@ -15,9 +15,30 @@ import { useIntroTuner } from '@/context/IntroTunerContext'
 import { useLenisScroll } from '@/components/SmoothScroll'
 import { splitSubhead } from '@/lib/heroLayoutDefaults'
 import WordSlideUp from './WordSlideUp'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
 
 const HandReachLottie = lazy(() => import('./HandReachLottie'))
 const MeshWaveBackground = lazy(() => import('@/components/ui/mesh-wave-background').then(module => ({ default: module.MeshWaveBackground })))
+
+/** Same pulse, with its playback phase held whenever the cue is out of view. */
+function HeroScrollCue() {
+  const [scope, animate] = useAnimate<HTMLSpanElement>()
+  const visible = useInView(scope, { margin: '10% 0px', initial: true })
+  const documentVisible = useDocumentVisible()
+  const playback = useRef<AnimationPlaybackControls | null>(null)
+  useEffect(() => {
+    const animation = animate(scope.current, { y: [0, 5, 0], opacity: [.35, .75, .35] }, {
+      duration: 1.6, repeat: Infinity, ease: 'easeInOut',
+    })
+    playback.current = animation
+    return () => { animation.stop(); playback.current = null }
+  }, [animate, scope])
+  useEffect(() => {
+    if (visible && documentVisible) playback.current?.play()
+    else playback.current?.pause()
+  }, [visible, documentVisible])
+  return <span ref={scope} className="text-home-muted" aria-hidden><ChevronDown size={16} strokeWidth={2} /></span>
+}
 
 /**
  * Left copy over desk-loop video. Breathe delay before chrome so the room reads first.
@@ -34,7 +55,7 @@ export default function DirectHero() {
   const chromeVisible = intro.showChrome || (!intro.enabled && !intro.preview)
   const pageUnderAperture = intro.mode === 'aperture' && intro.enabled
   const bgVisible = chromeVisible || pageUnderAperture
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
     const apply = () => setIsMobile(mq.matches)
@@ -319,14 +340,7 @@ export default function DirectHero() {
         >
           scroll
         </span>
-        <motion.span
-          className="text-home-muted"
-          animate={{ y: [0, 5, 0], opacity: [0.35, 0.75, 0.35] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-          aria-hidden
-        >
-          <ChevronDown size={16} strokeWidth={2} />
-        </motion.span>
+        <HeroScrollCue />
       </motion.a>
     </section>
   )

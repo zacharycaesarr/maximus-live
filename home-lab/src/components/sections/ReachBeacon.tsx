@@ -80,10 +80,13 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
   useEffect(() => {
     const page = document.getElementById('page-sections')
     const beacon = beaconRef.current
-    if (!enabled || !page || !beacon) return undefined
+    // Wait for the portal target so startup creates one route/trigger, rather
+    // than creating it, refreshing, then immediately replacing it for the CTA.
+    if (!enabled || !page || !beacon || !ctaScene) return undefined
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const sections = ANCHOR_IDS.map(id => page.querySelector<HTMLElement>(`#${id}`)).filter((el): el is HTMLElement => Boolean(el))
     let refreshTimer = 0
+    let disposed = false
     let route: Point[] = []
     let pageTop = 0
     let sceneOffset: Point = { x: 0, y: 0 }
@@ -185,8 +188,11 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
       markers, onUpdate: sync, onRefresh: () => { measure(); sync() },
     })
     const refresh = () => {
+      if (disposed) return
       window.clearTimeout(refreshTimer)
-      refreshTimer = window.setTimeout(() => { measure(); ScrollTrigger.refresh(); sync() }, 120)
+      // onRefresh already measures and syncs this route after trigger geometry
+      // settles. Avoid doing the same layout reads twice in one refresh.
+      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 120)
     }
     const resize = new ResizeObserver(refresh)
     resize.observe(page)
@@ -199,6 +205,7 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
     measure()
     sync()
     return () => {
+      disposed = true
       window.clearTimeout(refreshTimer)
       resize.disconnect()
       window.removeEventListener('resize', refresh)

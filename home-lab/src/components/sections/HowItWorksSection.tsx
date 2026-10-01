@@ -212,14 +212,7 @@ function MobileHowAccordion({ cards }: { cards: CardCopy[] }) {
  */
 export default function HowItWorksSection() {
   const t = useHowItWorksTuner()
-  const reduce = useReducedMotion()
-  const ref = useRef<HTMLElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start 75%', 'center 38%'],
-  })
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
@@ -229,26 +222,7 @@ export default function HowItWorksSection() {
     return () => mq.removeEventListener('change', apply)
   }, [])
 
-  const scrub = useSpring(scrollYProgress, {
-    stiffness: t.scrubStiffness,
-    damping: 28,
-    mass: 0.45,
-  })
-  const p = reduce ? scrollYProgress : scrub
-
-  const cardsScale = useTransform(p, [0, 1], [isMobile ? 1 : Math.min(0.96, t.idleScale + 0.06), 1])
-  const cardsX = useTransform(p, [0, 1], [isMobile ? 0 : -14, 0])
-  const card2Y = useTransform(p, [0, 1], [isMobile ? 0 : 6, 0])
-  const card3Y = useTransform(p, [0, 1], [isMobile ? 0 : 12, 0])
-  const titleInShellOpacity = useTransform(
-    p,
-    isMobile ? [0.12, 0.42] : [0.35, 0.85],
-    [0, 1],
-  )
-  const approachTitleOpacity = useTransform(p, isMobile ? [0, 0.32] : [0, 0.5], [1, 0])
-
   if (!t.enabled) return null
-
   const fill = '#080909'
   const mobileCards: CardCopy[] = [
     { tag: t.card1Tag, title: t.card1Title, body: t.card1Body },
@@ -256,6 +230,63 @@ export default function HowItWorksSection() {
     { tag: t.card3Tag, title: t.card3Title, body: t.card3Body },
   ]
 
+  // Mobile: compact accordion (no tall cream cards)
+  if (isMobile) {
+    return (
+      <section
+        id="how-it-works"
+        data-parallax-pause
+        className="relative w-full overflow-x-clip py-6"
+        aria-label="How it works"
+      >
+        <div className="relative w-full px-5 pb-2 pt-2" style={{ backgroundColor: fill }}>
+          <p data-home-reveal className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-[#aeb8ad]">
+            03
+          </p>
+          <h2 data-home-reveal className="m-0 font-nhg text-[clamp(1.85rem,7vw,2.35rem)] font-semibold tracking-tight text-home-on-dark">
+            {t.title}
+          </h2>
+          <p data-home-reveal className="mt-3 max-w-xl font-nhg text-[13px] leading-relaxed">
+            {highlightSubtitle(t.canopySubtitle, t.canopyHighlight)}
+          </p>
+          <div data-home-reveal className="mt-5 pb-2">
+            <MobileHowAccordion cards={mobileCards} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  return <DesktopHowItWorks t={t} />
+}
+
+function DesktopHowItWorks({ t }: { t: ReturnType<typeof useHowItWorksTuner> }) {
+  const reduce = useReducedMotion()
+  const ref = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start 75%', 'center 38%'],
+  })
+
+  const scrub = useSpring(scrollYProgress, {
+    stiffness: t.scrubStiffness,
+    damping: 28,
+    mass: 0.45,
+  })
+  const p = reduce ? scrollYProgress : scrub
+
+  const cardsScale = useTransform(p, [0, 1], [Math.min(0.96, t.idleScale + 0.06), 1])
+  const cardsX = useTransform(p, [0, 1], [-14, 0])
+  const card2Y = useTransform(p, [0, 1], [6, 0])
+  const card3Y = useTransform(p, [0, 1], [12, 0])
+  const titleInShellOpacity = useTransform(
+    p,
+    [0.35, 0.85],
+    [0, 1],
+  )
+  const approachTitleOpacity = useTransform(p, [0, 0.5], [1, 0])
+
+  const fill = '#080909'
   const desktopCards: StepCardData[] = [
     {
       tag: t.card1Tag,
@@ -288,34 +319,6 @@ export default function HowItWorksSection() {
       artY: t.card3ArtY,
     },
   ]
-
-  // Mobile: compact accordion (no tall cream cards)
-  if (isMobile) {
-    return (
-      <section
-        id="how-it-works"
-        ref={ref}
-        data-parallax-pause
-      className="relative w-full overflow-x-clip py-6"
-        aria-label="How it works"
-      >
-        <div className="relative w-full px-5 pb-2 pt-2" style={{ backgroundColor: fill }}>
-          <p data-home-reveal className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-[#aeb8ad]">
-            03
-          </p>
-          <h2 data-home-reveal className="m-0 font-nhg text-[clamp(1.85rem,7vw,2.35rem)] font-semibold tracking-tight text-home-on-dark">
-            {t.title}
-          </h2>
-          <p data-home-reveal className="mt-3 max-w-xl font-nhg text-[13px] leading-relaxed">
-            {highlightSubtitle(t.canopySubtitle, t.canopyHighlight)}
-          </p>
-          <div data-home-reveal className="mt-5 pb-2">
-            <MobileHowAccordion cards={mobileCards} />
-          </div>
-        </div>
-      </section>
-    )
-  }
 
   return (
     <section

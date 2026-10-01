@@ -8,10 +8,12 @@ export function NearMount({
   children,
   rootMargin = '35% 0px',
   minHeight = 320,
+  placeholder,
 }: {
   children: ReactNode
   rootMargin?: string
   minHeight?: number
+  placeholder?: ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [show, setShow] = useState(false)
@@ -37,7 +39,7 @@ export function NearMount({
 
   return (
     <div ref={ref} style={show ? undefined : { minHeight }}>
-      {show ? children : null}
+      {show ? children : placeholder ?? null}
     </div>
   )
 }

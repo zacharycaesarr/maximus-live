@@ -5,6 +5,8 @@
  */
 
 import { useEffect, useRef } from 'react'
+import { useInView } from 'framer-motion'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
 
 const FAR = [
   [7, 10], [19, 26], [31, 14], [44, 38], [56, 18], [68, 44], [79, 12], [91, 32],
@@ -52,6 +54,8 @@ function Layer({
  */
 export default function ServicesStarField({ opacity = 1, fadeEnd = 100 }: { opacity?: number; fadeEnd?: number }) {
   const ref = useRef<HTMLDivElement>(null)
+  const visible = useInView(ref)
+  const documentVisible = useDocumentVisible()
   const fadeStart = Math.max(35, fadeEnd - 30)
   const mask = `linear-gradient(to bottom, #000 0%, #000 ${fadeStart}%, transparent ${fadeEnd}%)`
 
@@ -72,8 +76,11 @@ export default function ServicesStarField({ opacity = 1, fadeEnd = 100 }: { opac
         top += node.offsetTop
         node = node.offsetParent as HTMLElement | null
       }
+      // Finish layout reads before changing either style (the old order forced
+      // a second layout in this ResizeObserver callback).
+      const height = band.offsetHeight
       el.style.top = `${top}px`
-      el.style.height = `${band.offsetHeight}px`
+      el.style.height = `${height}px`
     }
 
     sync()
@@ -103,10 +110,12 @@ export default function ServicesStarField({ opacity = 1, fadeEnd = 100 }: { opac
         opacity,
         maskImage: mask,
         WebkitMaskImage: mask,
+        animationPlayState: visible && documentVisible ? 'running' : 'paused',
       }}
     >
       <svg
         className="absolute inset-0 h-full w-full"
+        style={{ animationPlayState: 'inherit' }}
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid slice"
       >
@@ -118,14 +127,17 @@ export default function ServicesStarField({ opacity = 1, fadeEnd = 100 }: { opac
         .mr-svc-stars-far {
           animation: mr-svc-star-op 12s ease-in-out infinite alternate;
           animation-delay: -3.2s;
+          animation-play-state: inherit;
         }
         .mr-svc-stars-mid {
           animation: mr-svc-star-op 16s ease-in-out infinite alternate;
           animation-delay: -7.5s;
+          animation-play-state: inherit;
         }
         .mr-svc-stars-near {
           animation: mr-svc-star-op 21s ease-in-out infinite alternate;
           animation-delay: -11s;
+          animation-play-state: inherit;
         }
         @keyframes mr-svc-star-op {
           from { opacity: 0.72; }

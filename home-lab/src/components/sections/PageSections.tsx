@@ -24,6 +24,25 @@ import './closing-scene.css'
 
 const ImageFanCarousel = lazy(() => import('@/components/ui/image-fan-carousel'))
 
+/** The lazy boundary reserves the actual responsive composition, rather than
+ * a 420px guess that resized the page and moved every later scroll anchor. */
+function ProofFanPlaceholder() {
+  return <div aria-hidden="true" className="proof-fan relative w-full py-6 sm:py-10">
+    <div className="relative flex w-full flex-col items-center justify-center">
+      <div className="proof-fan-stage aspect-[5/3] w-[96%] max-w-3xl" />
+      <div className="mt-6 h-10 sm:mt-8 sm:h-11" />
+    </div>
+  </div>
+}
+
+function ProofHeadingPlaceholder({ text }: { text: string }) {
+  return <div aria-hidden="true" className="invisible relative flex min-h-[22vw] w-full items-center justify-center overflow-hidden px-4 py-6 sm:px-6 md:min-h-[140px] md:py-8">
+    <div className="relative w-full max-w-[1400px] max-md:min-h-[18vw]">
+      <p className="m-0 w-full whitespace-nowrap text-center font-nhg text-[6vw] font-medium tracking-[-0.04em] max-[1025px]:text-[7vw] max-md:text-[8vw]" style={{ lineHeight: .9 }}>{text}</p>
+    </div>
+  </div>
+}
+
 /** Section titles on dark environment */
 const titleOnDark = 'text-home-on-dark'
 const eyebrowOnDark =
@@ -174,7 +193,7 @@ export default function PageSections() {
                 <>
                   <div data-home-reveal className="relative mx-auto w-full max-w-4xl">
                     <BeaconAnchor id="work" className="left-[8%] top-1/2 -translate-y-1/2 md:left-[18%]" />
-                    <NearMount minHeight={160}>
+                    <NearMount minHeight={0} placeholder={<ProofHeadingPlaceholder text={proof.flipPhraseA} />}>
                       <DepthFlipText
                         phrases={[proof.flipPhraseA, proof.flipPhraseB]}
                         textColor={proof.flipColor === '#fcfaf2' || proof.flipColor === 'var(--home-text-dark)' ? 'var(--home-text-light)' : proof.flipColor}
@@ -185,7 +204,7 @@ export default function PageSections() {
                       />
                     </NearMount>
                   </div>
-                  <div data-home-reveal><NearMount minHeight={420}><Suspense fallback={<div style={{ minHeight: 420 }} />}><ImageFanCarousel /></Suspense></NearMount></div>
+                  <div data-home-reveal><NearMount minHeight={0} placeholder={<ProofFanPlaceholder />}><Suspense fallback={<ProofFanPlaceholder />}><ImageFanCarousel /></Suspense></NearMount></div>
                 </>
               )}
             </section>

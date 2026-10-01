@@ -32,6 +32,17 @@ const DARK_GLASS = 'rgba(8, 9, 9, 0.9)'
  * Hides quickly when the hamburger overlay is open (data-mobile-menu).
  */
 export default function TubelightNav() {
+  const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 767px)')
+    const sync = () => setMobile(query.matches)
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
+  return mobile ? <MobileTubelightNav /> : null
+}
+
+function MobileTubelightNav() {
   const { pathname } = useLocation()
   const active = items.find((i) => i.match(pathname))?.name ?? items[0].name
   const [ready, setReady] = useState(false)
@@ -59,15 +70,15 @@ export default function TubelightNav() {
 
   useEffect(() => {
     const onScroll = () => {
-      const y = window.scrollY || document.documentElement.scrollTop || 0
+      const y = window.scrollY
       setScrolled(y > window.innerHeight * 0.55)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    const id = window.setInterval(onScroll, 400)
+    window.addEventListener('resize', onScroll)
     return () => {
       window.removeEventListener('scroll', onScroll)
-      window.clearInterval(id)
+      window.removeEventListener('resize', onScroll)
     }
   }, [])
 

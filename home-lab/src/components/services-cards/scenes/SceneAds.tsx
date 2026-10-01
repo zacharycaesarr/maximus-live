@@ -86,7 +86,7 @@ export function SceneAds({ values: t, motionSettings }: { values: AdsValues; mot
             <div className="ads-ad__body">
               <div className="ads-ad__avatar"><PersonIcon /></div>
               <div className="ads-ad__media" style={mediaStyle('ad')}>
-                <img className="ads-ad__product" src="/products/MR-headphones.png" alt="" draggable={false} />
+                <img className="ads-ad__product" src="/products/MR-headphones.lossless.webp" alt="" draggable={false} />
               </div>
               <div className="ads-ad__meta"><span /><div className="ads-skeleton"><i /><i /></div></div>
             </div>
@@ -95,7 +95,7 @@ export function SceneAds({ values: t, motionSettings }: { values: AdsValues; mot
             <div className="ads-landing__chrome"><i /><i /><i /><span /><b /></div>
             <div className="ads-landing__content">
               <div className="ads-landing__media" style={mediaStyle('landing')}>
-                <img className="ads-landing__product" src="/products/MR-headphones.png" alt="" draggable={false} />
+                <img className="ads-landing__product" src="/products/MR-headphones.lossless.webp" alt="" draggable={false} />
               </div>
               <div className="ads-landing__copy"><span>Better<br />Performance</span><div className="ads-skeleton"><i /><i /><i /></div></div>
               <div className="ads-landing__button"><span /></div>

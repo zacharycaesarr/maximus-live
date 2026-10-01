@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import BlurOutWords from './BlurOutWords'
 import PhraseServiceBadge from './PhraseServiceBadge'
 import {
@@ -13,6 +13,7 @@ import {
   type ArrowTrendingUpIconHandle,
 } from '@/components/ui/arrow-trending-up-icon'
 import { cn } from '@/lib/utils'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
 
 type Props = {
   settings: HeroTextTuner
@@ -51,13 +52,16 @@ export default function HeroKineticText({
   const [phraseHovered, setPhraseHovered] = useState(false)
   const [phraseArmed, setPhraseArmed] = useState(false)
   const [phraseMinW, setPhraseMinW] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
 
   const wrapRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLSpanElement>(null)
   const arrowRef = useRef<ArrowTrendingUpIconHandle>(null)
   const resumeTimer = useRef<number | null>(null)
   const phraseHoveredRef = useRef(false)
+  const visible = useInView(wrapRef, { margin: '10% 0px', initial: true })
+  const documentVisible = useDocumentVisible()
+  const animationHeld = scrollActivated || phraseHovered || !visible || !documentVisible
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
@@ -77,7 +81,7 @@ export default function HeroKineticText({
   // Stacked = centered hero (stem line, rotating phrase below). Left layout
   // wants the plain wrap-like-a-sentence branch, so this now follows the prop only.
   const useStack = stacked
-  const cyclePaused = settings.pauseCycle || phraseHovered
+  const cyclePaused = settings.pauseCycle || phraseHovered || !visible || !documentVisible
   const headlineFontClass = settings.headlineFont === 'tiempos' ? 'font-tiempos' : 'font-nhg'
 
   const glow =
@@ -106,7 +110,7 @@ export default function HeroKineticText({
   }, [stemFull, settings.typeSpeed, instantStem, chromeVisible])
 
   useEffect(() => {
-    if (!chromeVisible || instantStem || stemDone) return undefined
+    if (!chromeVisible || instantStem || stemDone || !visible || !documentVisible) return undefined
     if (typed.length >= stemFull.length) {
       setStemDone(true)
       return undefined
@@ -115,7 +119,7 @@ export default function HeroKineticText({
       setTyped(stemFull.slice(0, typed.length + 1))
     }, settings.typeSpeed)
     return () => window.clearTimeout(timer)
-  }, [typed, stemFull, stemDone, settings.typeSpeed, instantStem, chromeVisible])
+  }, [typed, stemFull, stemDone, settings.typeSpeed, instantStem, chromeVisible, visible, documentVisible])
 
   useEffect(() => {
     if (!stemDone || scrollActivated || cyclePaused || phrases.length === 0) return undefined
@@ -411,7 +415,7 @@ export default function HeroKineticText({
                       color={settings.phraseColor}
                       fontWeight={settings.phraseWeight}
                       textShadow={glow}
-                      hold={scrollActivated || phraseHovered}
+                      hold={animationHeld}
                       className="text-center"
                     />
                   </span>
@@ -522,7 +526,7 @@ export default function HeroKineticText({
                   color={settings.phraseColor}
                   fontWeight={settings.phraseWeight}
                   textShadow={glow}
-                  hold={scrollActivated || phraseHovered}
+                  hold={animationHeld}
                   className="whitespace-normal"
                 />
                 {settings.phraseHoverEnabled && !scrollActivated ? (
@@ -640,7 +644,7 @@ export default function HeroKineticText({
                   color={settings.phraseColor}
                   fontWeight={settings.phraseWeight}
                   textShadow={glow}
-                  hold={scrollActivated || phraseHovered}
+                  hold={animationHeld}
                 />
                 {settings.phraseHoverEnabled && !scrollActivated ? (
                   <motion.span

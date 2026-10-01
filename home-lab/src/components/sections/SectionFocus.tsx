@@ -36,7 +36,7 @@ export default function SectionFocus({
   mobileSimplify = true,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')

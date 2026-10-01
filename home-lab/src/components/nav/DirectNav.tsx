@@ -189,19 +189,13 @@ export default function DirectNav({ overlay = false }: { overlay?: boolean }) {
 
   useEffect(() => {
     const threshold = nav.scrollSolidAt ?? 48
-    const readY = () =>
-      window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0
-
     const onScroll = () => {
-      setScrolled(readY() > threshold)
+      setScrolled(window.scrollY > threshold)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    // Lenis / smooth scroll can skip some native events — light poll keeps pill in sync
-    const id = window.setInterval(onScroll, 120)
     return () => {
       window.removeEventListener('scroll', onScroll)
-      window.clearInterval(id)
     }
   }, [nav.scrollSolidAt])
 

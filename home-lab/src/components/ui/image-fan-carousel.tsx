@@ -1,6 +1,6 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Lottie } from 'lottie-react'
@@ -10,6 +10,7 @@ import { useProofTuner } from '@/context/ProofTunerContext'
 import ProofShowcaseModal from '@/components/ui/proof-showcase-modal'
 import { BuildCaseHoverCard } from '@/work-mockups/build-case-stages'
 import { BrickworkPreview } from '@/components/ui/brickwork-preview'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
 
 const springTransition = {
   type: 'spring' as const,
@@ -205,6 +206,8 @@ export function ImageFanCarousel({ className }: { className?: string }) {
   const projects = useMemo(() => parseProofProjects(proof.projectsJson), [proof.projectsJson])
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const visible = useInView(containerRef, { margin: '10% 0px' })
+  const documentVisible = useDocumentVisible()
   const [rotation, setRotation] = useState(0)
   const [radius, setRadius] = useState(240)
   const [loadedThumbs, setLoadedThumbs] = useState<boolean[]>(() => projects.map(() => false))
@@ -239,13 +242,13 @@ export function ImageFanCarousel({ className }: { className?: string }) {
   }, [])
 
   useEffect(() => {
-    if (paused || expanded) return undefined
+    if (paused || expanded || !visible || !documentVisible) return undefined
     const interval = window.setInterval(() => {
       // Negative step = next project (matches ArrowRight)
       setRotation((prev) => prev - angleStep)
     }, proof.autoplayMs)
     return () => window.clearInterval(interval)
-  }, [angleStep, proof.autoplayMs, paused, expanded, autoplayEpoch])
+  }, [angleStep, proof.autoplayMs, paused, expanded, autoplayEpoch, visible, documentVisible])
 
   useEffect(() => {
     if (!proof.previewExpanded || !proof.expandEnabled) return

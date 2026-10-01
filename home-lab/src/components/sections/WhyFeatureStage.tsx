@@ -8,7 +8,7 @@ import './why-feature-stage.css'
 import './why-premium.css'
 import './why-motion-fix.css'
 
-type Props = { active: number; reducedMotion: boolean; label: string; progress?: unknown; isActive?: boolean; testimonialsPlaying?: boolean }
+type Props = { active: number; reducedMotion: boolean; label: string; isActive?: boolean; testimonialsPlaying?: boolean }
 
 // Stage instances stay mounted during the horizontal scrub. These guards also preserve
 // first-visit state if the responsive desktop/mobile branch is swapped mid-session.

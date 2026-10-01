@@ -1,16 +1,33 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
+import { rmSync } from 'node:fs'
+import { isAbsolute, join, relative, resolve } from 'node:path'
 
-export default defineConfig({
-  plugins: [react()],
+const workspace = fileURLToPath(new URL('.', import.meta.url))
+const serviceMasters = ['camerarig.png', 'MR-headphones.png', 'gooey-mrsmooth.png']
+
+export default defineConfig(({ command }) => ({
+  plugins: [react(), {
+    name: 'omit-replaced-service-masters',
+    apply: 'build',
+    writeBundle(output) {
+      // Retain editable PNG sources, but ship only their verified lossless copies.
+      // Constrain generated-file cleanup to this sandbox, including custom outDir.
+      const directory = resolve(workspace, output.dir ?? 'dist')
+      const within = relative(workspace, directory)
+      if (!within || within.startsWith('..') || isAbsolute(within)) return
+      for (const name of serviceMasters) rmSync(join(directory, 'products', name), { force: true })
+    },
+  }],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      ...(command === 'build' ? { leva: fileURLToPath(new URL('./src/lib/productionTuners.ts', import.meta.url)) } : {}),
     },
   },
   server: {
     port: 5176,
     host: true,
   },
-})
+}))

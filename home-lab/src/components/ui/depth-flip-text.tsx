@@ -9,6 +9,8 @@ import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { cn } from '@/lib/utils'
+import { useInView } from 'framer-motion'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
 
 gsap.registerPlugin(useGSAP, SplitText, ScrollTrigger)
 
@@ -63,6 +65,9 @@ const DepthFlipText = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const currentRef = useRef<HTMLParagraphElement>(null)
   const nextRef = useRef<HTMLParagraphElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const visible = useInView(containerRef, { margin: '10% 0px' })
+  const documentVisible = useDocumentVisible()
 
   useEffect(() => {
     let cancelled = false
@@ -100,6 +105,7 @@ const DepthFlipText = ({
       }
 
       const cleanup = () => {
+        timelineRef.current = null
         currentSplit?.revert()
         nextSplit?.revert()
       }
@@ -121,8 +127,9 @@ const DepthFlipText = ({
           rotationX: -90,
           opacity: 1,
         })
-        gsap
+        timelineRef.current = gsap
           .timeline({
+            paused: !scrub && (!visible || !documentVisible),
             delay: scrub ? 0 : holdDuration,
             onComplete: scrub ? undefined : () => setActiveIndex(nextIndex),
             scrollTrigger: scrub
@@ -160,8 +167,9 @@ const DepthFlipText = ({
       })
       const advance = () => setActiveIndex(nextIndex)
 
-      gsap
+      timelineRef.current = gsap
         .timeline({
+          paused: !scrub && (!visible || !documentVisible),
           delay: scrub ? 0 : holdDuration,
           onComplete: scrub ? undefined : advance,
           scrollTrigger: scrub
@@ -218,6 +226,12 @@ const DepthFlipText = ({
       ],
     },
   )
+
+  // Keep the exact timeline and its phase while hidden, instead of continuing
+  // character splitting, layout reads, and React phrase changes below the fold.
+  useEffect(() => {
+    if (!scrub) timelineRef.current?.paused(!visible || !documentVisible)
+  }, [visible, documentVisible, scrub, activeIndex, fontsReady])
 
   return (
     <section
