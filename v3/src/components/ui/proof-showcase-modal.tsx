@@ -8,21 +8,30 @@ import { Lottie } from 'lottie-react'
 import type { ProofProject } from '@/lib/proofDefaults'
 import { ProofCategoryIcon } from '@/lib/proofCategoryIcons'
 import { TechStackPill } from '@/components/ui/tech-stack-pill'
+import { BuildCaseStage } from '@/work-mockups/build-case-stages'
+import {
+  AnimatedCard,
+  CardBody,
+  CardDescription,
+  CardTitle,
+  CardVisual,
+  Visual1,
+} from '@/components/ui/animated-card'
 
 function AutoscrollClean({ image, title }: { image: string; title: string }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#1a1816]">
-      <div className="flex items-center gap-1.5 border-b border-white/10 px-3 py-2">
-        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
-        <span className="ml-2 truncate font-nhg text-[10px] text-white/35">{title}</span>
+    <div className="overflow-hidden rounded-2xl border border-home-line/25 bg-home-surface-dark">
+      <div className="flex items-center gap-1.5 border-b border-home-line/20 px-3 py-2">
+        <span className="h-2.5 w-2.5 rounded-full bg-home-on-dark/20" />
+        <span className="h-2.5 w-2.5 rounded-full bg-home-on-dark/20" />
+        <span className="h-2.5 w-2.5 rounded-full bg-home-on-dark/20" />
+        <span className="ml-2 truncate font-nhg text-[10px] text-home-muted">{title}</span>
       </div>
       <div className="relative h-[280px] overflow-hidden md:h-[360px]">
         <motion.img
           src={image}
           alt=""
-          className="absolute inset-x-0 top-0 w-full"
+          className="absolute inset-x-0 top-0 w-full object-cover object-top"
           style={{ height: '165%' }}
           animate={{ y: ['0%', '-42%', '0%'] }}
           transition={{ duration: 8, ease: 'easeInOut', repeat: Infinity }}
@@ -32,48 +41,90 @@ function AutoscrollClean({ image, title }: { image: string; title: string }) {
   )
 }
 
-function AdsCockpit() {
-  const bars = [42, 68, 55, 80, 62, 90, 74]
+/** Web Dev after-homepage, same chrome as Selected Builds */
+function BuildCaseHomepage({ project }: { project: ProofProject }) {
+  if (!project.buildCaseId) {
+    return (
+      <AutoscrollClean
+        image={project.detailImage || project.image}
+        title={project.title}
+      />
+    )
+  }
   return (
-    <div className="flex h-full min-h-[280px] flex-col rounded-2xl border border-white/10 bg-[#121110] p-5 md:min-h-[360px]">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-emerald-500/15 px-2.5 py-1 font-nhg text-[11px] font-medium text-emerald-400">
-          ROAS 4.2x
-        </span>
-        <span className="rounded-full bg-white/10 px-2.5 py-1 font-nhg text-[11px] text-white/70">
-          Live leads · 18
-        </span>
-      </div>
-      <div className="mt-8 flex flex-1 items-end gap-2 px-1">
-        {bars.map((h, i) => (
-          <div
-            key={i}
-            className="flex-1 rounded-t-md bg-gradient-to-t from-mocha/40 to-[#c4a574]"
-            style={{ height: `${h}%` }}
+    <div className="overflow-hidden rounded-2xl border border-home-line/25 bg-home-surface-dark [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="relative h-[280px] overflow-hidden md:h-[360px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <motion.div
+          className="absolute inset-x-0 top-0 w-full overflow-hidden"
+          style={{ height: '165%' }}
+          animate={{ y: ['0%', '-28%', '0%'] }}
+          transition={{ duration: 10, ease: 'easeInOut', repeat: Infinity }}
+        >
+          <BuildCaseStage
+            id={project.buildCaseId}
+            version="after"
+            className="h-full rounded-none border-0 overflow-hidden"
           />
-        ))}
+        </motion.div>
       </div>
-      <p className="mt-4 m-0 font-nhg text-[11px] text-white/35">7-day paid acquisition</p>
+    </div>
+  )
+}
+
+/** Exact Ads Reporting visual — AnimatedCard + Visual1 */
+function AdsCockpitRidge({ project }: { project: ProofProject }) {
+  const title = project.adsTitle || 'Brickwork - Meta'
+  const hoverBody = project.adsBody || 'Spent $7K - 74 calls - 22 booked'
+  return (
+    <div className="flex h-full min-h-[280px] items-center justify-center md:min-h-[360px]">
+      <div className="w-full max-w-[380px] rounded-2xl border border-dashed border-home-line/40 p-3">
+        <AnimatedCard className="w-full max-w-[356px] border-home-line/25 bg-home-surface-dark/80 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.45)]">
+          <CardVisual className="w-full !h-[200px] !w-full max-w-[356px]">
+            <Visual1
+              mainColor="#0081FB"
+              secondaryColor="#34A853"
+              layer4Title={title}
+              layer4Body={hoverBody}
+            />
+          </CardVisual>
+          <CardBody className="border-home-line/20">
+            <CardTitle className="font-switzer !text-home-on-dark">
+              {title}
+            </CardTitle>
+            <CardDescription className="font-switzer !text-home-muted">
+              {project.metricHighlight || '3.8x ROAS'}
+            </CardDescription>
+          </CardBody>
+        </AnimatedCard>
+      </div>
     </div>
   )
 }
 
 function LottiePreview({ src }: { src?: string }) {
   return (
-    <div className="flex h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#121110] md:h-[360px]">
+    <div className="flex h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-home-line/25 bg-home-surface-dark md:h-[360px]">
       {src ? (
         <Lottie src={src} loop autoplay className="h-[70%] w-[70%]" />
       ) : (
-        <p className="font-nhg text-sm text-white/40">Add mediaUrl for Lottie</p>
+        <p className="font-nhg text-sm text-home-muted">Add mediaUrl for Lottie</p>
       )}
     </div>
   )
 }
 
 function MediaPane({ project }: { project: ProofProject }) {
-  if (project.visualType === 'ads-cockpit') return <AdsCockpit />
+  if (project.visualType === 'ads-cockpit') return <AdsCockpitRidge project={project} />
   if (project.visualType === 'lottie') return <LottiePreview src={project.mediaUrl} />
-  return <AutoscrollClean image={project.image} title={project.title} />
+  if (project.visualType === 'build-case' || project.buildCaseId) {
+    return <BuildCaseHomepage project={project} />
+  }
+  return (
+    <AutoscrollClean
+      image={project.detailImage || project.image}
+      title={project.title}
+    />
+  )
 }
 
 type Props = {
@@ -85,7 +136,6 @@ type Props = {
   titleSize?: number
 }
 
-/** Shell stays open; Previous/Next swap content in place. */
 export default function ProofShowcaseModal({
   project,
   projects,
@@ -124,19 +174,19 @@ export default function ProofShowcaseModal({
     >
       <button
         type="button"
-        className="absolute inset-0 bg-[#0a0908]/72 backdrop-blur-[12px]"
+        className="absolute inset-0 bg-home-bg-dark/70 backdrop-blur-[12px]"
         aria-label="Close showcase"
         onClick={onClose}
       />
 
       <motion.div
-        className="relative z-10 flex max-h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#141210] shadow-[0_40px_100px_rgba(0,0,0,0.55)]"
+        className="relative z-10 flex max-h-[85vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-home-line/25 bg-home-surface-dark shadow-[0_40px_100px_rgba(0,0,0,0.55)]"
         initial={{ opacity: 0, scale: 0.97, y: 14 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: 8 }}
         transition={{ duration: 0.38, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 md:px-5">
+        <div className="flex items-center justify-between gap-3 border-b border-home-line/20 px-4 py-3 md:px-5">
           <AnimatePresence mode="wait">
             <motion.div
               key={`head-${project.id}`}
@@ -146,17 +196,17 @@ export default function ProofShowcaseModal({
               exit={{ opacity: 0, x: -8 }}
               transition={{ duration: 0.2 }}
             >
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#efeae2] px-2.5 py-1 font-nhg text-[11px] font-medium text-espresso">
-                <ProofCategoryIcon category={project.category} className="text-espresso/70" />
+              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-home-surface-light px-2.5 py-1 font-nhg text-[11px] font-medium text-home-on-light">
+                <ProofCategoryIcon category={project.category} className="text-home-muted" />
                 {project.categoryIcon}
               </span>
-              <span className="truncate font-nhg text-sm font-semibold text-white">{project.title}</span>
+              <span className="truncate font-nhg text-sm font-semibold text-home-on-dark">{project.title}</span>
             </motion.div>
           </AnimatePresence>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/70 transition hover:bg-white/5 hover:text-white"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-home-line/25 text-home-muted transition hover:bg-home-on-dark/5 hover:text-home-on-dark"
             aria-label="Close"
           >
             <X size={16} />
@@ -166,30 +216,39 @@ export default function ProofShowcaseModal({
         <AnimatePresence mode="wait">
           <motion.div
             key={project.id}
-            className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto md:grid-cols-5"
+            className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto md:grid-cols-5 md:overflow-hidden"
             initial={{ opacity: 0, x: 18 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -18 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="p-4 md:col-span-3 md:p-5">
+            <div className="min-h-0 overflow-hidden p-4 md:col-span-3 md:p-5">
               <MediaPane project={project} />
             </div>
-            <div className="flex flex-col border-t border-white/10 p-4 md:col-span-2 md:border-l md:border-t-0 md:p-5">
-              <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.14em] text-white/35">{project.tag}</p>
-              <h3
-                className="mt-2 m-0 font-nhg font-semibold tracking-tight text-white"
-                style={{ fontSize: titleSize }}
-              >
-                {project.title}
-              </h3>
-              <p className="mt-4 m-0 font-nhg text-2xl font-semibold tracking-tight text-[#c4a574] md:text-3xl">
+            <div className="flex flex-col border-t border-home-line/20 p-4 md:col-span-2 md:border-l md:border-t-0 md:p-5">
+              <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.14em] text-home-muted">
+                {project.tag}
+              </p>
+              <div className="mt-2 flex items-center gap-3">
+                <h3
+                  className="m-0 font-nhg font-semibold tracking-tight text-home-on-dark"
+                  style={{ fontSize: titleSize }}
+                >
+                  {project.title}
+                </h3>
+                {project.logoUrl ? (
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-home-surface-light p-1.5 shadow-sm">
+                    <img src={project.logoUrl} alt="" className="h-full w-full object-contain" />
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-4 m-0 font-nhg text-2xl font-semibold tracking-tight text-home-acid md:text-3xl">
                 {project.metricHighlight}
               </p>
               <ul className="mt-5 space-y-2.5 p-0">
                 {project.bullets.map((b) => (
-                  <li key={b} className="flex items-start gap-2 font-nhg text-sm text-white/70">
-                    <Check size={14} className="mt-0.5 shrink-0 text-[#c4a574]" aria-hidden />
+                  <li key={b} className="flex items-start gap-2 font-nhg text-sm text-home-muted">
+                    <Check size={14} className="mt-0.5 shrink-0 text-home-acid" aria-hidden />
                     <span>{b}</span>
                   </li>
                 ))}
@@ -203,16 +262,16 @@ export default function ProofShowcaseModal({
           </motion.div>
         </AnimatePresence>
 
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-white/10 px-4 py-3 md:px-5">
-          <p className="m-0 font-nhg text-[11px] text-white/40">
+        <div className="flex flex-col gap-3 border-t border-home-line/20 px-4 py-3 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:px-5">
+          <p className="m-0 order-1 font-nhg text-[11px] text-home-muted md:order-none">
             {Math.max(1, idx + 1)} / {projects.length}
           </p>
-          <div className="flex justify-center gap-2">
+          <div className="order-3 flex justify-center gap-2 md:order-none">
             <button
               type="button"
               onClick={onPrev}
               disabled={projects.length < 2}
-              className="rounded-[10px] border border-white/12 px-3 py-2 font-nhg text-[12px] text-white/75 transition hover:bg-white/5 disabled:opacity-40"
+              className="rounded-[10px] border border-home-line/30 px-3 py-2 font-nhg text-[12px] text-home-on-dark/80 transition hover:bg-home-on-dark/5 disabled:opacity-40"
             >
               ← Previous
             </button>
@@ -220,7 +279,7 @@ export default function ProofShowcaseModal({
               type="button"
               onClick={onNext}
               disabled={projects.length < 2}
-              className="rounded-[10px] border border-white/12 px-3 py-2 font-nhg text-[12px] text-white/75 transition hover:bg-white/5 disabled:opacity-40"
+              className="rounded-[10px] border border-home-line/30 px-3 py-2 font-nhg text-[12px] text-home-on-dark/80 transition hover:bg-home-on-dark/5 disabled:opacity-40"
             >
               Next →
             </button>
@@ -228,7 +287,7 @@ export default function ProofShowcaseModal({
           <a
             href="#get-started"
             onClick={onClose}
-            className="inline-flex items-center justify-self-end rounded-[10px] bg-[#efeae2] px-4 py-2.5 font-nhg text-[13px] font-medium text-espresso no-underline transition hover:bg-white"
+            className="order-2 inline-flex w-full items-center justify-center rounded-[10px] bg-home-acid px-3 py-2 font-nhg text-[12px] font-medium text-home-on-light no-underline transition hover:opacity-90 md:order-none md:w-auto md:justify-self-end md:px-4 md:py-2.5 md:text-[13px]"
           >
             Need something like this? →
           </a>
@@ -237,5 +296,6 @@ export default function ProofShowcaseModal({
     </motion.div>
   )
 
-  return createPortal(ui, document.body)
+  const mount = document.getElementById('home-page') ?? document.body
+  return createPortal(ui, mount)
 }

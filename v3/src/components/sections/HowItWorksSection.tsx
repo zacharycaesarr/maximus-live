@@ -1,76 +1,62 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion'
+import { useEffect, useId, useRef, useState } from 'react'
+import { AnimatePresence, motion, useScroll, useSpring, useTransform, useReducedMotion } from 'framer-motion'
 import { useHowItWorksTuner } from '@/context/HowItWorksTunerContext'
 import { cn } from '@/lib/utils'
 
-function AppleEmoji({ emoji, className }: { emoji: string; className?: string }) {
-  const cps = [...emoji]
-    .map((c) => c.codePointAt(0)?.toString(16))
-    .filter(Boolean)
-    .join('-')
-  const src = `https://cdn.jsdelivr.net/npm/emoji-datasource-apple@15.1.2/img/apple/64/${cps}.png`
-  return (
-    <>
-      <img
-        src={src}
-        alt=""
-        className={className}
-        draggable={false}
-        onError={(e) => {
-          e.currentTarget.style.display = 'none'
-          const fallback = e.currentTarget.nextElementSibling as HTMLElement | null
-          if (fallback) fallback.hidden = false
-        }}
-      />
-      <span className={cn('text-7xl', className)} hidden>
-        {emoji}
-      </span>
-    </>
-  )
+type CardCopy = { tag: string; title: string; body: string }
+
+type StepCardData = CardCopy & {
+  art: string
+  artScale: number
+  artOpacity: number
+  artX: number
+  artY: number
 }
 
-type CardData = { tag: string; title: string; body: string; emoji: string }
-
-function StepCard({ card, bg }: { card: CardData; bg: string }) {
+function StepCard({ card }: { card: StepCardData }) {
   return (
-    <article
-      className="group relative flex min-h-[380px] flex-col overflow-hidden rounded-2xl p-5 transition-[transform,box-shadow] duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-3.5 hover:shadow-[0_32px_56px_rgba(0,0,0,0.35)] md:min-h-[460px] md:p-6"
-      style={{ background: bg }}
-    >
-      <p className="m-0 font-nhg text-[11px] font-medium tracking-[0.14em] text-espresso/40">{card.tag}</p>
-      <h3 className="mt-3 m-0 font-nhg text-[1.15rem] font-semibold leading-snug tracking-tight text-espresso md:text-[1.35rem]">
-        {card.title}
-      </h3>
-      <p className="mt-3 m-0 font-nhg text-sm leading-relaxed text-espresso/60 md:text-[15px]">{card.body}</p>
-      <div
-        className="pointer-events-none absolute bottom-[-2%] left-1/2 flex h-[46%] w-[70%] -translate-x-1/2 items-end justify-center opacity-[0.2] transition-transform duration-[380ms] group-hover:scale-110"
+    <article className="group relative flex min-h-[380px] flex-col overflow-hidden rounded-2xl bg-home-surface-light p-5 transition-[transform,box-shadow] duration-[380ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-3.5 hover:shadow-[0_32px_56px_rgba(0,0,0,0.35)] md:min-h-[460px] md:p-6">
+      {/* Decorative PNG — floats on card bg, clipped by overflow. No wrapper bg. */}
+      <img
+        src={card.art}
+        alt=""
         aria-hidden
-      >
-        <AppleEmoji emoji={card.emoji} className="h-36 w-36 object-contain md:h-44 md:w-44" />
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        className="pointer-events-none absolute bottom-0 left-1/2 z-0 w-[clamp(11rem,72%,20rem)] max-w-none select-none object-contain object-bottom"
+        style={{
+          opacity: card.artOpacity,
+          transform: `translate(calc(-50% + ${card.artX}px), ${card.artY}px) scale(${card.artScale})`,
+          transformOrigin: 'center bottom',
+        }}
+      />
+      <div className="relative z-[1]">
+        <p className="m-0 font-nhg text-[11px] font-medium tracking-[0.14em] text-home-muted">{card.tag}</p>
+        <h3 className="mt-3 m-0 font-nhg text-[1.15rem] font-semibold leading-snug tracking-tight text-home-on-light md:text-[1.35rem]">
+          {card.title}
+        </h3>
+        <p className="mt-3 m-0 font-nhg text-sm leading-relaxed text-home-muted md:text-[15px]">{card.body}</p>
       </div>
     </article>
   )
 }
 
 function highlightSubtitle(text: string, highlight: string) {
-  if (!highlight.trim()) return <span className="text-white/45">{text}</span>
+  if (!highlight.trim()) return <span className="text-home-muted">{text}</span>
   const idx = text.toLowerCase().indexOf(highlight.toLowerCase())
-  if (idx < 0) return <span className="text-white/45">{text}</span>
+  if (idx < 0) return <span className="text-home-muted">{text}</span>
   return (
     <>
-      <span className="text-white/45">{text.slice(0, idx)}</span>
-      <span className="font-medium text-white">{text.slice(idx, idx + highlight.length)}</span>
-      <span className="text-white/45">{text.slice(idx + highlight.length)}</span>
+      <span className="text-home-muted">{text.slice(0, idx)}</span>
+      <span className="font-medium text-home-on-dark">{text.slice(idx, idx + highlight.length)}</span>
+      <span className="text-home-muted">{text.slice(idx + highlight.length)}</span>
     </>
   )
 }
 
-/**
- * Concave elbow. Position + rotate via Leva (How it works → Fillets).
- * Hit Remember after you dial it in.
- */
 function InvertedFillet({
   side,
   fill,
@@ -105,12 +91,124 @@ function InvertedFillet({
   )
 }
 
+function MobileHowAccordion({ cards }: { cards: CardCopy[] }) {
+  const reduce = useReducedMotion()
+  const [open, setOpen] = useState(0)
+  const baseId = useId()
+  const dur = reduce ? 0.01 : 0.42
+
+  return (
+    <div className="mx-auto w-full max-w-lg px-1">
+      <ul className="m-0 flex list-none flex-col gap-2 p-0">
+        {cards.map((card, i) => {
+          const isOpen = open === i
+          const panelId = `${baseId}-panel-${i}`
+          const btnId = `${baseId}-btn-${i}`
+          return (
+            <li
+              key={card.tag}
+              className={cn(
+                'relative overflow-hidden rounded-2xl border transition-[border-color,box-shadow,background] duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]',
+                isOpen
+                  ? 'border-home-acid/45 bg-home-surface-dark shadow-[0_0_0_1px_color-mix(in_srgb,var(--home-acid)_18%,transparent),0_12px_28px_-16px_rgba(0,0,0,0.55)]'
+                  : 'border-home-line/25 bg-home-bg-dark/40',
+              )}
+            >
+              {isOpen && !reduce ? (
+                <span
+                  className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-2xl"
+                  aria-hidden
+                >
+                  <span className="mr-how-sweep absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFEDD5]/12 to-transparent" />
+                </span>
+              ) : null}
+
+              <button
+                type="button"
+                id={btnId}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                className="relative z-[1] flex w-full items-center gap-3 px-3.5 py-3.5 text-left"
+                onClick={() => setOpen((prev) => (prev === i ? -1 : i))}
+              >
+                <motion.span
+                  className="shrink-0 font-nhg text-[11px] font-medium tracking-[0.16em] text-home-acid"
+                  animate={
+                    reduce
+                      ? undefined
+                      : { x: isOpen ? 2 : 0, y: isOpen ? -1 : 0 }
+                  }
+                  transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {card.tag}
+                </motion.span>
+                <motion.span
+                  className="min-w-0 flex-1 font-nhg text-[14px] font-semibold leading-snug tracking-tight text-home-on-dark"
+                  animate={reduce ? undefined : { x: isOpen ? 3 : 0 }}
+                  transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {card.title}
+                </motion.span>
+                <motion.span
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-home-line/30 text-home-muted"
+                  animate={{ rotate: isOpen ? 45 : 0 }}
+                  transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
+                  aria-hidden
+                >
+                  <span className="relative block h-3 w-3">
+                    <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current" />
+                    <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-current" />
+                  </span>
+                </motion.span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen ? (
+                  <motion.div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={btnId}
+                    key="body"
+                    initial={reduce ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={reduce ? { height: 0, opacity: 0 } : { height: 0, opacity: 0 }}
+                    transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative z-[1] overflow-hidden"
+                  >
+                    <motion.p
+                      className="m-0 px-3.5 pb-3.5 pt-0 font-nhg text-[13px] leading-relaxed text-home-muted"
+                      initial={reduce ? false : { opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={reduce ? undefined : { opacity: 0, y: 4 }}
+                      transition={{ duration: dur * 0.9, ease: [0.22, 1, 0.36, 1], delay: reduce ? 0 : 0.04 }}
+                    >
+                      {card.body}
+                    </motion.p>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </li>
+          )
+        })}
+      </ul>
+      <style>{`
+        @keyframes mr-how-sweep {
+          from { transform: translateX(-120%); }
+          to { transform: translateX(320%); }
+        }
+        .mr-how-sweep {
+          animation: mr-how-sweep 0.48s ease-out 1;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .mr-how-sweep { animation: none; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
 /**
- * Dessn canopy:
- * 1) full-width black header
- * 2) cream sides return
- * 3) narrower black well drops down with inverted fillets at the elbows
- * 4) convex rounded bottom on the well
+ * Dessn canopy (desktop) + compact mobile accordion.
  */
 export default function HowItWorksSection() {
   const t = useHowItWorksTuner()
@@ -151,12 +249,73 @@ export default function HowItWorksSection() {
 
   if (!t.enabled) return null
 
-  const fill = t.canopyBg
-  const cards: CardData[] = [
-    { tag: t.card1Tag, title: t.card1Title, body: t.card1Body, emoji: t.card1Emoji },
-    { tag: t.card2Tag, title: t.card2Title, body: t.card2Body, emoji: t.card2Emoji },
-    { tag: t.card3Tag, title: t.card3Title, body: t.card3Body, emoji: t.card3Emoji },
+  const fill = 'var(--home-surface-dark)'
+  const mobileCards: CardCopy[] = [
+    { tag: t.card1Tag, title: t.card1Title, body: t.card1Body },
+    { tag: t.card2Tag, title: t.card2Title, body: t.card2Body },
+    { tag: t.card3Tag, title: t.card3Title, body: t.card3Body },
   ]
+
+  const desktopCards: StepCardData[] = [
+    {
+      tag: t.card1Tag,
+      title: t.card1Title,
+      body: t.card1Body,
+      art: t.card1Art,
+      artScale: t.card1ArtScale,
+      artOpacity: t.card1ArtOpacity,
+      artX: t.card1ArtX,
+      artY: t.card1ArtY,
+    },
+    {
+      tag: t.card2Tag,
+      title: t.card2Title,
+      body: t.card2Body,
+      art: t.card2Art,
+      artScale: t.card2ArtScale,
+      artOpacity: t.card2ArtOpacity,
+      artX: t.card2ArtX,
+      artY: t.card2ArtY,
+    },
+    {
+      tag: t.card3Tag,
+      title: t.card3Title,
+      body: t.card3Body,
+      art: t.card3Art,
+      artScale: t.card3ArtScale,
+      artOpacity: t.card3ArtOpacity,
+      artX: t.card3ArtX,
+      artY: t.card3ArtY,
+    },
+  ]
+
+  // Mobile: compact accordion (no tall cream cards)
+  if (isMobile) {
+    return (
+      <section
+        id="how-it-works"
+        ref={ref}
+        data-parallax-pause
+        className="relative w-full overflow-x-clip py-10"
+        aria-label="How it works"
+      >
+        <div className="relative w-full px-5 pb-2 pt-2" style={{ backgroundColor: fill }}>
+          <p className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-muted">
+            03
+          </p>
+          <h2 className="m-0 font-nhg text-[clamp(1.85rem,7vw,2.35rem)] font-semibold tracking-tight text-home-on-dark">
+            {t.title}
+          </h2>
+          <p className="mt-3 max-w-xl font-nhg text-[13px] leading-relaxed">
+            {highlightSubtitle(t.canopySubtitle, t.canopyHighlight)}
+          </p>
+          <div className="mt-5 pb-2">
+            <MobileHowAccordion cards={mobileCards} />
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section
@@ -170,21 +329,20 @@ export default function HowItWorksSection() {
         className="relative z-10 mx-auto mb-5 w-full max-w-6xl px-5 md:mb-6 md:px-8"
         style={{ opacity: approachTitleOpacity }}
       >
-        <p className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-espresso/45">
+        <p className="mb-2 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-muted">
           03
         </p>
-        <h2 className="m-0 bg-gradient-to-br from-[#1a1612] via-[#2C2520] to-[#6b5a4a] bg-clip-text font-nhg text-[clamp(1.85rem,4vw,2.75rem)] font-semibold tracking-tight text-transparent">
+        <h2 className="m-0 font-nhg text-[clamp(1.85rem,4vw,2.75rem)] font-semibold tracking-tight text-home-on-dark">
           {t.title}
         </h2>
       </motion.div>
 
-      {/* 1. Full-width black header only */}
       <div className="relative w-full" style={{ backgroundColor: fill }}>
         <motion.div
           className="mx-auto max-w-6xl px-5 pb-8 pt-10 text-center md:px-8 md:pb-10 md:pt-14"
           style={{ opacity: titleInShellOpacity }}
         >
-          <h2 className="m-0 font-nhg text-[clamp(1.85rem,3.8vw,2.75rem)] font-semibold tracking-tight text-white">
+          <h2 className="m-0 font-nhg text-[clamp(1.85rem,3.8vw,2.75rem)] font-semibold tracking-tight text-home-on-dark">
             {t.title}
           </h2>
           <p className="mx-auto mt-4 max-w-2xl font-nhg text-sm leading-relaxed md:text-[15px]">
@@ -193,7 +351,6 @@ export default function HowItWorksSection() {
         </motion.div>
       </div>
 
-      {/* 2. Cream on sides; 3. narrower well with concave top elbows */}
       <div className="relative mx-auto max-w-6xl px-0">
         <div
           className="relative -mt-px overflow-visible rounded-b-3xl px-3 pb-4 pt-0 md:px-5 md:pb-5"
@@ -221,13 +378,13 @@ export default function HowItWorksSection() {
             style={{
               scale: cardsScale,
               x: cardsX,
-              transformOrigin: isMobile ? 'center top' : 'left center',
+              transformOrigin: 'left center',
             }}
           >
             <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-4">
-              {cards.map((card, i) => (
+              {desktopCards.map((card, i) => (
                 <motion.div key={card.tag} style={{ y: i === 1 ? card2Y : i === 2 ? card3Y : 0 }}>
-                  <StepCard card={card} bg={t.cardBg} />
+                  <StepCard card={card} />
                 </motion.div>
               ))}
             </div>

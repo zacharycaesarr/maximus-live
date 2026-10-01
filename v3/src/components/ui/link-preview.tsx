@@ -10,7 +10,10 @@ type LinkPreviewProps = {
   className?: string
   width?: number
   height?: number
-  imageSrc: string
+  /** Photo preview (legacy). Ignored when `preview` is set. */
+  imageSrc?: string
+  /** Custom hover card (browser mock, chart, etc.) */
+  preview?: ReactNode
   href?: string
 }
 
@@ -23,6 +26,7 @@ export function LinkPreview({
   width = 220,
   height = 132,
   imageSrc,
+  preview,
   href,
 }: LinkPreviewProps) {
   const [open, setOpen] = useState(false)
@@ -59,7 +63,7 @@ export function LinkPreview({
     <span
       ref={wrapRef}
       className={cn(
-        'inline cursor-default border-b border-dotted border-[#c4a574]/70 font-medium text-espresso transition-colors hover:border-[#8b6950]',
+        'inline cursor-default border-b border-dotted border-home-acid/70 font-medium text-home-on-light transition-colors hover:border-home-acid',
         className,
       )}
       onMouseEnter={openPreview}
@@ -92,21 +96,25 @@ export function LinkPreview({
             exit={{ opacity: 0, y: 10, scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 280, damping: 22 }}
           >
-            <div className="overflow-hidden rounded-xl border border-espresso/10 bg-white p-1 shadow-[0_20px_50px_rgba(26,22,18,0.28)]">
-              <img
-                src={imageSrc}
-                alt=""
-                width={width}
-                height={height}
-                className="block rounded-lg object-cover"
-                style={{ width, height }}
-                draggable={false}
-              />
+            <div className="overflow-hidden rounded-xl border border-home-line/50 bg-home-surface-light p-1 shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
+              {preview ? (
+                preview
+              ) : imageSrc ? (
+                <img
+                  src={imageSrc}
+                  alt=""
+                  width={width}
+                  height={height}
+                  className="block rounded-lg object-cover"
+                  style={{ width, height }}
+                  draggable={false}
+                />
+              ) : null}
             </div>
           </motion.div>
         ) : null}
       </AnimatePresence>,
-      document.body,
+      document.getElementById('home-page') ?? document.body,
     )
 
   if (href) {

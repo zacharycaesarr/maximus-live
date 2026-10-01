@@ -23,11 +23,11 @@ export function HeroLayoutTunerProvider({
     {
       'Hero layout & copy': folder(
         {
-          'Layout trial': folder(
+          'Layout': folder(
             {
               heroAlign: {
                 value: initial.heroAlign,
-                options: { 'Left (new)': 'left', 'Center (old)': 'center' },
+                options: { Left: 'left', Center: 'center' },
                 label: 'copy align',
               },
               bgVideoEnabled: { value: initial.bgVideoEnabled, label: 'video bg (vs mesh)' },
@@ -43,39 +43,104 @@ export function HeroLayoutTunerProvider({
                 min: -120,
                 max: 120,
                 step: 1,
-                label: 'video Y desktop (+ down)',
+                label: 'video Y desktop',
               },
               heroVideoOffsetYMobile: {
                 value: initial.heroVideoOffsetYMobile,
                 min: -120,
                 max: 120,
                 step: 1,
-                label: 'video Y mobile (+ down)',
+                label: 'video Y mobile',
               },
             },
             { collapsed: true },
           ),
           showEyebrow: initial.showEyebrow,
           eyebrow: initial.eyebrow,
+          eyebrowScale: {
+            value: initial.eyebrowScale,
+            min: 0.55,
+            max: 1.35,
+            step: 0.01,
+            label: 'eyebrow scale',
+          },
           subhead: { value: initial.subhead, label: 'body (use | for lines)' },
-          scrollLabel: initial.scrollLabel,
-          showSidePlaceholder: { value: initial.showSidePlaceholder, label: 'side column' },
-          columnSplit: { value: initial.columnSplit, min: 28, max: 50, step: 1 },
-          imageOnTopMobile: initial.imageOnTopMobile,
-          sideImageUrl: initial.sideImageUrl,
-          sideBg: initial.sideBg,
-          copyMaxWidth: { value: initial.copyMaxWidth, min: 320, max: 1200, step: 10 },
-          sideRadius: { value: initial.sideRadius, min: 0, max: 40, step: 1 },
+          'Copy block (group)': folder(
+            {
+              copyOffsetX: {
+                value: initial.copyOffsetX,
+                min: -220,
+                max: 220,
+                step: 1,
+                label: 'position X',
+              },
+              copyOffsetY: {
+                value: initial.copyOffsetY,
+                min: -220,
+                max: 220,
+                step: 1,
+                label: 'position Y',
+              },
+              copyScale: {
+                value: initial.copyScale,
+                min: 0.85,
+                max: 1.45,
+                step: 0.01,
+                label: 'whole block scale',
+              },
+              ctaScale: {
+                value: initial.ctaScale,
+                min: 0.9,
+                max: 1.4,
+                step: 0.01,
+                label: 'buttons scale',
+              },
+              copyBreathMs: {
+                value: initial.copyBreathMs,
+                min: 0,
+                max: 2000,
+                step: 40,
+                label: 'breathe before copy (ms)',
+              },
+              subheadLagMs: {
+                value: initial.subheadLagMs,
+                min: 0,
+                max: 1200,
+                step: 20,
+                label: 'subtext after headline (ms)',
+              },
+              'Reset copy block': button(() => {
+                try {
+                  const cur = JSON.parse(
+                    localStorage.getItem(HERO_LAYOUT_STORAGE_KEY) || '{}',
+                  ) as Record<string, unknown>
+                  localStorage.setItem(
+                    HERO_LAYOUT_STORAGE_KEY,
+                    JSON.stringify({
+                      ...cur,
+                      copyOffsetX: defaultHeroLayout.copyOffsetX,
+                      copyOffsetY: defaultHeroLayout.copyOffsetY,
+                      copyScale: defaultHeroLayout.copyScale,
+                      ctaScale: defaultHeroLayout.ctaScale,
+                      copyBreathMs: defaultHeroLayout.copyBreathMs,
+                      subheadLagMs: defaultHeroLayout.subheadLagMs,
+                    }),
+                  )
+                  window.location.reload()
+                } catch {
+                  /* ignore */
+                }
+              }),
+            },
+            { collapsed: false },
+          ),
           showCtas: initial.showCtas,
           ctaGetStarted: initial.ctaGetStarted,
           ctaPortal: initial.ctaPortal,
           Hand: folder(
             {
               handEnabled: { value: initial.handEnabled, label: 'enabled' },
-              handPreview: {
-                value: initial.handPreview,
-                label: 'preview (force show)',
-              },
+              handPreview: { value: initial.handPreview, label: 'preview (force show)' },
               handSide: {
                 value: initial.handSide,
                 options: { left: 'left', right: 'right' },
@@ -108,13 +173,12 @@ export function HeroLayoutTunerProvider({
                 step: 4,
                 label: 'edge slide px',
               },
-              handRevealMs: { value: initial.handRevealMs, min: 80, max: 600, step: 10, label: 'slide in ms' },
-              handLeaveDelayMs: {
-                value: initial.handLeaveDelayMs,
-                min: 0,
-                max: 400,
+              handRevealMs: {
+                value: initial.handRevealMs,
+                min: 80,
+                max: 600,
                 step: 10,
-                label: 'leave delay ms',
+                label: 'slide in ms',
               },
               handFadeOutMs: {
                 value: initial.handFadeOutMs,
@@ -128,7 +192,7 @@ export function HeroLayoutTunerProvider({
                 min: 0,
                 max: 0.9,
                 step: 0.05,
-                label: 'retract early (0-1)',
+                label: 'retract early',
               },
               handRetractHoldMs: {
                 value: initial.handRetractHoldMs,
@@ -143,10 +207,7 @@ export function HeroLayoutTunerProvider({
           ),
           Parallax: folder(
             {
-              parallaxEnabled: {
-                value: initial.parallaxEnabled,
-                label: 'enabled (content + bg)',
-              },
+              parallaxEnabled: { value: initial.parallaxEnabled, label: 'enabled' },
               parallaxStrength: {
                 value: initial.parallaxStrength,
                 min: 0,
@@ -167,81 +228,6 @@ export function HeroLayoutTunerProvider({
                 max: 1600,
                 step: 20,
                 label: 'perspective',
-              },
-            },
-            { collapsed: true },
-          ),
-          Surfer: folder(
-            {
-              surferEnabled: { value: initial.surferEnabled, label: 'enabled' },
-              surferOpacity: { value: initial.surferOpacity, min: 0.2, max: 1, step: 0.02, label: 'opacity' },
-              surferScale: { value: initial.surferScale, min: 0.5, max: 1.8, step: 0.05, label: 'scale' },
-              surferOffsetX: {
-                value: initial.surferOffsetX,
-                min: -200,
-                max: 200,
-                step: 1,
-                label: 'offset X',
-              },
-              surferOffsetY: {
-                value: initial.surferOffsetY,
-                min: -300,
-                max: 200,
-                step: 1,
-                label: 'offset Y',
-              },
-              surferWidth: {
-                value: initial.surferWidth,
-                min: 280,
-                max: 900,
-                step: 10,
-                label: 'width px',
-              },
-            },
-            { collapsed: true },
-          ),
-          Watermark: folder(
-            {
-              showWatermark: initial.showWatermark,
-              watermarkLine1: { value: initial.watermarkLine1, label: 'line 1' },
-              watermarkLine2: { value: initial.watermarkLine2, label: 'line 2' },
-              watermarkOpacity: {
-                value: initial.watermarkOpacity,
-                min: 0,
-                max: 1,
-                step: 0.01,
-                label: 'opacity',
-              },
-              watermarkSize: { value: initial.watermarkSize, min: 3, max: 16, step: 0.25, label: 'size (vw)' },
-              watermarkTracking: {
-                value: initial.watermarkTracking,
-                min: -0.1,
-                max: 0.1,
-                step: 0.005,
-                label: 'tracking',
-              },
-              watermarkColor: { value: initial.watermarkColor, label: 'color' },
-              watermarkRight: { value: initial.watermarkRight, min: 0, max: 40, step: 0.5, label: 'right %' },
-              watermarkBottom: {
-                value: initial.watermarkBottom,
-                min: 0,
-                max: 40,
-                step: 0.5,
-                label: 'bottom %',
-              },
-              watermarkOffsetX: {
-                value: initial.watermarkOffsetX,
-                min: -120,
-                max: 120,
-                step: 1,
-                label: 'offset X',
-              },
-              watermarkOffsetY: {
-                value: initial.watermarkOffsetY,
-                min: -120,
-                max: 120,
-                step: 1,
-                label: 'offset Y',
               },
             },
             { collapsed: true },

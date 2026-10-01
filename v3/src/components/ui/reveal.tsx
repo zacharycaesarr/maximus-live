@@ -8,10 +8,19 @@ type Props = {
   children: ReactNode
   className?: string
   delay?: number
+  duration?: number
+  /** How far it slides up from (px). Bigger = more noticeable rise. */
+  y?: number
 }
 
 /** Soft scroll-in used across About / Start / Work. */
-export function Reveal({ children, className, delay = 0 }: Props) {
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  duration = 1.45,
+  y = 18,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
   const inView = useInView(ref, { once: true, margin: '0px 0px -12% 0px' })
@@ -24,9 +33,9 @@ export function Reveal({ children, className, delay = 0 }: Props) {
     <motion.div
       ref={ref}
       className={cn(className)}
-      initial={{ opacity: 0, y: 18 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-      transition={{ duration: 0.85, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

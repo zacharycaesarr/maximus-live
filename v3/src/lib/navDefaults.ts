@@ -1,4 +1,4 @@
-export const NAV_STORAGE_KEY = 'mr-v3-nav-tuner-v7'
+export const NAV_STORAGE_KEY = 'mr-v3-nav-tuner-v13'
 
 export const defaultNavTuner = {
   barHeight: 64,
@@ -8,7 +8,7 @@ export const defaultNavTuner = {
   link2: 'How it works',
   link3: 'FAQ',
   ctaLabel: 'Get started',
-  ctaBg: '#c4a574',
+  ctaBg: '#C8FF3D',
   ctaText: '#0a0a0a',
   showCtaArrow: true,
   showLogo: true,
@@ -25,6 +25,11 @@ export const defaultNavTuner = {
   scrollSolidAt: 48,
   glassMenuBg: '#ffffff',
   glassMenuOpacity: 0.92,
+  capsWebArtScale: 1.15,
+  capsWebArtOpacity: 1,
+  capsWebArtX: 8,
+  capsWebArtY: 0,
+  capsWebArtW: 64,
 }
 
 export type NavTuner = typeof defaultNavTuner

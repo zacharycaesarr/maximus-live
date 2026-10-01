@@ -16,6 +16,13 @@ export type ImageHoverRevealProps = {
   alt?: string
   /** directional = desktop hover wipe; slice = mouse/finger track band */
   variant?: 'directional' | 'slice'
+  /** when false, base image stays full color (before/after phone use) */
+  grayscaleBase?: boolean
+  /**
+   * Phone proof mode: show overlaySrc as the always-visible "after",
+   * and reveal src ("before") inside the track slot.
+   */
+  preferOverlayAsBase?: boolean
 }
 
 const DEFAULT_IMAGE =
@@ -31,6 +38,8 @@ export default function ImageHoverReveal({
   overlaySrc,
   alt = 'Before after reveal',
   variant = 'directional',
+  grayscaleBase = true,
+  preferOverlayAsBase = false,
 }: ImageHoverRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
   const controls = useAnimation()
@@ -44,15 +53,26 @@ export default function ImageHoverReveal({
   const clipPath = useMotionTemplate`inset(${insetTop}px ${insetRight}px ${insetBottom}px ${insetLeft}px)`
   const thickness = 120
 
+  const baseSrc = preferOverlayAsBase ? overlaySrc || src : src
+  const slotSrc = preferOverlayAsBase ? src : overlaySrc || src
+
   useEffect(() => {
     if (variant === 'slice' && ref.current) {
       const rect = ref.current.getBoundingClientRect()
-      insetTop.jump(rect.height / 2)
-      insetBottom.jump(rect.height / 2)
-      insetLeft.jump(rect.width / 2)
-      insetRight.jump(rect.width / 2)
+      if (preferOverlayAsBase) {
+        // hide the "before" slot until hover/drag
+        insetTop.jump(rect.height)
+        insetBottom.jump(0)
+        insetLeft.jump(0)
+        insetRight.jump(0)
+      } else {
+        insetTop.jump(rect.height / 2)
+        insetBottom.jump(rect.height / 2)
+        insetLeft.jump(rect.width / 2)
+        insetRight.jump(rect.width / 2)
+      }
     }
-  }, [variant, insetTop, insetBottom, insetLeft, insetRight])
+  }, [variant, preferOverlayAsBase, insetTop, insetBottom, insetLeft, insetRight])
 
   const getDirection = (clientX: number, clientY: number) => {
     if (!ref.current) return 'top'
@@ -205,14 +225,18 @@ export default function ImageHoverReveal({
         endSlice(e.clientX, e.clientY)
       }}
     >
-      <img src={src} alt={`${alt} before`} className="h-full w-full object-cover" />
+      <img
+        src={baseSrc}
+        alt={`${alt} base`}
+        className={cn('h-full w-full object-cover', grayscaleBase && !preferOverlayAsBase && 'grayscale')}
+      />
       <motion.div
         className="pointer-events-none absolute left-0 top-0 h-full w-full"
         style={variant === 'slice' ? { clipPath } : { clipPath: 'inset(0% 0% 100% 0%)' }}
         animate={variant === 'directional' ? controls : undefined}
         initial={variant === 'directional' ? { clipPath: 'inset(0% 0% 100% 0%)' } : undefined}
       >
-        <img src={overlaySrc || src} alt={`${alt} after`} className="h-full w-full object-cover" />
+        <img src={slotSrc} alt={`${alt} reveal`} className="h-full w-full object-cover" />
       </motion.div>
     </div>
   )

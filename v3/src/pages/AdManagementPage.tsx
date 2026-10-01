@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { LevaPanel, useControls, useCreateStore, folder } from 'leva'
-import { ArrowUpRight } from 'lucide-react'
 import DirectNav from '@/components/nav/DirectNav'
 import SmoothScroll from '@/components/SmoothScroll'
 import SiteFooter from '@/components/sections/SiteFooter'
+import MoneyFlow from '@/components/sections/ads/MoneyFlow'
+import AdsConversionFunnel from '@/components/sections/ads/AdsConversionFunnel'
 import WebDevCtaSlab from '@/components/sections/WebDevCtaSlab'
 import { StretchText } from '@/components/ui/StretchText'
 import GrainOverlay from '@/components/ui/GrainOverlay'
@@ -14,7 +14,7 @@ import { LenisTunerProvider } from '@/context/LenisTunerContext'
 import { FooterTunerProvider } from '@/context/FooterTunerContext'
 import type { LevaStore } from '@/lib/levaStore'
 
-const KEY = 'mr-v3-ads-v3'
+const KEY = 'mr-v3-ads-v12'
 
 const DEFAULTS = {
   eyebrow: 'Capabilities · Ads',
@@ -23,35 +23,58 @@ const DEFAULTS = {
   titleTail: 'not noise.',
   blurb:
     'Paid campaigns run like a system: clear targeting, honest testing, and reports you can read in a minute.',
-  pillarEyebrow: 'How we work',
-  pillarTitle: 'Three moves. No dashboard fog.',
+  flowEyebrow: 'Where it goes',
+  flowTitle: 'Every dollar has a job.',
+  flowBody:
+    'Budget splits across platforms by what your customers use. Each platform feeds the outcomes you care about.',
+  flowChartH: 360,
+  flowChartPad: 48,
+  flowLineBase: 2,
+  flowLineShareMul: 18,
+  flowOutLineBase: 1.5,
+  flowOutLineMul: 26,
+  flowBudgetR: 14,
+  flowOutcomeR: 6,
+  flowLogoCardW: 100,
+  flowLogoImg: 28,
+  flowSectionPy: 112,
   reportEyebrow: 'Reporting',
-  reportTitle: 'A note you can read.',
+  reportTitle: "Clicks don't pay the bills. Customers do.",
+  reportBlurb:
+    'A lead is only the start. We look at which campaigns bring real inquiries, booked work, and better decisions for your budget.',
+  funnelExample: 'Example funnel',
+  funnel1Label: 'Ad clicks',
+  funnel1Value: 1214,
+  funnel2Label: 'Inquiries',
+  funnel2Value: 86,
+  funnel3Label: 'Qualified leads',
+  funnel3Value: 38,
+  funnel4Label: 'Booked customers',
+  funnel4Value: 17,
+  funnelColor1: '#A67C52',
+  funnelColor2: '#8B6950',
+  funnelColor3: '#6B4F3A',
+  funnelColor4: '#E8C547',
+  funnelThickness: 0.55,
+  funnelMinNorm: 0.04,
+  funnelMinH: 300,
+  funnelMinHMobile: 440,
+  decisionLabel: 'The decision',
+  decisionBody: 'Shift spend toward campaigns producing booked jobs, not just cheap clicks.',
   ctaHeadline: 'Turn it on.',
   ctaBlurb: 'Tell me your market and your goal. I map the first 30 days from there.',
   ctaLabel: 'Plan my campaign',
   peakWidth: 151,
-  baseWidth: 82,
-  grainOpacity: 0.06,
+  baseWidth: 45,
+  hoverBoost: 22,
+  bgA: '#FFF6E4',
+  bgB: '#E8B87A',
+  bgC: '#C4A574',
+  bgVignette: 0.18,
+  bgGrain: 45,
+  grainContrast: 1.45,
+  grainBrightness: 1.08,
 }
-
-const PILLARS = [
-  {
-    n: '01',
-    t: 'Target',
-    d: 'We find the people who already need what you sell. Not everyone with a pulse.',
-  },
-  {
-    n: '02',
-    t: 'Test',
-    d: 'Small budgets, several angles. The market votes. We cut what lies.',
-  },
-  {
-    n: '03',
-    t: 'Scale',
-    d: 'Push spend into what proves itself. Keep a side budget for the next idea.',
-  },
-]
 
 function load() {
   try {
@@ -76,8 +99,14 @@ function flatten(raw: unknown) {
   const merged = { ...DEFAULTS, ...bag }
   merged.baseWidth = Number(merged.baseWidth) || DEFAULTS.baseWidth
   merged.peakWidth = Number(merged.peakWidth) || DEFAULTS.peakWidth
-  merged.grainOpacity = Number(merged.grainOpacity)
-  if (!Number.isFinite(merged.grainOpacity)) merged.grainOpacity = DEFAULTS.grainOpacity
+  merged.hoverBoost = Number(merged.hoverBoost) || DEFAULTS.hoverBoost
+  merged.bgVignette = Number(merged.bgVignette)
+  if (!Number.isFinite(merged.bgVignette)) merged.bgVignette = DEFAULTS.bgVignette
+  merged.bgGrain = Number(merged.bgGrain)
+  if (merged.bgGrain > 0 && merged.bgGrain <= 1) merged.bgGrain = merged.bgGrain * 100
+  if (!Number.isFinite(merged.bgGrain)) merged.bgGrain = DEFAULTS.bgGrain
+  merged.grainContrast = Number(merged.grainContrast) || DEFAULTS.grainContrast
+  merged.grainBrightness = Number(merged.grainBrightness) || DEFAULTS.grainBrightness
   return merged
 }
 
@@ -89,6 +118,7 @@ function AdMain({ store }: { store: LevaStore }) {
       titleStretch: { value: initial.titleStretch, label: 'stretch word' },
       baseWidth: { value: initial.baseWidth, min: 25, max: 151, step: 1, label: 'base width' },
       peakWidth: { value: initial.peakWidth, min: 25, max: 151, step: 1, label: 'peak width' },
+      hoverBoost: { value: initial.hoverBoost, min: 0, max: 60, step: 1, label: 'hover boost' },
     },
     { store },
   )
@@ -100,12 +130,110 @@ function AdMain({ store }: { store: LevaStore }) {
         titleLead: { value: initial.titleLead, label: 'title lead' },
         titleTail: { value: initial.titleTail, label: 'title tail' },
         blurb: initial.blurb,
-        grainOpacity: { value: initial.grainOpacity, min: 0, max: 0.15, step: 0.005, label: 'grain' },
       }),
-      Pillars: folder(
+      Background: folder({
+        bgA: { value: initial.bgA, label: 'color A (light)' },
+        bgB: { value: initial.bgB, label: 'color B (mid)' },
+        bgC: { value: initial.bgC, label: 'color C (deep)' },
+        bgVignette: { value: initial.bgVignette, min: 0, max: 0.6, step: 0.02, label: 'vignette' },
+        bgGrain: { value: initial.bgGrain, min: 0, max: 100, step: 1, label: 'grain amount' },
+        grainContrast: {
+          value: initial.grainContrast,
+          min: 1,
+          max: 2.2,
+          step: 0.05,
+          label: 'grain contrast',
+        },
+        grainBrightness: {
+          value: initial.grainBrightness,
+          min: 0.8,
+          max: 1.4,
+          step: 0.02,
+          label: 'grain brightness',
+        },
+      }),
+      Flow: folder(
         {
-          pillarEyebrow: { value: initial.pillarEyebrow, label: 'eyebrow' },
-          pillarTitle: { value: initial.pillarTitle, label: 'title' },
+          flowEyebrow: { value: initial.flowEyebrow, label: 'eyebrow' },
+          flowTitle: { value: initial.flowTitle, label: 'title' },
+          flowBody: { value: initial.flowBody, label: 'body' },
+          flowSectionPy: {
+            value: initial.flowSectionPy,
+            min: 40,
+            max: 200,
+            step: 4,
+            label: 'section pad Y',
+          },
+          flowChartH: {
+            value: initial.flowChartH,
+            min: 240,
+            max: 520,
+            step: 4,
+            label: 'chart height',
+          },
+          flowChartPad: {
+            value: initial.flowChartPad,
+            min: 24,
+            max: 80,
+            step: 2,
+            label: 'chart pad',
+          },
+          flowLineBase: {
+            value: initial.flowLineBase,
+            min: 0.5,
+            max: 8,
+            step: 0.25,
+            label: 'in line base',
+          },
+          flowLineShareMul: {
+            value: initial.flowLineShareMul,
+            min: 4,
+            max: 40,
+            step: 1,
+            label: 'in line thick mul',
+          },
+          flowOutLineBase: {
+            value: initial.flowOutLineBase,
+            min: 0.5,
+            max: 8,
+            step: 0.25,
+            label: 'out line base',
+          },
+          flowOutLineMul: {
+            value: initial.flowOutLineMul,
+            min: 4,
+            max: 50,
+            step: 1,
+            label: 'out line thick mul',
+          },
+          flowBudgetR: {
+            value: initial.flowBudgetR,
+            min: 6,
+            max: 28,
+            step: 1,
+            label: 'budget node R',
+          },
+          flowOutcomeR: {
+            value: initial.flowOutcomeR,
+            min: 3,
+            max: 16,
+            step: 1,
+            label: 'outcome node R',
+          },
+          flowLogoCardW: {
+            value: initial.flowLogoCardW,
+            min: 48,
+            max: 140,
+            step: 2,
+            label: 'logo card W',
+          },
+          flowLogoImg: {
+            value: initial.flowLogoImg,
+            min: 14,
+            max: 48,
+            step: 1,
+            label: 'logo img size',
+          },
         },
         { collapsed: true },
       ),
@@ -113,6 +241,50 @@ function AdMain({ store }: { store: LevaStore }) {
         {
           reportEyebrow: { value: initial.reportEyebrow, label: 'eyebrow' },
           reportTitle: { value: initial.reportTitle, label: 'title' },
+          reportBlurb: { value: initial.reportBlurb, label: 'blurb' },
+          funnelExample: { value: initial.funnelExample, label: 'funnel badge' },
+          funnel1Label: { value: initial.funnel1Label, label: 's1 label' },
+          funnel1Value: { value: initial.funnel1Value, min: 0, max: 50000, step: 1, label: 's1 value' },
+          funnel2Label: { value: initial.funnel2Label, label: 's2 label' },
+          funnel2Value: { value: initial.funnel2Value, min: 0, max: 5000, step: 1, label: 's2 value' },
+          funnel3Label: { value: initial.funnel3Label, label: 's3 label' },
+          funnel3Value: { value: initial.funnel3Value, min: 0, max: 2000, step: 1, label: 's3 value' },
+          funnel4Label: { value: initial.funnel4Label, label: 's4 label' },
+          funnel4Value: { value: initial.funnel4Value, min: 0, max: 500, step: 1, label: 's4 value' },
+          funnelColor1: { value: initial.funnelColor1, label: 's1 color' },
+          funnelColor2: { value: initial.funnelColor2, label: 's2 color' },
+          funnelColor3: { value: initial.funnelColor3, label: 's3 color' },
+          funnelColor4: { value: initial.funnelColor4, label: 's4 gold' },
+          funnelThickness: {
+            value: initial.funnelThickness,
+            min: 0.35,
+            max: 0.7,
+            step: 0.01,
+            label: 'band thickness',
+          },
+          funnelMinNorm: {
+            value: initial.funnelMinNorm,
+            min: 0,
+            max: 0.2,
+            step: 0.01,
+            label: 'min stage size',
+          },
+          funnelMinH: {
+            value: initial.funnelMinH,
+            min: 200,
+            max: 480,
+            step: 10,
+            label: 'chart H desktop',
+          },
+          funnelMinHMobile: {
+            value: initial.funnelMinHMobile,
+            min: 280,
+            max: 640,
+            step: 10,
+            label: 'chart H mobile',
+          },
+          decisionLabel: { value: initial.decisionLabel, label: 'decision label' },
+          decisionBody: { value: initial.decisionBody, label: 'decision body' },
         },
         { collapsed: true },
       ),
@@ -144,6 +316,7 @@ function AdMain({ store }: { store: LevaStore }) {
   const stretch = {
     baseWidth: t.baseWidth,
     peakWidth: t.peakWidth,
+    hoverBoost: t.hoverBoost,
     curve: 'ramp' as const,
     weight: 720,
     letterSpacing: -0.02,
@@ -151,97 +324,126 @@ function AdMain({ store }: { store: LevaStore }) {
   }
 
   return (
-    <div className="mr-caps-page min-h-screen bg-[#f3efe8]">
-      <GrainOverlay opacity={Math.max(0.05, t.grainOpacity)} />
-      <DirectNav />
+    <div
+      className="mr-caps-page relative min-h-screen"
+      style={{
+        backgroundColor: t.bgA,
+        backgroundImage: `
+          radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 52%, rgba(0,0,0,${t.bgVignette}) 100%),
+          linear-gradient(30deg, ${t.bgA} 0%, ${t.bgB} 47%, ${t.bgC} 100%)
+        `,
+        backgroundSize: 'auto, auto',
+        backgroundBlendMode: 'normal, normal',
+      }}
+    >
+      {/* Dedicated grain ABOVE gradient — contrast so it reads on light cream */}
+      <GrainOverlay
+        fixed={false}
+        amount={t.bgGrain}
+        contrast={t.grainContrast}
+        brightness={t.grainBrightness}
+        blend="overlay"
+        className="!absolute"
+      />
 
-      <section className="overflow-x-clip px-5 pb-16 pt-24 md:px-6 md:pb-28 md:pt-36">
-        <div className="mx-auto max-w-6xl">
-          <Reveal>
-            <p className="mb-3 font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
-              {t.eyebrow}
-            </p>
-            <h1 className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[clamp(2.5rem,7vw,5rem)] font-light leading-[0.95] tracking-tight text-espresso">
-              <span className="font-tiempos">{t.titleLead}</span>
-              <StretchText text={t.titleStretch} {...stretch} className="text-[#8B6950]" />
-              <span className="basis-full font-tiempos sm:basis-auto">{t.titleTail}</span>
-            </h1>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-6 max-w-md font-serotiva text-[15px] font-medium leading-relaxed text-espresso/55">
-              {t.blurb}
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <div className="relative z-[1]">
+        <DirectNav />
 
-      <section className="border-t border-espresso/8 bg-[#2C2520] px-5 py-16 text-[#FCFAF2] md:px-6 md:py-28">
-        <div className="mx-auto max-w-6xl">
-          <Reveal>
-            <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-[#FCFAF2]/40">
-              {t.pillarEyebrow}
-            </p>
-            <h2 className="mt-3 max-w-xl font-tiempos text-[clamp(1.85rem,3.5vw,2.75rem)] font-light tracking-tight">
-              {t.pillarTitle}
-            </h2>
-          </Reveal>
-          <ol className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
-            {PILLARS.map((p, i) => (
-              <li
-                key={p.t}
-                className={`border-t border-white/12 pt-6 ${i === 1 ? 'md:translate-y-10' : ''}`}
-              >
-                <p className="font-serotiva text-[11px] uppercase tracking-[0.16em] text-[#c4a574]">{p.n}</p>
-                <h3 className="mt-3 font-tiempos text-[clamp(1.6rem,3vw,2.2rem)] font-light">{p.t}</h3>
-                <p className="mt-3 max-w-xs font-serotiva text-[15px] font-medium leading-relaxed text-[#FCFAF2]/55">
-                  {p.d}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="border-t border-espresso/8 px-5 py-16 md:px-6 md:py-28">
-        <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end md:gap-16">
-          <Reveal>
-            <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
-              {t.reportEyebrow}
-            </p>
-            <h2 className="mt-3 font-tiempos text-[clamp(1.85rem,3.5vw,2.75rem)] font-light tracking-tight text-espresso">
-              {t.reportTitle}
-            </h2>
-            <p className="mt-4 max-w-sm font-serotiva text-[15px] font-medium leading-relaxed text-espresso/55">
-              Every week: what we spent, what came in, what we changed, what is next. Numbers attached for the curious.
-            </p>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <article className="rounded-[11px] border border-white/55 bg-[rgba(255,255,255,0.28)] p-6 shadow-[0_12px_32px_-12px_rgba(44,37,32,0.35)] backdrop-blur-[8px] md:p-8">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-serotiva text-[11px] uppercase tracking-[0.16em] text-espresso/40">
-                  Week 6 · Ridge Plumbing
-                </p>
-                <span className="rounded-[8px] bg-espresso px-2.5 py-1 font-serotiva text-[10px] uppercase tracking-[0.12em] text-[#FCFAF2]">
-                  On track
-                </span>
-              </div>
-              <p className="mt-5 font-tiempos text-[1.3rem] font-light leading-snug text-espresso">
-                Spent $1,940. 38 calls, 11 booked. We paused the broad Meta set and moved that budget to branded search.
+        <section className="relative overflow-x-clip px-5 pb-16 pt-24 md:px-6 md:pb-24 md:pt-36">
+          <div className="relative mx-auto max-w-6xl">
+            <Reveal duration={1.55}>
+              <p className="mb-3 font-switzer text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+                {t.eyebrow}
               </p>
-              <Link
-                to="/start"
-                className="mt-6 inline-flex items-center gap-1.5 font-serotiva text-[13px] font-medium text-[#8B6950] no-underline"
-              >
-                See a sample week
-                <ArrowUpRight size={14} />
-              </Link>
-            </article>
-          </Reveal>
-        </div>
-      </section>
+              <h1 className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[clamp(2.5rem,7vw,5rem)] font-light leading-[0.95] tracking-tight text-espresso">
+                <span className="font-tiempos">{t.titleLead}</span>
+                <StretchText text={t.titleStretch} {...stretch} className="text-[#8B6950]" />
+                <span className="basis-full font-tiempos sm:basis-auto">{t.titleTail}</span>
+              </h1>
+            </Reveal>
+            <Reveal duration={1.55} delay={0.22}>
+              <p className="mt-6 max-w-md font-switzer text-[15px] font-medium leading-relaxed text-espresso">
+                {t.blurb}
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-      <WebDevCtaSlab headline={t.ctaHeadline} blurb={t.ctaBlurb} label={t.ctaLabel} eyebrow="Next step" />
-      <SiteFooter />
+        <MoneyFlow
+          eyebrow={t.flowEyebrow}
+          title={t.flowTitle}
+          body={t.flowBody}
+          chartH={Number(t.flowChartH)}
+          chartPad={Number(t.flowChartPad)}
+          lineBase={Number(t.flowLineBase)}
+          lineShareMul={Number(t.flowLineShareMul)}
+          outLineBase={Number(t.flowOutLineBase)}
+          outLineMul={Number(t.flowOutLineMul)}
+          budgetR={Number(t.flowBudgetR)}
+          outcomeR={Number(t.flowOutcomeR)}
+          logoCardW={Number(t.flowLogoCardW)}
+          logoImg={Number(t.flowLogoImg)}
+          sectionPy={Number(t.flowSectionPy)}
+        />
+
+        <section className="px-5 py-16 md:px-6 md:py-28">
+          <div className="mx-auto max-w-6xl">
+            <Reveal duration={1.55}>
+              <p className="font-switzer text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+                {t.reportEyebrow}
+              </p>
+              <h2 className="mt-3 max-w-xl font-tiempos text-[clamp(1.85rem,3.5vw,2.75rem)] font-light tracking-tight text-espresso">
+                {t.reportTitle}
+              </h2>
+              <p className="mt-4 max-w-md font-switzer text-[15px] font-medium leading-relaxed text-espresso">
+                {t.reportBlurb}
+              </p>
+            </Reveal>
+            <Reveal duration={1.55} delay={0.18}>
+              <div className="mt-10">
+                <AdsConversionFunnel
+                  exampleLabel={String(t.funnelExample)}
+                  decisionLabel={String(t.decisionLabel)}
+                  decisionBody={String(t.decisionBody)}
+                  thickness={Number(t.funnelThickness)}
+                  minNorm={Number(t.funnelMinNorm)}
+                  chartMinH={Number(t.funnelMinH)}
+                  chartMinHMobile={Number(t.funnelMinHMobile)}
+                  stages={[
+                    {
+                      label: String(t.funnel1Label),
+                      value: Number(t.funnel1Value),
+                      displayValue: Number(t.funnel1Value).toLocaleString('en-US'),
+                      color: String(t.funnelColor1),
+                    },
+                    {
+                      label: String(t.funnel2Label),
+                      value: Number(t.funnel2Value),
+                      displayValue: String(t.funnel2Value),
+                      color: String(t.funnelColor2),
+                    },
+                    {
+                      label: String(t.funnel3Label),
+                      value: Number(t.funnel3Value),
+                      displayValue: String(t.funnel3Value),
+                      color: String(t.funnelColor3),
+                    },
+                    {
+                      label: String(t.funnel4Label),
+                      value: Number(t.funnel4Value),
+                      displayValue: String(t.funnel4Value),
+                      color: String(t.funnelColor4),
+                    },
+                  ]}
+                />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <WebDevCtaSlab headline={t.ctaHeadline} blurb={t.ctaBlurb} label={t.ctaLabel} eyebrow="Next step" />
+        <SiteFooter />
+      </div>
     </div>
   )
 }

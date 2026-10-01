@@ -1,0 +1,6 @@
+/* Outer wrappers only: the accepted perspective objects keep their own transforms. */
+.web-card-motion { position: relative; width: 100%; height: 100%; }
+.web-motion-layer, .web-motion-idle { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+.web-motion-layer--browser { z-index: 2; }
+.web-motion-layer--rail { z-index: 3; }
+.web-motion-layer--analytics { z-index: 4; }

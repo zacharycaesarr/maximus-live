@@ -49,11 +49,23 @@ export default function HeroKineticText({
   const [phraseIndex, setPhraseIndex] = useState(0)
   const [fitScale, setFitScale] = useState(1)
   const [phraseHovered, setPhraseHovered] = useState(false)
+  const [phraseArmed, setPhraseArmed] = useState(false)
+  const [phraseMinW, setPhraseMinW] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
 
   const wrapRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLSpanElement>(null)
   const arrowRef = useRef<ArrowTrendingUpIconHandle>(null)
   const resumeTimer = useRef<number | null>(null)
+  const phraseHoveredRef = useRef(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const apply = () => setIsMobile(mq.matches)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
 
   const longestPhrase = useMemo(() => {
     if (!phrases.length) return settings.scrollPhrase
@@ -116,6 +128,7 @@ export default function HeroKineticText({
   useEffect(() => {
     return () => {
       if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+      delete document.documentElement.dataset.mrPhraseHover
     }
   }, [])
 
@@ -124,17 +137,52 @@ export default function HeroKineticText({
   const badgeMap = useMemo(() => parsePhraseBadges(settings.phraseBadges), [settings.phraseBadges])
   const badgeEmoji = emojiForPhrase(phrase || phrases[0] || '', badgeMap)
 
+  // Arm hover only after the new phrase has drawn in (avoids blank-slot pause).
+  useEffect(() => {
+    setPhraseArmed(false)
+    if (phraseHoveredRef.current) {
+      if (resumeTimer.current) {
+        window.clearTimeout(resumeTimer.current)
+        resumeTimer.current = null
+      }
+      phraseHoveredRef.current = false
+      delete document.documentElement.dataset.mrPhraseHover
+      setPhraseHovered(false)
+      arrowRef.current?.stopAnimation()
+    }
+    if (!phrase || scrollActivated) {
+      setPhraseArmed(Boolean(phrase))
+      return undefined
+    }
+    const words = phrase.split(' ').filter(Boolean).length
+    const frameMs = 1000 / Math.max(1, settings.blurFps)
+    const enterMs = (17 * frameMs) / Math.max(0.01, settings.blurSpeed)
+    const staggerMs = (settings.staggerDelay * frameMs) / Math.max(0.01, settings.blurSpeed)
+    const armAt = enterMs + Math.max(0, words - 1) * staggerMs * 0.4 + 70
+    const t = window.setTimeout(() => setPhraseArmed(true), armAt)
+    return () => window.clearTimeout(t)
+  }, [
+    phraseKey,
+    phrase,
+    scrollActivated,
+    settings.blurFps,
+    settings.blurSpeed,
+    settings.staggerDelay,
+  ])
+
   useEffect(() => {
     const measure = () => {
       const wrap = wrapRef.current
       const probe = measureRef.current
       if (!wrap || !probe) return
-      // Reserve room for arrow so hover never forces wrap / layout shift
-      const arrowReserve = settings.phraseHoverEnabled
-        ? settings.phraseArrowSize + settings.phraseArrowGap + 8
-        : 0
-      const available = Math.max(80, wrap.clientWidth - arrowReserve)
+      // Stem stays fixed size. Only the rotating phrase may shrink to fit.
+      const arrowReserve =
+        settings.phraseHoverEnabled && !isMobile
+          ? settings.phraseArrowSize + settings.phraseArrowGap + 8
+          : 0
+      const available = Math.max(60, wrap.clientWidth - arrowReserve)
       const needed = probe.scrollWidth
+      setPhraseMinW(needed + arrowReserve)
       if (available <= 0 || needed <= 0) return
       const next = Math.min(1, available / needed)
       setFitScale((prev) => (Math.abs(prev - next) < 0.002 ? prev : next))
@@ -156,36 +204,50 @@ export default function HeroKineticText({
     settings.phraseArrowGap,
     settings.headlineFont,
     gapEm,
-    stemFull,
     longestPhrase,
+    isMobile,
   ])
 
-  const fittedPx = Math.max(22, settings.fontSize * fitScale)
-  const fontSize = useStack
-    ? `clamp(2.25rem, 7vw, ${settings.fontSize}px)`
-    : settings.singleLine
-      ? `${fittedPx}px`
-      : `clamp(1.75rem, 5.5vw, ${settings.fontSize}px)`
+  // Stem size is stable across viewport width — only the phrase uses fitScale / wrap.
+  const stemPx = settings.fontSize
+  const stemFontSize = useStack
+    ? `clamp(2.25rem, 7vw, ${stemPx}px)`
+    : `clamp(1.75rem, 5.5vw, ${stemPx}px)`
+  // Below ~0.88 fit, stop shrinking and let the rotating phrase wrap onto new lines.
+  const phraseWraps = fitScale < 0.88
+  const phraseFittedPx = Math.max(18, stemPx * (phraseWraps ? Math.max(fitScale, 0.72) : fitScale))
+  const phraseFontSize = useStack
+    ? phraseWraps
+      ? `clamp(1.35rem, 5.5vw, ${stemPx}px)`
+      : stemFontSize
+    : settings.singleLine && !phraseWraps
+      ? `${phraseFittedPx}px`
+      : stemFontSize
 
   const onPhraseEnter = () => {
-    if (!settings.phraseHoverEnabled || scrollActivated) return
+    if (!settings.phraseHoverEnabled || scrollActivated || isMobile) return
+    if (!phraseArmed) return
     if (resumeTimer.current) {
       window.clearTimeout(resumeTimer.current)
       resumeTimer.current = null
     }
+    phraseHoveredRef.current = true
+    document.documentElement.dataset.mrPhraseHover = '1'
     setPhraseHovered(true)
     arrowRef.current?.startAnimation()
   }
 
   const onPhraseLeave = () => {
-    setPhraseHovered(false)
-    arrowRef.current?.stopAnimation()
-    if (scrollActivated || settings.pauseCycle || phrases.length === 0) return
+    if (!phraseHoveredRef.current && !resumeTimer.current) return
     if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    // Debounce leave so parallax / arrow / blur kids do not flicker the hover off.
     resumeTimer.current = window.setTimeout(() => {
-      setPhraseIndex((i) => (i + 1) % phrases.length)
       resumeTimer.current = null
-    }, Math.max(80, settings.phraseHoverResumeMs))
+      phraseHoveredRef.current = false
+      delete document.documentElement.dataset.mrPhraseHover
+      setPhraseHovered(false)
+      arrowRef.current?.stopAnimation()
+    }, Math.max(0, settings.phraseHoverResumeMs || 180))
   }
 
   const renderStem = (text: string) => {
@@ -219,8 +281,12 @@ export default function HeroKineticText({
   }
 
   if (useStack) {
-    const phrasePx = Math.max(22, settings.fontSize * fitScale)
-    const slotH = Math.ceil(phrasePx * Math.max(settings.lineHeight, 1) + 4)
+    const phrasePx = phraseWraps
+      ? Math.max(22, Math.min(settings.fontSize, settings.fontSize * Math.max(fitScale, 0.72)))
+      : Math.max(22, settings.fontSize * fitScale)
+    const lineH = Math.max(settings.lineHeight, 1.05)
+    // Always reserve 2 lines so rotating phrases never shove subtext/buttons
+    const slotH = Math.ceil(phrasePx * lineH * 2.15 + 8)
     const href = settings.phraseHref || '#get-started'
 
     return (
@@ -255,7 +321,7 @@ export default function HeroKineticText({
             lineHeight: settings.lineHeight,
           }}
         >
-          {settings.badgeEnabled ? (
+          {settings.badgeEnabled && !isMobile ? (
             <motion.div
               className="flex w-full justify-center"
               style={{ marginBottom: settings.badgeGapBelow }}
@@ -275,9 +341,9 @@ export default function HeroKineticText({
           ) : null}
 
           <span
-            className="block"
+            className="block whitespace-nowrap"
             style={{
-              fontSize,
+              fontSize: stemFontSize,
               fontWeight: settings.stemWeight,
               color: settings.stemColor,
             }}
@@ -288,17 +354,20 @@ export default function HeroKineticText({
             )}
           </span>
 
-          <div className="relative mt-1 w-full" style={{ height: slotH }}>
+          <div
+            className="relative mt-1 w-full"
+            style={{ height: slotH, minHeight: slotH }}
+          >
             {stemDone && (
               <motion.a
                 href={href}
-                className="absolute inset-0 flex items-center justify-center no-underline"
-                style={{ color: settings.phraseColor }}
+                className="absolute inset-0 flex w-full items-center justify-center no-underline"
+                style={{ color: settings.phraseColor, pointerEvents: phraseArmed ? 'auto' : 'none' }}
                 initial={false}
                 animate={{ opacity: chromeVisible ? 1 : 0, y: chromeVisible ? 0 : 14 }}
                 transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-                onMouseEnter={onPhraseEnter}
-                onMouseLeave={onPhraseLeave}
+                onPointerEnter={onPhraseEnter}
+                onPointerLeave={onPhraseLeave}
                 onFocus={onPhraseEnter}
                 onBlur={onPhraseLeave}
                 onClick={(e) => {
@@ -309,50 +378,159 @@ export default function HeroKineticText({
                   }
                 }}
               >
-                <motion.span
-                  className="inline-flex max-w-full items-center justify-center whitespace-nowrap"
-                  animate={{
-                    scale: phraseHovered ? settings.phraseHoverScale : 1,
-                  }}
-                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                <span
+                  className="pointer-events-none inline-flex max-w-full items-center justify-center"
                   style={{
                     fontSize: `${phrasePx}px`,
                     fontWeight: settings.phraseWeight,
-                    transformOrigin: 'center center',
-                    gap: settings.phraseArrowGap,
+                    gap: !isMobile && settings.phraseHoverEnabled ? settings.phraseArrowGap : 0,
+                    textAlign: 'center',
+                    minWidth: phraseMinW > 0 ? Math.min(phraseMinW, wrapRef.current?.clientWidth || phraseMinW) : undefined,
                   }}
                 >
-                  <BlurOutWords
-                    key={phraseKey}
-                    text={phrase}
-                    staggerDelay={settings.staggerDelay}
-                    speed={settings.blurSpeed}
-                    fps={settings.blurFps}
-                    durationInFrames={settings.blurDurationFrames}
-                    color={settings.phraseColor}
-                    fontWeight={settings.phraseWeight}
-                    textShadow={glow}
-                    hold={scrollActivated || phraseHovered}
-                    className="whitespace-nowrap"
-                  />
-                  <motion.span
-                    className="inline-flex shrink-0 self-center"
-                    initial={false}
-                    animate={{
-                      opacity: phraseHovered ? 1 : 0,
-                      width: phraseHovered ? settings.phraseArrowSize : 0,
-                      marginLeft: phraseHovered ? settings.phraseArrowGap : 0,
-                    }}
-                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                    style={{ overflow: 'hidden', color: settings.phraseColor }}
-                    aria-hidden={!phraseHovered}
-                  >
-                    <ArrowTrendingUpIcon ref={arrowRef} size={settings.phraseArrowSize} />
-                  </motion.span>
-                </motion.span>
+                  <span className="block w-full text-center" style={{ maxWidth: 'min(100%, 34ch)' }}>
+                    <BlurOutWords
+                      key={phraseKey}
+                      text={phrase}
+                      staggerDelay={settings.staggerDelay}
+                      speed={settings.blurSpeed}
+                      fps={settings.blurFps}
+                      durationInFrames={settings.blurDurationFrames}
+                      color={settings.phraseColor}
+                      fontWeight={settings.phraseWeight}
+                      textShadow={glow}
+                      hold={scrollActivated || phraseHovered}
+                      className="text-center"
+                    />
+                  </span>
+                  {settings.phraseHoverEnabled && !scrollActivated && !isMobile ? (
+                    <motion.span
+                      className="inline-flex shrink-0 self-center"
+                      initial={false}
+                      animate={{
+                        opacity: phraseHovered ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                      style={{
+                        width: settings.phraseArrowSize,
+                        marginLeft: settings.phraseArrowGap,
+                        color: settings.phraseColor,
+                      }}
+                      aria-hidden
+                    >
+                      <ArrowTrendingUpIcon ref={arrowRef} size={settings.phraseArrowSize} />
+                    </motion.span>
+                  ) : null}
+                </span>
               </motion.a>
             )}
           </div>
+        </h1>
+      </div>
+    )
+  }
+
+  // Left layout: when phrase cannot fit, drop it under the stem and wrap.
+  if (phraseWraps) {
+    const href = settings.phraseHref || '#get-started'
+    return (
+      <div
+        ref={wrapRef}
+        className={className}
+        style={{
+          maxWidth: settings.maxWidth,
+          width: '100%',
+          overflow: 'visible',
+        }}
+      >
+        <span
+          ref={measureRef}
+          aria-hidden
+          className={cn('pointer-events-none invisible absolute left-0 top-0 whitespace-nowrap', headlineFontClass)}
+          style={{
+            fontSize: settings.fontSize,
+            letterSpacing: `${settings.letterSpacing}em`,
+            fontWeight: settings.phraseWeight,
+          }}
+        >
+          {longestPhrase}
+        </span>
+        <h1
+          className={cn('m-0 flex flex-col', headlineFontClass)}
+          aria-live="polite"
+          style={{
+            letterSpacing: `${settings.letterSpacing}em`,
+            lineHeight: settings.lineHeight,
+          }}
+        >
+          <span
+            className="block whitespace-nowrap"
+            style={{
+              fontSize: stemFontSize,
+              fontWeight: settings.stemWeight,
+              color: settings.stemColor,
+            }}
+          >
+            {renderStem(typed)}
+            {settings.showCursor && !stemDone && (
+              <span className="hero-type-cursor" aria-hidden style={{ backgroundColor: settings.stemColor }} />
+            )}
+          </span>
+          {stemDone && (
+            <a
+              href={href}
+              className="mt-1 block max-w-full no-underline"
+              style={{
+                fontSize: phraseFontSize,
+                fontWeight: settings.phraseWeight,
+                color: settings.phraseColor,
+                minWidth: phraseMinW > 0 ? phraseMinW : undefined,
+                pointerEvents: phraseArmed ? 'auto' : 'none',
+              }}
+              onPointerEnter={onPhraseEnter}
+              onPointerLeave={onPhraseLeave}
+              onFocus={onPhraseEnter}
+              onBlur={onPhraseLeave}
+              onClick={(e) => {
+                if (!onPhraseNavigate) return
+                if (href.startsWith('#')) {
+                  e.preventDefault()
+                  onPhraseNavigate(href)
+                }
+              }}
+            >
+              <span className="pointer-events-none inline-flex max-w-full flex-wrap items-center gap-1">
+                <BlurOutWords
+                  key={phraseKey}
+                  text={phrase}
+                  staggerDelay={settings.staggerDelay}
+                  speed={settings.blurSpeed}
+                  fps={settings.blurFps}
+                  durationInFrames={settings.blurDurationFrames}
+                  color={settings.phraseColor}
+                  fontWeight={settings.phraseWeight}
+                  textShadow={glow}
+                  hold={scrollActivated || phraseHovered}
+                  className="whitespace-normal"
+                />
+                {settings.phraseHoverEnabled && !scrollActivated ? (
+                  <motion.span
+                    className="inline-flex shrink-0"
+                    initial={false}
+                    animate={{ opacity: phraseHovered ? 1 : 0 }}
+                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    style={{
+                      width: settings.phraseArrowSize,
+                      color: settings.phraseColor,
+                    }}
+                    aria-hidden
+                  >
+                    <ArrowTrendingUpIcon ref={arrowRef} size={settings.phraseArrowSize} />
+                  </motion.span>
+                ) : null}
+              </span>
+            </a>
+          )}
         </h1>
       </div>
     )
@@ -368,6 +546,7 @@ export default function HeroKineticText({
         overflow: 'visible',
       }}
     >
+      {/* Measure phrase only — stem stays a fixed clamp size so it never jumps on resize */}
       <span
         ref={measureRef}
         aria-hidden
@@ -375,18 +554,17 @@ export default function HeroKineticText({
         style={{
           fontSize: settings.fontSize,
           letterSpacing: `${settings.letterSpacing}em`,
-          fontWeight: settings.stemWeight,
+          fontWeight: settings.phraseWeight,
         }}
       >
-        {stemFull}
-        <span style={{ marginLeft: phraseGap, fontWeight: settings.phraseWeight }}>{longestPhrase}</span>
+        {longestPhrase}
       </span>
 
       <h1
         className={cn('relative m-0', headlineFontClass)}
         aria-live="polite"
         style={{
-          fontSize,
+          fontSize: stemFontSize,
           letterSpacing: `${settings.letterSpacing}em`,
           lineHeight: settings.lineHeight,
           fontWeight: settings.stemWeight,
@@ -397,27 +575,81 @@ export default function HeroKineticText({
         {/* Invisible full line locks height so type-in / first phrase never shove subtext */}
         <span aria-hidden className="invisible block" style={{ pointerEvents: 'none' }}>
           {stemFull}
-          <span style={{ marginLeft: phraseGap, fontWeight: settings.phraseWeight }}>{longestPhrase}</span>
+          <span
+            style={{
+              marginLeft: phraseGap,
+              fontWeight: settings.phraseWeight,
+              fontSize: phraseFontSize,
+            }}
+          >
+            {longestPhrase}
+          </span>
         </span>
 
         <span className="absolute left-0 top-0 w-full">
-          <span style={{ fontWeight: settings.stemWeight, color: settings.stemColor }}>{typed}</span>
+          <span style={{ fontWeight: settings.stemWeight, color: settings.stemColor, fontSize: stemFontSize }}>
+            {typed}
+          </span>
 
           {stemDone && (
-            <span className="inline" style={{ marginLeft: phraseGap }}>
-              <BlurOutWords
-                key={phraseKey}
-                text={phrase}
-                staggerDelay={settings.staggerDelay}
-                speed={settings.blurSpeed}
-                fps={settings.blurFps}
-                durationInFrames={settings.blurDurationFrames}
-                color={settings.phraseColor}
-                fontWeight={settings.phraseWeight}
-                textShadow={glow}
-                hold={scrollActivated}
-              />
-            </span>
+            <motion.a
+              href={settings.phraseHref || '#get-started'}
+              className="inline-flex items-center no-underline"
+              style={{
+                marginLeft: phraseGap,
+                fontSize: phraseFontSize,
+                color: settings.phraseColor,
+                fontWeight: settings.phraseWeight,
+                gap: settings.phraseArrowGap,
+                minWidth: phraseMinW > 0 ? phraseMinW : undefined,
+                pointerEvents: phraseArmed ? 'auto' : 'none',
+              }}
+              onPointerEnter={onPhraseEnter}
+              onPointerLeave={onPhraseLeave}
+              onFocus={onPhraseEnter}
+              onBlur={onPhraseLeave}
+              onClick={(e) => {
+                const href = settings.phraseHref || '#get-started'
+                if (!onPhraseNavigate) return
+                if (href.startsWith('#')) {
+                  e.preventDefault()
+                  onPhraseNavigate(href)
+                }
+              }}
+            >
+              <span className="pointer-events-none inline-flex items-center" style={{ gap: settings.phraseArrowGap }}>
+                <BlurOutWords
+                  key={phraseKey}
+                  text={phrase}
+                  staggerDelay={settings.staggerDelay}
+                  speed={settings.blurSpeed}
+                  fps={settings.blurFps}
+                  durationInFrames={settings.blurDurationFrames}
+                  color={settings.phraseColor}
+                  fontWeight={settings.phraseWeight}
+                  textShadow={glow}
+                  hold={scrollActivated || phraseHovered}
+                />
+                {settings.phraseHoverEnabled && !scrollActivated ? (
+                  <motion.span
+                    className="inline-flex shrink-0 self-center"
+                    initial={false}
+                    animate={{
+                      opacity: phraseHovered ? 1 : 0,
+                    }}
+                    transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                    style={{
+                      width: settings.phraseArrowSize,
+                      marginLeft: settings.phraseArrowGap,
+                      color: settings.phraseColor,
+                    }}
+                    aria-hidden
+                  >
+                    <ArrowTrendingUpIcon ref={arrowRef} size={settings.phraseArrowSize} />
+                  </motion.span>
+                ) : null}
+              </span>
+            </motion.a>
           )}
 
           {settings.showCursor && !stemDone && (

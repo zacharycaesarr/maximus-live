@@ -1,4 +1,4 @@
-export const HERO_TEXT_TUNER_STORAGE_KEY = 'mr-v3-hero-text-tuner-v24'
+export const HERO_TEXT_TUNER_STORAGE_KEY = 'mr-v3-hero-text-tuner-v27'
 
 export const defaultHeroPhrases = [
   'build my website',
@@ -40,7 +40,7 @@ export const defaultPhraseBadges = [
 export const defaultHeroTextTuner = {
   stemText: 'I want Maximus to',
   phrases: defaultHeroPhrases.join('|'),
-  fontSize: 52,
+  fontSize: 60,
   maxWidth: 920,
   /** true = one sentence L→R. Toggle off in Leva ("one sentence") to wrap like before. */
   singleLine: true,
@@ -54,12 +54,12 @@ export const defaultHeroTextTuner = {
   spaceAfterTo: 0.05,
   letterSpacing: -0.03,
   lineHeight: 0.95,
-  typeSpeed: 45,
-  cycleSeconds: 2.4,
+  typeSpeed: 38,
+  cycleSeconds: 2.1,
   staggerDelay: 4,
-  blurSpeed: 1,
+  blurSpeed: 1.15,
   blurFps: 30,
-  blurDurationFrames: 90,
+  blurDurationFrames: 78,
   scrollPhrase: 'do it all',
   showCursor: true,
   pauseCycle: false,
@@ -77,7 +77,7 @@ export const defaultHeroTextTuner = {
   phraseHoverResumeMs: 280,
   phraseHref: '#get-started',
   /** Micro badge above stem — live-swaps with rotating phrase */
-  badgeEnabled: true,
+  badgeEnabled: false,
   badgeSize: 44,
   badgeRadius: 12,
   badgeBg: '#ffffff',

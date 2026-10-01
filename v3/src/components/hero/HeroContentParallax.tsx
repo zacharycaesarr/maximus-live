@@ -55,6 +55,9 @@ export default function HeroContentParallax({ children, className }: Props) {
     }
 
     const apply = (clientX: number, clientY: number) => {
+      // Freeze while phrase is hovered so parallax does not shove the
+      // hit target out from under the cursor (enter/leave flicker).
+      if (document.documentElement.dataset.mrPhraseHover === '1') return
       const rect = root.getBoundingClientRect()
       if (clientY < rect.top || clientY > rect.bottom || clientX < rect.left || clientX > rect.right) {
         return

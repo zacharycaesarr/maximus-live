@@ -14,23 +14,34 @@ export function PageScrollBgTunerProvider({ store, children }: { store: LevaStor
   const initial = useMemo(() => loadPageScrollBg(), [])
   const values = useControls({
     'Homepage Background': folder({
-      starsOpacity: { value: initial.starsOpacity, min: 0, max: 1, step: 0.01, label: 'Stars Opacity' },
-      starsFadeEnd: { value: initial.starsFadeEnd, min: 55, max: 100, step: 1, label: 'Stars Fade End' },
-      lightTransitionStart: { value: initial.lightTransitionStart, min: -30, max: 50, step: 1, label: 'Light Transition Start (vh)' },
-      lightTransitionEnd: { value: initial.lightTransitionEnd, min: 5, max: 90, step: 1, label: 'Light Transition End (vh)' },
-      speckleOpacity: { value: initial.speckleOpacity, min: 0, max: 12, step: 1, label: 'Speckle Opacity' },
-      speckleDensity: { value: initial.speckleDensity, min: 25, max: 110, step: 1, label: 'Speckle Density' },
-      creamLightStrength: { value: initial.creamLightStrength, min: 0, max: 25, step: 1, label: 'Cream Light Strength' },
-      grainOpacity: { value: initial.grainOpacity, min: 0, max: 6, step: 1, label: 'Grain Opacity' },
-      darkReturnStart: { value: initial.darkReturnStart, min: -60, max: 15, step: 1, label: 'Dark Return Start (vh)' },
-      darkReturnEnd: { value: initial.darkReturnEnd, min: 5, max: 90, step: 1, label: 'Dark Return End (vh)' },
-      waveSpeed: { value: initial.waveSpeed, min: 0.1, max: 2, step: 0.05, label: 'Wave Speed' },
-      waveStrength: { value: initial.waveStrength, min: 0, max: 100, step: 1, label: 'Wave Strength' },
-      waveAcidAmount: { value: initial.waveAcidAmount, min: 0, max: 30, step: 1, label: 'Wave Acid Amount' },
+      servicesFadeLength: { value: initial.servicesFadeLength, min: 16, max: 40, step: 1, label: 'Services Fade Length (vh)' },
+      servicesFadeCurve: { value: initial.servicesFadeCurve, min: 0, max: 100, step: 1, label: 'Services Fade Curve' },
+      creamBase: { value: initial.creamBase, label: 'Cream Base' },
+      creamToneLight: { value: initial.creamToneLight, label: 'Cream Light Tone' },
+      creamToneShade: { value: initial.creamToneShade, label: 'Cream Shade Tone' },
+      creamTonalStrength: { value: initial.creamTonalStrength, min: 0, max: 30, step: 1, label: 'Cream Tonal Strength' },
+      creamTextureOpacity: { value: initial.creamTextureOpacity, min: 0, max: 10, step: 0.5, label: 'Grain Opacity' },
+      creamTextureScale: { value: initial.creamTextureScale, min: 0.5, max: 2, step: 0.05, label: 'Grain Scale' },
+      nodeOpacity: { value: initial.nodeOpacity, min: 0, max: 15, step: 0.5, label: 'Node Opacity' },
+      nodeScale: { value: initial.nodeScale, min: 0.6, max: 1.6, step: 0.05, label: 'Node Scale' },
+      nodeLineColor: { value: initial.nodeLineColor, label: 'Node Line Color' },
+      nodeDotColor: { value: initial.nodeDotColor, label: 'Node Dot Color' },
+      darkReturnOffsetV3: { value: initial.darkReturnStart, min: -25, max: 60, step: 1, label: 'Dark Return Start (vh)' },
+      darkReturnLength: { value: initial.darkReturnLength, min: 35, max: 110, step: 1, label: 'Dark Return Length (vh)' },
+      ctaDarkening: { value: initial.ctaDarkening, min: 45, max: 100, step: 1, label: 'CTA Darkening' },
+      ctaBurstColor: { value: initial.ctaBurstColor, label: 'CTA Burst Color' },
+      ctaBurstOpacity: { value: initial.ctaBurstOpacity, min: 0, max: 35, step: 1, label: 'CTA Burst Opacity' },
+      ctaBurstSize: { value: initial.ctaBurstSize, min: 0.5, max: 1.7, step: 0.05, label: 'CTA Burst Size' },
+      ctaNoiseOpacity: { value: initial.ctaNoiseOpacity, min: 0, max: 12, step: 0.5, label: 'CTA Noise Opacity' },
+      ctaNoiseSpeed: { value: initial.ctaNoiseSpeed, min: 0, max: 2, step: 0.05, label: 'CTA Noise Speed' },
+      ctaNoiseScale: { value: initial.ctaNoiseScale, min: 0.5, max: 2, step: 0.05, label: 'CTA Noise Scale' },
     }, { collapsed: true }),
   }, { store })
 
-  const settings = useMemo(() => ({ ...defaultPageScrollBg, ...values }) as PageScrollBgTuner, [values])
+  const settings = useMemo(() => {
+    const { darkReturnOffsetV3, ...rest } = values
+    return { ...defaultPageScrollBg, ...rest, darkReturnStart: darkReturnOffsetV3 } as PageScrollBgTuner
+  }, [values])
   useEffect(() => {
     try { localStorage.setItem(PAGE_SCROLL_BG_STORAGE_KEY, JSON.stringify(settings)) }
     catch { /* storage unavailable */ }

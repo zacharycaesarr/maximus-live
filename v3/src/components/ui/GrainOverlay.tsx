@@ -1,25 +1,53 @@
 /**
- * Fixed film-grain layer. SVG turbulence, no JS, no repaint cost.
- * Sits over the whole page; pointer-events off so it never blocks anything.
+ * Dedicated grain layer ABOVE gradients, BELOW content.
+ * 21st-style feTurbulence + contrast/brightness so it reads as texture, not dirt.
+ * Leva: amount, size, contrast, brightness, blend.
  */
+export function twentyFirstGrainDataUrl(amount = 100) {
+  const op = Math.max(0.08, Math.min(0.72, (amount / 100) * 0.55))
+  return `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='${op}'/></svg>")`
+}
+
 export default function GrainOverlay({
-  opacity = 0.06,
-  blend = 'multiply',
+  amount = 90,
+  opacity,
+  blend = 'overlay',
+  grainSize = 120,
+  contrast = 1.35,
+  brightness = 1.05,
+  fixed = true,
+  className = '',
 }: {
+  /** 0–100, matches 21st grain slider */
+  amount?: number
+  /** @deprecated use amount */
   opacity?: number
-  blend?: 'multiply' | 'overlay' | 'soft-light'
+  blend?: 'multiply' | 'overlay' | 'soft-light' | 'normal'
+  grainSize?: number
+  /** CSS filter contrast — bump this if grain disappears on light bg */
+  contrast?: number
+  brightness?: number
+  fixed?: boolean
+  className?: string
 }) {
-  if (opacity <= 0) return null
+  const level =
+    opacity != null ? Math.min(100, Math.max(0, (opacity / 0.5) * 100)) : amount
+  if (level <= 0) return null
+  const tile = Math.max(60, Math.min(240, Math.round(grainSize)))
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[2]"
+      className={
+        fixed
+          ? `pointer-events-none fixed inset-0 z-[2] ${className}`
+          : `pointer-events-none absolute inset-0 z-[2] ${className}`
+      }
       style={{
-        opacity: Math.min(0.18, Math.max(0.04, opacity)),
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")",
-        backgroundSize: '180px 180px',
+        backgroundImage: twentyFirstGrainDataUrl(level),
+        backgroundSize: `${tile}px ${tile}px`,
         mixBlendMode: blend,
+        filter: `contrast(${contrast}) brightness(${brightness})`,
+        opacity: 1,
       }}
     />
   )

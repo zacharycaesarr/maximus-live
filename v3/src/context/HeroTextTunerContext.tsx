@@ -30,14 +30,14 @@ export function HeroTextTunerProvider({
             min: -200,
             max: 200,
             step: 1,
-            label: 'block offset X',
+            label: '(moved → Hero layout · Copy block)',
           },
           copyOffsetY: {
             value: initial.copyOffsetY,
             min: -200,
             max: 200,
             step: 1,
-            label: 'block offset Y',
+            label: '(moved → Hero layout · Copy block)',
           },
           Content: folder(
             {

@@ -16,18 +16,18 @@ type Props = {
 const STAGE = [
   { w: 58, ratio: 1.0, chrome: 0.12 }, // direction: small square, barely a window
   { w: 82, ratio: 0.8, chrome: 0.75 }, // structure
-  { w: 94, ratio: 0.7, chrome: 0.92 }, // trust
-  { w: 94, ratio: 0.82, chrome: 1 }, // finish: taller than step 3, clipped by parent max-height
+  { w: 98, ratio: 0.7, chrome: 0.92 }, // trust — wider so lights + icons fit
+  { w: 98, ratio: 0.82, chrome: 1 }, // finish
 ]
 
 const IMG_HERO =
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=70&auto=format'
 const IMG_MEDIA =
-  'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=70&auto=format'
+  'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=70&auto=format'
 const IMG_CARD_A =
-  'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=600&q=70&auto=format'
+  'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=70&auto=format'
 const IMG_CARD_B =
-  'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=600&q=70&auto=format'
+  'https://images.unsplash.com/photo-1556911220-bff31c812d84?w=600&q=70&auto=format'
 
 const EASE = 'expo.out'
 
@@ -40,7 +40,7 @@ export function BuildSiteCanvas({
   activeStep,
   reducedMotion = false,
   className,
-  url = 'yourwebsite.com',
+  url = 'youramazingwebsite.com',
 }: Props) {
   const root = useRef<HTMLDivElement>(null)
   const prev = useRef(-1)
@@ -59,6 +59,7 @@ export function BuildSiteCanvas({
     gsap.set(q('[data-el="card"]'), { y: 18 })
     gsap.set(one('[data-el="cursor"]'), { autoAlpha: 0, x: 120, y: 90 })
     gsap.set(one('[data-el="sweep"]'), { xPercent: -130 })
+    gsap.set(one('[data-el="pill-label"]'), { opacity: 0, scale: 0.6 })
     const s = STAGE[0]
     gsap.set(one('[data-el="stage"]'), { width: `${s.w}%` })
     gsap.set(one('[data-el="ratio"]'), { paddingTop: `${s.ratio * 100}%` })
@@ -84,6 +85,7 @@ export function BuildSiteCanvas({
       gsap.set(one('[data-el="band"]'), { clipPath: step >= 2 ? 'inset(0 0 0% 0)' : 'inset(0 0 100% 0)' })
       gsap.set(one('[data-el="media"]'), { clipPath: step >= 2 ? 'inset(0 0 0 0 round 10px)' : 'inset(100% 0 0 0 round 10px)' })
       gsap.set(q('[data-el="card"]'), { y: 0 })
+      gsap.set(one('[data-el="pill-label"]'), { opacity: step >= 3 ? 1 : 0, scale: 1 })
       prev.current = step
       return
     }
@@ -104,7 +106,10 @@ export function BuildSiteCanvas({
       tl.to(one('[data-el="band"]'), { clipPath: 'inset(0 0 100% 0)', duration: 0.3 }, 0)
       tl.to(one('[data-el="media"]'), { clipPath: 'inset(100% 0 0 0 round 10px)', duration: 0.3 }, 0)
     }
-    if (step < 3) tl.set(q('[data-el="card"]'), { y: 18 }, 0.3)
+    if (step < 3) {
+      tl.set(q('[data-el="card"]'), { y: 18 }, 0.3)
+      tl.set(one('[data-el="pill-label"]'), { opacity: 0, scale: 0.6 }, 0)
+    }
 
     // 3. make sure everything at or below the step is present
     for (let i = 0; i <= step; i++) {
@@ -117,7 +122,10 @@ export function BuildSiteCanvas({
       tl.set(one('[data-el="band"]'), { clipPath: 'inset(0 0 0% 0)' }, 0)
       tl.set(one('[data-el="media"]'), { clipPath: 'inset(0 0 0 0 round 10px)' }, 0)
     }
-    if (step >= 3 && !(up && step === 3)) tl.set(q('[data-el="card"]'), { y: 0 }, 0)
+    if (step >= 3 && !(up && step === 3)) {
+      tl.set(q('[data-el="card"]'), { y: 0 }, 0)
+      tl.set(one('[data-el="pill-label"]'), { opacity: 1, scale: 1 }, 0)
+    }
 
     // 4. the entrance for the new step
     if (up) {
@@ -146,7 +154,13 @@ export function BuildSiteCanvas({
         tl.fromTo(one('[data-el="sweep"]'), { xPercent: -130 }, { xPercent: 130, duration: 1.4, ease: 'power2.inOut' }, 0.5)
         tl.to(q('[data-el="card"]'), { y: 0, duration: 0.7, stagger: 0.1 }, 0.7)
         tl.fromTo(one('[data-el="live"]'), { scale: 0.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(2)' }, 1.1)
-        // cursor glides to the CTA, presses it
+        tl.fromTo(
+          q('[data-el="body-lines"] > span'),
+          { scaleX: 0, transformOrigin: 'left center' },
+          { scaleX: 1, duration: 0.45, stagger: 0.07, ease: 'power2.out' },
+          0.85,
+        )
+        // cursor glides to the CTA, presses it, then REQUEST pops in
         const c = gsap.timeline({ delay: 1.2, defaults: { ease: 'power3.inOut' } })
         c.to(one('[data-el="cursor"]'), { autoAlpha: 1, duration: 0.2 })
           .to(one('[data-el="cursor"]'), { x: 0, y: 0, duration: 1.1 })
@@ -155,6 +169,12 @@ export function BuildSiteCanvas({
           .to(one('[data-el="pill-ring"]'), { scale: 1.8, autoAlpha: 0, duration: 0.7, ease: 'power2.out' }, '<')
           .set(one('[data-el="pill-ring"]'), { scale: 1, autoAlpha: 0.6 })
           .to(one('[data-el="cursor"]'), { autoAlpha: 0, duration: 0.4 }, '+=0.4')
+          .fromTo(
+            one('[data-el="pill-label"]'),
+            { opacity: 0, scale: 0.55 },
+            { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.4)' },
+            '+=0.15',
+          )
         cursorTl.current = c
       }
     }
@@ -194,10 +214,10 @@ export function BuildSiteCanvas({
                 </p>
               </div>
 
-              {/* step 1 — structure: nav band, hero slab, CTA pill */}
+              {/* step 1 — structure: nav band (left only — right is LIVE on finish) */}
               <div data-el="nav" data-s="1" className="absolute inset-x-[5%] top-[5%] flex h-[7%] items-center justify-between">
                 <span className="h-2 w-2 rounded-full bg-espresso" />
-                <div className="flex gap-2">
+                <div className="flex gap-2 pr-[22%]">
                   <span className="h-1 w-6 rounded bg-espresso/30" />
                   <span className="h-1 w-6 rounded bg-espresso/30" />
                   <span className="h-1 w-4 rounded bg-espresso/30" />
@@ -249,14 +269,22 @@ export function BuildSiteCanvas({
                       />
                       <span
                         data-el="pill"
-                        className="block h-5 w-14 rounded-full bg-[#c4a574] sm:h-6 sm:w-16"
-                      />
+                        className="relative flex h-5 w-14 items-center justify-center overflow-hidden rounded-full bg-[#c4a574] sm:h-6 sm:w-16"
+                      >
+                        <span
+                          data-el="pill-label"
+                          className="font-nhg text-[5px] font-semibold uppercase tracking-[0.1em] text-[#1a1612] sm:text-[6px]"
+                          style={{ opacity: 0, transform: 'scale(0.6)' }}
+                        >
+                          REQUEST
+                        </span>
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* step 2 — trust: text band + trust strip + media pane */}
+              {/* step 2 — trust: title + reviews up high so cards never cover them */}
               <div
                 data-el="band"
                 data-s="2"
@@ -267,7 +295,7 @@ export function BuildSiteCanvas({
                   <br />
                   trusted.
                 </p>
-                <div className="mt-[6%] flex items-center gap-2">
+                <div className="mt-[4%] flex items-center gap-2">
                   <div className="flex -space-x-1.5">
                     {['#c4a574', '#8B6950', '#D9C3B0'].map((c) => (
                       <span
@@ -284,6 +312,17 @@ export function BuildSiteCanvas({
                 </div>
               </div>
 
+              {/* short gray lines in the gap between title and media (step 4) */}
+              <div
+                data-el="body-lines"
+                data-s="3"
+                className="absolute left-[42%] top-[68%] w-[14%] space-y-1.5"
+              >
+                <span className="block h-1 w-full rounded bg-espresso/20" />
+                <span className="block h-1 w-[78%] rounded bg-espresso/14" />
+                <span className="block h-1 w-[55%] rounded bg-espresso/10" />
+              </div>
+
               <div
                 data-el="media"
                 data-s="2"
@@ -298,7 +337,7 @@ export function BuildSiteCanvas({
                 />
               </div>
 
-              {/* step 3 — finish: cards + live badge + cursor */}
+              {/* step 3 — finish: cards + live badge (lines sit under the badge) + cursor */}
               <div data-s="3" className="absolute bottom-[4%] left-[5%] flex w-[52%] gap-2">
                 {[IMG_CARD_A, IMG_CARD_B].map((src) => (
                   <div
@@ -314,14 +353,20 @@ export function BuildSiteCanvas({
                   </div>
                 ))}
               </div>
-              <span
+              <div
                 data-el="live"
                 data-s="3"
-                className="absolute right-[5%] top-[4%] z-10 flex items-center gap-1 rounded-full bg-espresso px-2 py-0.5 font-nhg text-[7px] uppercase tracking-[0.16em] text-[#FCFAF2]"
+                className="absolute right-[5%] top-[3.5%] z-10 flex flex-col items-end gap-1"
               >
-                <span className="h-1 w-1 rounded-full bg-[#a9d3a3]" />
-                Live
-              </span>
+                <span className="flex items-center gap-1 rounded-full bg-espresso px-2 py-0.5 font-nhg text-[7px] uppercase tracking-[0.16em] text-[#FCFAF2]">
+                  <span className="h-1 w-1 rounded-full bg-[#a9d3a3]" />
+                  Live
+                </span>
+                <div className="flex w-full flex-col items-end gap-0.5 pr-0.5">
+                  <span className="block h-0.5 w-8 rounded bg-espresso/25" />
+                  <span className="block h-0.5 w-6 rounded bg-espresso/15" />
+                </div>
+              </div>
 
               {/* cursor that presses the CTA (positioned to the pill via translate) */}
               <svg

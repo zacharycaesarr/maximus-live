@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { MessageCircleHeart, Send, X } from 'lucide-react'
 import { getSupabase, supabaseConfigured } from '@/lib/supabase'
 import { Reveal } from '@/components/ui/reveal'
@@ -28,6 +28,8 @@ type Props = {
   cardRadius?: number
 }
 
+const RAIL_BG = '#ebe4da'
+
 /**
  * Blended proof rail:
  * - horizontal overview (efferd columns idea, sideways)
@@ -42,16 +44,55 @@ export default function WebDevTestimonials({
   cardRadius = 11,
 }: Props) {
   const [activeId, setActiveId] = useState(items[0]?.id ?? '')
+  const [paused, setPaused] = useState(false)
   const [formOpen, setFormOpen] = useState(false)
+  const reduced = useReducedMotion()
+  const trackRef = useRef<HTMLDivElement>(null)
+  const setRef = useRef<HTMLDivElement>(null)
+  const offsetRef = useRef(0)
+  const rafRef = useRef(0)
 
   const active = items.find((t) => t.id === activeId) ?? items[0]
+
+  useEffect(() => {
+    if (reduced || paused || items.length < 2) return
+    const track = trackRef.current
+    const setEl = setRef.current
+    if (!track || !setEl) return
+
+    const loop = () => {
+      offsetRef.current -= 0.45
+      const w = setEl.offsetWidth
+      if (w > 0) {
+        // catch up if a frame skipped so we never show the seam gap
+        while (Math.abs(offsetRef.current) >= w) {
+          offsetRef.current += w
+        }
+      }
+      track.style.transform = `translate3d(${offsetRef.current}px,0,0)`
+      rafRef.current = requestAnimationFrame(loop)
+    }
+    rafRef.current = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [reduced, paused, items.length])
+
+  useEffect(() => {
+    if (reduced || paused || items.length < 2) return
+    const id = window.setInterval(() => {
+      setActiveId((cur) => {
+        const i = items.findIndex((t) => t.id === cur)
+        return items[(i + 1) % items.length].id
+      })
+    }, 5200)
+    return () => window.clearInterval(id)
+  }, [reduced, paused, items])
 
   return (
     <section className="overflow-x-clip border-t border-espresso/8 bg-[#ebe4da] py-14 md:py-24">
       <div className="mx-auto max-w-6xl px-5 md:px-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <Reveal>
-            <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+            <p className="font-switzer text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
               {eyebrow}
             </p>
             <h2 className="mt-3 font-tiempos text-[clamp(1.85rem,3.5vw,2.75rem)] font-light tracking-tight text-espresso">
@@ -62,34 +103,34 @@ export default function WebDevTestimonials({
             type="button"
             data-magnetic
             onClick={() => setFormOpen(true)}
-            className="inline-flex items-center gap-2 rounded-[11px] border border-white/55 bg-white/35 px-4 py-2.5 font-serotiva text-[13px] font-medium text-espresso shadow-[0_8px_24px_-12px_rgba(44,37,32,0.3)] backdrop-blur-[6px] transition hover:bg-white/50"
+            className="inline-flex items-center gap-2 rounded-[11px] border border-white/55 bg-white/35 px-4 py-2.5 font-switzer text-[13px] font-medium text-espresso shadow-[0_8px_24px_-12px_rgba(44,37,32,0.3)] backdrop-blur-[6px] transition hover:bg-white/50"
           >
             <MessageCircleHeart size={15} className="text-[#c4a574]" />
             {submitLabel}
           </button>
         </div>
 
-        {/* featured — glass you can actually see */}
         <div
-          className="mt-10 min-h-[200px] border border-white/55 bg-[rgba(255,255,255,0.22)] p-6 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.35)] backdrop-blur-[8px] md:p-10"
-          style={{ borderRadius: cardRadius }}
+          className="relative mt-10 border border-white/55 bg-[rgba(255,255,255,0.22)] p-6 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.35)] backdrop-blur-[11px] md:p-10"
+          style={{ borderRadius: cardRadius, minHeight: 280 }}
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {active && (
               <motion.div
                 key={active.id}
-                initial={{ opacity: 0, y: 10 }}
+                className="absolute inset-0 flex flex-col p-6 md:p-10"
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="font-nhg text-[10px] uppercase tracking-[0.16em] text-espresso/35">
                   {active.category}
                 </p>
-                <blockquote className="mt-4 max-w-3xl font-tiempos text-[clamp(1.25rem,2.4vw,1.85rem)] font-light leading-snug text-espresso">
+                <blockquote className="mt-4 max-w-3xl flex-1 font-tiempos text-[clamp(1.25rem,2.4vw,1.85rem)] font-light leading-snug text-espresso">
                   “{active.quote}”
                 </blockquote>
-                <div className="mt-6 flex flex-wrap items-center gap-4">
+                <div className="mt-auto flex flex-wrap items-center gap-4 pt-6">
                   {active.image ? (
                     <img
                       src={active.image}
@@ -121,36 +162,66 @@ export default function WebDevTestimonials({
         </div>
       </div>
 
-      <div className="mx-auto mt-8 grid max-w-6xl gap-3 px-6 sm:grid-cols-2 md:grid-cols-4">
-        {items.map((t) => {
-          const isActive = t.id === activeId
-          return (
-            <button
-              key={t.id}
-              type="button"
-              data-magnetic
-              onMouseEnter={() => setActiveId(t.id)}
-              onFocus={() => setActiveId(t.id)}
-              onClick={() => setActiveId(t.id)}
-              className={cn(
-                'border border-white/55 bg-[rgba(255,255,255,0.18)] px-4 py-4 text-left shadow-[0_12px_32px_-12px_rgba(26,22,18,0.28)] backdrop-blur-[8px] transition',
-                isActive
-                  ? 'bg-[rgba(255,255,255,0.42)]'
-                  : 'hover:bg-[rgba(255,255,255,0.32)]',
-              )}
-              style={{ borderRadius: cardRadius }}
+      <div
+        className="relative mt-8 overflow-hidden"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16"
+          style={{ background: `linear-gradient(to right, ${RAIL_BG}, transparent)` }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16"
+          style={{ background: `linear-gradient(to left, ${RAIL_BG}, transparent)` }}
+        />
+        <div
+          ref={trackRef}
+          className="flex w-max will-change-transform"
+          style={{ transform: 'translate3d(0,0,0)' }}
+        >
+          {[0, 1, 2].map((copy) => (
+            <div
+              key={copy}
+              ref={copy === 0 ? setRef : undefined}
+              className="flex gap-4 px-3"
+              aria-hidden={copy > 0}
             >
-              <p className="font-nhg text-[10px] uppercase tracking-[0.12em] text-espresso/35">
-                {t.category}
-              </p>
-              <p className="mt-2 line-clamp-3 font-nhg text-[13px] leading-relaxed text-espresso/70">
-                “{t.excerpt}”
-              </p>
-              <p className="mt-3 font-nhg text-[12px] font-medium text-espresso">{t.name}</p>
-              <p className="font-nhg text-[11px] text-espresso/40">{t.company}</p>
-            </button>
-          )
-        })}
+              {items.map((t) => {
+                const isActive = t.id === activeId
+                return (
+                  <button
+                    key={`${copy}-${t.id}`}
+                    type="button"
+                    data-magnetic
+                    tabIndex={copy === 0 ? 0 : -1}
+                    onMouseEnter={() => setActiveId(t.id)}
+                    onFocus={() => setActiveId(t.id)}
+                    onClick={() => setActiveId(t.id)}
+                    className={cn(
+                      'w-[260px] shrink-0 border border-white/55 px-4 py-4 text-left shadow-[0_12px_32px_-12px_rgba(26,22,18,0.28)] backdrop-blur-[8px] transition',
+                      isActive
+                        ? 'bg-[rgba(255,255,255,0.42)]'
+                        : 'bg-[rgba(255,255,255,0.18)] hover:bg-[rgba(255,255,255,0.32)]',
+                    )}
+                    style={{ borderRadius: cardRadius }}
+                  >
+                    <p className="font-nhg text-[10px] uppercase tracking-[0.12em] text-espresso/35">
+                      {t.category}
+                    </p>
+                    <p className="mt-2 line-clamp-3 font-nhg text-[13px] leading-relaxed text-espresso/70">
+                      “{t.excerpt}”
+                    </p>
+                    <p className="mt-3 font-nhg text-[12px] font-medium text-espresso">{t.name}</p>
+                    <p className="font-nhg text-[11px] text-espresso/40">{t.company}</p>
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
       <AnimatePresence>

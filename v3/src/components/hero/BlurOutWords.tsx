@@ -48,15 +48,19 @@ export default function BlurOutWords({
   return (
     <span className={className} style={{ color, fontWeight }}>
       {words.map((word, i) => {
+        // Keep enter+exit string stable. Toggling hold used to rewrite
+        // animation and restart the blur mid-hover (felt like a glitch).
         const enter = `mr-v3-bou-in ${enterMs}ms cubic-bezier(0.22,1,0.36,1) ${i * staggerMs}ms backwards`
-        const exit = hold
-          ? ''
-          : `, mr-v3-bou-out ${exitMs}ms cubic-bezier(0.64,0,0.78,0) ${exitStartMs + i * staggerMs}ms forwards`
+        const exit = `, mr-v3-bou-out ${exitMs}ms cubic-bezier(0.64,0,0.78,0) ${exitStartMs + i * staggerMs}ms forwards`
         return (
           <span
             key={`${word}-${i}`}
             className="hero-blur-word"
-            style={{ animation: `${enter}${exit}`, textShadow }}
+            style={{
+              animation: `${enter}${exit}`,
+              animationPlayState: hold ? 'paused' : 'running',
+              textShadow,
+            }}
           >
             {word}
           </span>

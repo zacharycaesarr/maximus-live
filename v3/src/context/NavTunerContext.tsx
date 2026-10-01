@@ -47,14 +47,54 @@ export function NavTunerProvider({ store, children }: { store: LevaStore; childr
           ctaBg: initial.ctaBg,
           ctaText: initial.ctaText,
           showCtaArrow: initial.showCtaArrow,
+          'Caps dropdown': folder(
+            {
+              capsWebArtScale: {
+                value: initial.capsWebArtScale,
+                min: 0.4,
+                max: 2,
+                step: 0.02,
+                label: 'web art scale',
+              },
+              capsWebArtOpacity: {
+                value: initial.capsWebArtOpacity,
+                min: 0.1,
+                max: 1,
+                step: 0.02,
+                label: 'web art opacity',
+              },
+              capsWebArtX: {
+                value: initial.capsWebArtX,
+                min: -120,
+                max: 120,
+                step: 1,
+                label: 'web art X px',
+              },
+              capsWebArtY: {
+                value: initial.capsWebArtY,
+                min: -120,
+                max: 120,
+                step: 1,
+                label: 'web art Y px',
+              },
+              capsWebArtW: {
+                value: initial.capsWebArtW,
+                min: 30,
+                max: 90,
+                step: 1,
+                label: 'web art width %',
+              },
+            },
+            { collapsed: false },
+          ),
           Logo: folder(
             {
               showLogo: initial.showLogo,
               logoStyle: {
                 value: initial.logoStyle ?? 'short',
                 options: {
-                  'Short (new mark)': 'short',
-                  'Classic SVG (smooth trial)': 'smooth',
+                  'Short mark (MR)': 'short',
+                  'Smooth mark (mr)': 'smooth',
                 },
                 label: 'logo mark',
               },

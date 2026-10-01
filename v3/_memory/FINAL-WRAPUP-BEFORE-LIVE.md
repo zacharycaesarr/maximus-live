@@ -13,6 +13,30 @@ Standing checklist. Do these before push / go-live. Do not treat as optional.
 - Delete the stray empty `v3/v3/_memory/tmp-hiw-frames/` folder (debug crops from HIW fillet work, leftover nested `v3/v3` dir).
 - Hero video masters live in two places right now: repo root (`Hero-MP4FALLBACK-handbrake.mp4`, `Hero-quicktime-handbrake.webm` — outside `v3/`, won't ship) and `v3/public/` (same files, copied byte-for-byte, this is what the live `<video>` tag actually points at, so this copy DOES ship). Before going live, decide if 4K60 at ~8MB each is the final call for production bandwidth, or if a lighter pass makes sense — Zachary's call, don't touch without asking (see `HERO-VIDEO-BG.md`).
 
+## Pending: Start page AE icon loop (REMEMBER)
+
+Zachary to make in After Effects a **~5 second smooth loop** for the Start page (top + middle):
+
+1. Phone ringing icon animates in  
+2. Two heads talking  
+3. Hands shaking  
+4. Chart / graph going up  
+5. Loop  
+
+Export decision (Lottie vs short video) at wrap-up. See `NEED-TO-IMPLEMENT.md`.
+
+## Pending: Capabilities pages
+
+- Web Development is the active build page (`/capabilities/web-development`)
+- Ad Management + Creative Studio are stubs
+- Creative Studio later uses scroll-morph-hero from 21st
+- Old Work page removed; `/work` redirects
+
+## Pending: Work / web mockup hover (wired on web page)
+
+- Great UI Image Hover Reveal is on the Web Development showcase
+- Also still: AE hero with 3D objects animating up after intro; remake mobile hero render if uneven.
+
 ## Pending: Zachary is re-cutting the hero After Effects file
 
 - Zachary is going back into After Effects to tweak the hero background composition (the floating megaphone/phone/laptop scene) before going live. When he hands over the new export, the swap is: drop the new files at repo root with the same two names, copy them into `v3/public/` (same names), verify checksums match, done — `HeroVideoBackground.tsx` already points at the right filenames so no code change needed unless he renames the files. Don't re-encode/compress the new export either, same rule as before.
@@ -29,6 +53,17 @@ Standing checklist. Do these before push / go-live. Do not treat as optional.
 
 - Mobile-first pass on every page (About, Work, Start, Home, Portal, Privacy, Terms).
 - Deep performance pass: see `FUTURE-PERFORMANCE.md` (images, fonts, Lottie, Lenis, Leva stripped from prod).
+- **Zero mini-freezes while scrolling (hard requirement):** no millisecond hitching on any page (Web Dev, Ads, Home, Start, About). Feel must be butter-smooth on mid-tier phones and desktop.
+  - **Possible solutions (attack plan):**
+    - Default off continuous hero mesh rAF; Leva can still enable for design.
+    - Cap live grain (prefer baked PNG tile over SVG `feTurbulence` + CSS filter).
+    - Never mount desktop + mobile duplicates of the same heavy UI (phone carousel, BuildSiteCanvas). One `matchMedia` instance.
+    - Pause all rAF / autoplay / dash animations when offscreen or tab hidden.
+    - Lazy-mount before-state phone mocks and sticky Safari stage until near viewport.
+    - Kill scroll-linked `blur` / `filter` / `clipPath` where transform+opacity will do.
+    - Scope Google mock fonts to Web Dev only; subset NHG weights above the fold.
+    - Soften Lenis + ScrollTrigger stacking (`limitCallbacks`, refresh after fonts, shorter step timelines).
+    - Profile with Chrome Performance + mid-tier phone Lighthouse before calling done.
 - Remove unused Leva / preview flags from production builds.
 - Confirm no secrets in client bundle (only `VITE_` public keys).
 - Sitemap + robots for new routes: `/`, `/about`, `/work`, `/start`, `/privacy`, `/terms`, `/portal`.

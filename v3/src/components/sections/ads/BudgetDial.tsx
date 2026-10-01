@@ -40,7 +40,7 @@ export default function BudgetDial({
   const leads = clicks * leadRate
 
   return (
-    <section className="border-t border-espresso/8 bg-[#f7f7f5] px-6 py-20 md:py-28">
+    <section className="px-6 py-20 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="md:flex md:items-end md:justify-between md:gap-16">
           <div>
@@ -49,7 +49,7 @@ export default function BudgetDial({
               {title}
             </h2>
           </div>
-          <p className="mt-4 max-w-xs font-nhg text-sm text-espresso/45 md:mt-0">{note}</p>
+          <p className="mt-4 max-w-xs font-nhg text-sm text-espresso md:mt-0">{note}</p>
         </div>
 
         <div className="mt-12 grid gap-10 md:grid-cols-[1.1fr_1fr] md:gap-16">

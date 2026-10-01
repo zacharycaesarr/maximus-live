@@ -1,0 +1,82 @@
+/*
+ * Homepage Services Overview row.
+ * Sandbox cards are designed at 380 × 560. Production content is narrower
+ * (max-w-6xl + side pad), so the three shells share the row equally and
+ * the live artboard scales from the 380 design size. Artwork poses stay put.
+ */
+
+.svc-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+  overflow: visible;
+}
+
+.svc-card-slot {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 380 / 560;
+  container-type: inline-size;
+  container-name: svc-card;
+  overflow: visible;
+}
+
+/* Creative floats can paint outside its slot; keep it above neighbors. */
+.svc-card-slot:has(.lab-artboard__live--creative) {
+  z-index: 2;
+}
+
+/*
+ * Keep the lab design size, then scale to the slot width.
+ * Poses / SVG / perspective stay 1:1 with the sandbox; only the shell shrinks.
+ */
+.lab-artboard__live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--lab-card-w);
+  height: var(--lab-card-h);
+  transform-origin: top left;
+  transform: scale(calc(100cqw / 380px));
+}
+
+.lab-artboard__live--web,
+.lab-artboard__live--ads,
+.lab-artboard__live--creative {
+  width: var(--lab-card-w);
+  height: var(--lab-card-h);
+}
+
+.lab-artboard__live--creative {
+  overflow: visible;
+}
+
+@media (max-width: 767px) {
+  .svc-cards-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    margin-top: -24px;
+    margin-bottom: -24px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .svc-cards-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .svc-card-slot {
+    flex: 0 0 auto;
+    width: min(var(--lab-card-w), 86vw);
+    aspect-ratio: 380 / 560;
+    height: auto;
+    scroll-snap-align: center;
+  }
+}

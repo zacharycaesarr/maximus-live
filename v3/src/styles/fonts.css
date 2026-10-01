@@ -179,31 +179,31 @@
   font-display: swap;
 }
 
-/* Serotiva — subtext + nav dropdown (Medium/Bold preferred) */
+/* Switzer — subtext + labels (replaces Serotiva) */
 @font-face {
-  font-family: 'Serotiva';
-  src: url('/fonts/Serotiva-Regular.otf') format('opentype');
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Serotiva';
-  src: url('/fonts/Serotiva-Medium.otf') format('opentype');
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Serotiva';
-  src: url('/fonts/Serotiva-SemiBold.otf') format('opentype');
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Semibold.otf') format('opentype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Serotiva';
-  src: url('/fonts/Serotiva-Bold.otf') format('opentype');
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

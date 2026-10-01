@@ -76,25 +76,38 @@ export default function MotionGetStarted() {
 
   useEffect(() => {
     if (!wrapRef.current) return undefined
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        [headingRef.current, linksRef.current],
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.12,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: wrapRef.current,
-            start: 'top 70%',
-            end: 'top 30%',
-            scrub: 0.8,
+    const mobile = window.matchMedia('(max-width: 767px)')
+    let ctx: gsap.Context | undefined
+    const sync = () => {
+      ctx?.revert()
+      ctx = undefined
+      // The scrubbed desktop reveal must be cleared when crossing into mobile.
+      if (mobile.matches) return
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          [headingRef.current, linksRef.current],
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: wrapRef.current,
+              start: 'top 70%',
+              end: 'top 30%',
+              scrub: 0.8,
+            },
           },
-        },
-      )
-    }, wrapRef)
-    return () => ctx.revert()
+        )
+      }, wrapRef)
+    }
+    sync()
+    mobile.addEventListener('change', sync)
+    return () => {
+      mobile.removeEventListener('change', sync)
+      ctx?.revert()
+    }
   }, [])
 
   if (!t.enabled) return null
@@ -106,7 +119,7 @@ export default function MotionGetStarted() {
     <section
       id="get-started"
       ref={wrapRef}
-      className="relative overflow-visible px-5 py-20 md:py-28"
+      className="relative z-[2] overflow-visible px-5 py-20 md:py-28"
       aria-label="Get started"
     >
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center overflow-visible text-center">
@@ -115,7 +128,7 @@ export default function MotionGetStarted() {
         </p>
         <h2
           ref={headingRef}
-          className="m-0 max-w-3xl overflow-visible pb-2 font-nhg text-[clamp(2.4rem,8vw,5.5rem)] font-semibold leading-[1.02] tracking-tight text-home-on-dark"
+          className="m-0 max-w-3xl overflow-visible bg-gradient-to-b from-[#FCFAF2] via-[#E8DFD4] to-[#C4A574] bg-clip-text pb-2 font-nhg text-[clamp(2.4rem,8vw,5.5rem)] font-semibold leading-[1.02] tracking-tight text-transparent"
           style={{ paddingBottom: '0.12em' }}
         >
           {t.headline}

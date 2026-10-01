@@ -1,14 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   CheckCircle2,
   Clock3,
-  Layers3,
-  Megaphone,
   MessageSquareWarning,
-  Puzzle,
   ShieldCheck,
   Sparkles,
   Users,
@@ -72,54 +69,42 @@ const ROWS: Row[] = [
       Icon: MessageSquareWarning,
     },
   },
-  {
-    id: 'stack',
-    category: 'Stack',
-    maximus: {
-      title: 'Site + ads + follow-up',
-      description: 'Landing pages, Meta/Google, and lead alerts wired as one system.',
-      Icon: Layers3,
-    },
-    traditional: {
-      title: 'Bolt-on tools',
-      description: 'Disconnected platforms with nobody owning the full path to a booked call.',
-      Icon: Puzzle,
-    },
-  },
-  {
-    id: 'creative',
-    category: 'Creative',
-    maximus: {
-      title: 'Built for conversion',
-      description: 'Copy, motion, and ads designed around the same offer and funnel.',
-      Icon: Megaphone,
-    },
-    traditional: {
-      title: 'Pretty, then patch',
-      description: 'Brand work first, performance later. Creative rarely matches the media plan.',
-      Icon: MessageSquareWarning,
-    },
-  },
 ]
 
 /**
  * Placeholder comparison matrix for Why Maximus Reach.
- * Cream/mocha theme. Sync-hover rows. Mobile segmented control.
+ * Sync-hover rows. Mobile: pill + swipe between columns.
  */
 export default function WhyComparisonMatrix() {
   const [hovered, setHovered] = useState<string | null>(null)
   const [mobileTab, setMobileTab] = useState<'maximus' | 'traditional'>('maximus')
+  const touchX = useRef<number | null>(null)
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchX.current = e.changedTouches[0]?.clientX ?? null
+  }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchX.current
+    touchX.current = null
+    if (start == null) return
+    const end = e.changedTouches[0]?.clientX ?? start
+    const dx = end - start
+    if (Math.abs(dx) < 48) return
+    // Swipe left → Traditional, swipe right → Maximus
+    if (dx < 0) setMobileTab('traditional')
+    else setMobileTab('maximus')
+  }
 
   return (
     <div className="w-full">
       {/* Mobile tabs */}
-      <div className="mb-5 flex justify-center md:hidden">
-        <div className="inline-flex rounded-full border border-espresso/15 bg-white/70 p-1 backdrop-blur">
+      <div className="mb-4 flex justify-center md:mb-5 md:hidden">
+        <div className="inline-flex rounded-full border border-home-line/60 bg-home-surface-light/80 p-1 backdrop-blur">
           <button
             type="button"
             className={cn(
               'rounded-full px-4 py-2 font-nhg text-[12px] font-medium transition',
-              mobileTab === 'maximus' ? 'bg-espresso text-cream' : 'text-espresso/60',
+              mobileTab === 'maximus' ? 'bg-home-surface-dark text-home-on-dark' : 'text-home-muted',
             )}
             onClick={() => setMobileTab('maximus')}
           >
@@ -129,7 +114,7 @@ export default function WhyComparisonMatrix() {
             type="button"
             className={cn(
               'rounded-full px-4 py-2 font-nhg text-[12px] font-medium transition',
-              mobileTab === 'traditional' ? 'bg-espresso text-cream' : 'text-espresso/60',
+              mobileTab === 'traditional' ? 'bg-home-surface-dark text-home-on-dark' : 'text-home-muted',
             )}
             onClick={() => setMobileTab('traditional')}
           >
@@ -138,24 +123,26 @@ export default function WhyComparisonMatrix() {
         </div>
       </div>
 
-      <div className="relative overflow-hidden rounded-3xl border border-espresso/15 bg-[#efeae2]/40 p-3 md:p-4">
+      <div
+        className="relative overflow-hidden rounded-3xl border border-home-line/50 bg-home-surface-light/40 p-3 md:p-4"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <div className="relative grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-0">
-          {/* VS spine (desktop) */}
           <div className="pointer-events-none absolute inset-y-6 left-1/2 z-20 hidden -translate-x-1/2 md:block" aria-hidden>
-            <div className="mx-auto h-full w-px bg-espresso/15" />
-            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-espresso/20 bg-[#f7f7f5] px-2.5 py-1 font-nhg text-[10px] font-semibold tracking-[0.18em] text-espresso/70">
+            <div className="mx-auto h-full w-px bg-home-line/60" />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-home-line bg-home-surface-light px-2.5 py-1 font-nhg text-[10px] font-semibold tracking-[0.18em] text-home-muted">
               VS
             </span>
           </div>
 
-          {/* Maximus column */}
           <div
             className={cn(
-              'rounded-2xl bg-[#0e0d0c] p-4 md:rounded-r-none md:p-5',
+              'rounded-2xl bg-home-surface-dark p-4 md:rounded-r-none md:p-5',
               mobileTab !== 'maximus' && 'hidden md:block',
             )}
           >
-            <p className="mb-4 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-[#c4a574]">
+            <p className="mb-4 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-acid">
               Maximus Reach
             </p>
             <div className="flex flex-col gap-2.5">
@@ -173,21 +160,21 @@ export default function WhyComparisonMatrix() {
                     onMouseEnter={() => setHovered(row.id)}
                     onMouseLeave={() => setHovered(null)}
                     className={cn(
-                      'rounded-xl border border-white/10 bg-white/[0.03] p-3.5 transition-all duration-250 md:p-4',
-                      active && 'border-[#c4a574]/45 bg-[#c4a574]/10',
+                      'rounded-xl border border-home-line/20 bg-home-on-dark/[0.03] p-3.5 transition-all duration-250 md:p-4',
+                      active && 'border-home-acid/45 bg-home-acid/10',
                       dim && 'opacity-55',
                     )}
                   >
                     <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-[#c4a574]" aria-hidden />
+                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-home-acid" aria-hidden />
                       <div>
-                        <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.12em] text-white/35">
+                        <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.12em] text-home-muted/70">
                           {row.category}
                         </p>
-                        <h3 className="mt-1 m-0 font-nhg text-[15px] font-semibold text-white md:text-base">
+                        <h3 className="mt-1 m-0 font-nhg text-[15px] font-semibold text-home-on-dark md:text-base">
                           {row.maximus.title}
                         </h3>
-                        <p className="mt-1.5 m-0 font-nhg text-[13px] leading-relaxed text-white/55">
+                        <p className="mt-1.5 m-0 font-nhg text-[13px] leading-relaxed text-home-muted">
                           {row.maximus.description}
                         </p>
                       </div>
@@ -198,14 +185,13 @@ export default function WhyComparisonMatrix() {
             </div>
           </div>
 
-          {/* Traditional column */}
           <div
             className={cn(
-              'rounded-2xl border border-espresso/10 bg-[#efeae2]/90 p-4 md:rounded-l-none md:border-l-0 md:p-5',
+              'rounded-2xl border border-home-line/40 bg-home-surface-light/90 p-4 md:rounded-l-none md:border-l-0 md:p-5',
               mobileTab !== 'traditional' && 'hidden md:block',
             )}
           >
-            <p className="mb-4 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-espresso/45">
+            <p className="mb-4 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-muted">
               Traditional agency
             </p>
             <div className="flex flex-col gap-2.5">
@@ -223,21 +209,21 @@ export default function WhyComparisonMatrix() {
                     onMouseEnter={() => setHovered(row.id)}
                     onMouseLeave={() => setHovered(null)}
                     className={cn(
-                      'rounded-xl border border-espresso/10 bg-white/40 p-3.5 transition-all duration-250 md:p-4',
-                      active && 'border-espresso/25 bg-espresso/5',
+                      'rounded-xl border border-home-line/50 bg-home-bg-light/50 p-3.5 transition-all duration-250 md:p-4',
+                      active && 'border-home-line bg-home-surface-light',
                       dim && 'opacity-55',
                     )}
                   >
                     <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-espresso/45" aria-hidden />
+                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-home-muted" aria-hidden />
                       <div>
-                        <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.12em] text-espresso/35">
+                        <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.12em] text-home-muted/80">
                           {row.category}
                         </p>
-                        <h3 className="mt-1 m-0 font-nhg text-[15px] font-semibold text-espresso/80 md:text-base">
+                        <h3 className="mt-1 m-0 font-nhg text-[15px] font-semibold text-home-on-light md:text-base">
                           {row.traditional.title}
                         </h3>
-                        <p className="mt-1.5 m-0 font-nhg text-[13px] leading-relaxed text-espresso/50">
+                        <p className="mt-1.5 m-0 font-nhg text-[13px] leading-relaxed text-home-muted">
                           {row.traditional.description}
                         </p>
                       </div>

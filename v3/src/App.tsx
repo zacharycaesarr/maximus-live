@@ -37,8 +37,10 @@ import { FaqTunerProvider } from '@/context/FaqTunerContext'
 import { HowItWorksTunerProvider } from '@/context/HowItWorksTunerContext'
 import { FooterTunerProvider } from '@/context/FooterTunerContext'
 import { PageScrollBgTunerProvider } from '@/context/PageScrollBgTunerContext'
+import { HomeColorsTunerProvider } from '@/context/HomeColorsTunerContext'
 import { ServicesOverviewTunerProvider } from '@/context/ServicesOverviewTunerContext'
 import { HomeLevaStoreProvider } from '@/context/HomeLevaStoreContext'
+import HomePageShell from '@/components/HomePageShell'
 import TubelightNav from '@/components/nav/TubelightNav'
 
 function HomePage() {
@@ -95,6 +97,7 @@ function HomePage() {
       'mr-v3-page-scroll-bg-v2',
       'mr-v3-page-scroll-bg-v3',
       'mr-v3-page-scroll-bg-v4',
+      'mr-v3-home-colors-v1',
     ]
     obsolete.forEach((k) => {
       try {
@@ -132,17 +135,20 @@ function HomePage() {
                           <FaqTunerProvider store={store}>
                             <FooterTunerProvider store={store}>
                             <PageScrollBgTunerProvider store={store}>
+                            <HomeColorsTunerProvider store={store}>
                             <ServicesOverviewTunerProvider store={store}>
                             <HomeLevaStoreProvider store={store}>
                             <GetStartedHoverProvider>
                               <SmoothScroll>
                                 <ApertureIntro />
-                                <div id="top" className="relative min-h-screen">
-                                  <BrandPreloader />
-                                  <DirectNav overlay />
-                                  <DirectHero />
-                                  <PageSections />
-                                </div>
+                                <HomePageShell>
+                                  <div id="top" className="relative min-h-screen">
+                                    <BrandPreloader />
+                                    <DirectNav overlay />
+                                    <DirectHero />
+                                    <PageSections />
+                                  </div>
+                                </HomePageShell>
                               </SmoothScroll>
                               {isDev && (
                                 <div
@@ -168,6 +174,7 @@ function HomePage() {
                             </GetStartedHoverProvider>
                             </HomeLevaStoreProvider>
                             </ServicesOverviewTunerProvider>
+                            </HomeColorsTunerProvider>
                             </PageScrollBgTunerProvider>
                             </FooterTunerProvider>
                           </FaqTunerProvider>

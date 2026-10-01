@@ -21,6 +21,7 @@ export default function HandReachLottie() {
   const [posedIn, setPosedIn] = useState(false)
   const [dock, setDock] = useState<Dock>({ top: 0, left: 0, width: 200, ready: false })
   const [mounted, setMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const active = hoverActive || layout.handPreview
   const onRight = layout.handSide === 'right'
@@ -28,6 +29,14 @@ export default function HandReachLottie() {
   const handZ = layout.handLayer === 'below' ? 3 : 35
 
   useEffect(() => setMounted(true), [])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const apply = () => setIsMobile(mq.matches)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
 
   const clearTimers = () => {
     if (leaveTimer.current) {
@@ -41,12 +50,12 @@ export default function HandReachLottie() {
   }
 
   useEffect(() => {
-    if (!layout.handEnabled) return undefined
+    if (!layout.handEnabled || isMobile) return undefined
 
     let raf = 0
     const place = () => {
       const btn = document.querySelector('[data-get-started-btn]') as HTMLElement | null
-      if (!btn) {
+      if (!btn || btn.getAttribute('data-cta-armed') !== '1') {
         setDock((d) => ({ ...d, ready: false }))
         raf = requestAnimationFrame(place)
         return
@@ -90,9 +99,10 @@ export default function HandReachLottie() {
 
     raf = requestAnimationFrame(place)
     return () => cancelAnimationFrame(raf)
-  }, [layout.handEnabled, layout.handOffsetX, layout.handOffsetY, layout.handSide, onRight])
+  }, [layout.handEnabled, layout.handOffsetX, layout.handOffsetY, layout.handSide, onRight, isMobile])
 
   useEffect(() => {
+    if (isMobile) return undefined
     clearTimers()
     const api = lottieRef.current
 
@@ -159,9 +169,10 @@ export default function HandReachLottie() {
     layout.handPreview,
     layout.handFadeEarly,
     layout.handRetractHoldMs,
+    isMobile,
   ])
 
-  if (!mounted || !layout.handEnabled || !dock.ready) return null
+  if (!mounted || isMobile || !layout.handEnabled || !dock.ready) return null
 
   const show = posedIn
   const fadeOutSec = (layout.handFadeOutMs || 120) / 1000
@@ -192,6 +203,8 @@ export default function HandReachLottie() {
         style={{
           transform: onRight ? `scaleX(-1) scale(${scale})` : `scale(${scale})`,
           transformOrigin: onRight ? 'left center' : 'right center',
+          // Sketch Lottie is black ink — invert for dark video hero
+          filter: 'invert(1)',
         }}
       >
         <Lottie

@@ -26,9 +26,11 @@ export default function ReelStrip({ frames, eyebrow, title }: Props) {
   const bar = useTransform(eased, [0, 1], ['0%', '100%'])
 
   return (
-    <section ref={ref} className="relative bg-[#141110] text-[#FCFAF2]" style={{ height: reduced ? 'auto' : '260vh' }}>
+    <section ref={ref} className="relative z-[2] bg-[#141110] text-[#FCFAF2]" style={{ height: reduced ? 'auto' : '260vh' }}>
       <div className={cn('flex flex-col justify-center overflow-hidden', reduced ? 'py-24' : 'sticky top-0 h-[100svh]')}>
-        <div className="mx-auto w-full max-w-6xl px-6">
+        {/* covers any CREATIVE letters bleeding from the hero above */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[#141110]" />
+        <div className="relative mx-auto w-full max-w-6xl px-6 pt-16 md:pt-20">
           <div className="flex items-end justify-between">
             <div>
               <p className="font-nhg text-[11px] font-medium uppercase tracking-[0.18em] text-[#FCFAF2]/40">{eyebrow}</p>

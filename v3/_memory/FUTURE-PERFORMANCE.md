@@ -18,6 +18,7 @@ Do not sacrifice this for decorative density.
 ## Standing reminder: full deep optimization (later)
 
 **Status:** Deferred until the whole site is content-complete and Zachary says we are done editing.
+**Also see:** `FINAL-WRAPUP-BEFORE-LIVE.md` → Optimize before live → Zero mini-freezes.
 
 **Do not skip this.** Even if chat context is gone, every future agent must see this before calling V3 “finished.”
 
@@ -29,5 +30,13 @@ When we unlock this pass:
 4. Re-check Chrome vs Comet vs Safari for scroll, hover, and layout parity.
 5. Phone-first Lighthouse / Web Vitals pass; fix anything that feels sticky or surprise-janky.
 6. Confirm no horizontal overflow and no click-blocking overlays remain.
+7. **Zero scroll hitching:** eliminate stacked permanent rAFs (mesh + grain + showcase + Lenis/GSAP), dual-mounted carousels/canvases, and scroll-linked blur filters. Target: no perceptible freezes on Web Dev or Ads while scrolling.
+
+### Early wins already started (2026-09-22)
+
+- Mesh motion default **off** on Web Dev.
+- Ads grain default lowered (~45).
+- Phone carousel: single mount (desktop OR mobile), dental start, before DOM lazy on peek, autoplay waits for in-view.
+- Showcase strip rAF pauses offscreen; CTA slab glow no longer scroll-linked.
 
 Until then: ship bricks cleanly, avoid new lag, but do not run the full optimization sweep early.

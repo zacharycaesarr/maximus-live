@@ -1,9 +1,7 @@
 'use client'
 
-import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
-import { motion, useScroll, useTransform } from 'framer-motion'
 import { Reveal } from '@/components/ui/reveal'
 import type { StretchTextProps } from '@/components/ui/StretchText'
 import { cn } from '@/lib/utils'
@@ -22,7 +20,7 @@ type Props = {
 
 /**
  * Closing slab. Calm and final: one headline, one line, one button.
- * A soft glow drifts behind it as you scroll. No carousels, no tricks.
+ * Soft glow is static (no scroll-linked blur) to avoid scroll jank.
  */
 export default function WebDevCtaSlab({
   headline,
@@ -32,27 +30,19 @@ export default function WebDevCtaSlab({
   tone = 'dark',
   href = '/start',
 }: Props) {
-  const ref = useRef<HTMLElement>(null)
   const dark = tone === 'dark'
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const glow = useTransform(scrollYProgress, [0, 0.5, 1], [0.12, 0.4, 0.15])
-  const y = useTransform(scrollYProgress, [0, 1], [30, -30])
 
   return (
     <section
-      ref={ref}
       className={cn(
         'relative overflow-hidden px-6 py-24 md:py-36',
         dark ? 'bg-[#2C2520] text-[#FCFAF2]' : 'bg-[#f3f1ec] text-espresso',
       )}
     >
-      {/* soft drifting glow, nothing else moving */}
-      <motion.div
+      <div
         aria-hidden
-        style={{ opacity: glow, y }}
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#c4a574] blur-[160px]"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[720px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#c4a574] opacity-25 blur-[160px]"
       />
-      {/* faint grain so the slab isn't a flat fill */}
       <div
         aria-hidden
         className={cn(
@@ -66,7 +56,7 @@ export default function WebDevCtaSlab({
       />
 
       <div className="relative mx-auto max-w-3xl text-center">
-        <Reveal>
+        <Reveal duration={2.85} delay={0.06} y={48}>
           <p
             className={cn(
               'font-nhg text-[11px] uppercase tracking-[0.2em]',
@@ -76,12 +66,12 @@ export default function WebDevCtaSlab({
             {eyebrow}
           </p>
         </Reveal>
-        <Reveal delay={0.08}>
+        <Reveal duration={3.05} delay={0.22} y={56}>
           <h2 className="mt-5 font-tiempos text-[clamp(2.2rem,6vw,4.25rem)] font-light leading-[1.02] tracking-tight">
             {headline}
           </h2>
         </Reveal>
-        <Reveal delay={0.16}>
+        <Reveal duration={2.9} delay={0.42} y={40}>
           <p
             className={cn(
               'mx-auto mt-5 max-w-md font-nhg text-[15px] leading-relaxed',
@@ -91,7 +81,7 @@ export default function WebDevCtaSlab({
             {blurb}
           </p>
         </Reveal>
-        <Reveal delay={0.24}>
+        <Reveal duration={2.8} delay={0.6} y={36}>
           <Link
             to={href}
             data-magnetic

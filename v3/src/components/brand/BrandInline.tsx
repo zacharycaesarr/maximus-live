@@ -1,3 +1,4 @@
+import { StretchText } from '@/components/ui/StretchText'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -5,24 +6,51 @@ type Props = {
   tone?: 'dark' | 'light'
   /** Maximus over Reach — main navbar only */
   stacked?: boolean
+  /** stretch amount for Reach Further (nav wordmark) */
+  stretchBase?: number
+  stretchPeak?: number
 }
 
 /** Brand lockup — tight tracking. stacked = two lines for main nav. */
-export function BrandInline({ className, tone = 'dark', stacked = false }: Props) {
+export function BrandInline({
+  className,
+  tone = 'dark',
+  stacked = false,
+  stretchBase = 55,
+  stretchPeak = 140,
+}: Props) {
   const color = tone === 'light' ? 'text-white' : 'text-espresso'
 
   if (stacked) {
     return (
       <span
-        className={cn(
-          'inline-flex flex-col items-start font-nhg font-semibold leading-[0.92] tracking-[-0.045em]',
-          color,
-          className,
-        )}
+        className={cn('inline-flex flex-col items-start leading-[0.92]', color, className)}
         aria-label="Reach Further"
       >
-        <span className="text-[12px] md:text-[13px]">Reach</span>
-        <span className="text-[12px] md:text-[13px]">Further</span>
+        <StretchText
+          text="Reach"
+          baseWidth={stretchBase}
+          peakWidth={stretchPeak}
+          curve="ramp"
+          weight={650}
+          letterSpacing={-0.04}
+          opticalSize={48}
+          hoverBoost={18}
+          animateIn={false}
+          className="text-[12px] md:text-[13px]"
+        />
+        <StretchText
+          text="Further"
+          baseWidth={stretchBase}
+          peakWidth={stretchPeak}
+          curve="ramp"
+          weight={650}
+          letterSpacing={-0.04}
+          opticalSize={48}
+          hoverBoost={18}
+          animateIn={false}
+          className="text-[12px] md:text-[13px]"
+        />
       </span>
     )
   }

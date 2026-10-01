@@ -12,65 +12,97 @@ function layoutBox(content: HTMLElement, element: HTMLElement) {
   return { top: segment.offsetTop, bottom: segment.offsetTop + segment.offsetHeight }
 }
 
-function grainTile(opacity: number) {
-  const alpha = Math.max(0, Math.min(0.06, opacity / 100))
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17"><g fill="#080909" fill-opacity="${alpha}"><circle cx="2" cy="3" r=".3"/><circle cx="12" cy="2" r=".25"/><circle cx="7" cy="9" r=".3"/><circle cx="15" cy="13" r=".25"/><circle cx="3" cy="15" r=".2"/></g></svg>`
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+function rgb(hex: string) {
+  const parts = hex.match(/[0-9a-f]{2}/gi)
+  return parts && parts.length === 3 ? parts.map((part) => parseInt(part, 16)).join(',') : '243,240,232'
 }
 
-/** Static CSS paint; ResizeObserver only updates stops when section geometry changes. */
+/** One shared CSS paint for Services, the cream sections, and the dark return. */
 export default function PageScrollGradient({ settings, targetRef }: Props) {
   useLayoutEffect(() => {
     const page = targetRef?.current ?? document.getElementById('page-sections')
     if (!page) return undefined
     const services = page.querySelector<HTMLElement>('[data-services-band]')
+    const proof = page.querySelector<HTMLElement>('#work')
     const why = page.querySelector<HTMLElement>('#why-maximus')
     const faq = page.querySelector<HTMLElement>('#faq')
     const cta = page.querySelector<HTMLElement>('#get-started')
     const content = services?.parentElement
-    if (!services || !why || !faq || !cta || !content) return undefined
+    if (!services || !proof || !why || !faq || !cta || !content) return undefined
 
-    const previousImage = page.style.backgroundImage
-    const previousSize = page.style.backgroundSize
-    const previousPosition = page.style.backgroundPosition
+    const previous = {
+      backgroundImage: page.style.backgroundImage,
+      backgroundSize: page.style.backgroundSize,
+      backgroundPosition: page.style.backgroundPosition,
+      backgroundRepeat: page.style.backgroundRepeat,
+      grainOpacity: page.style.getPropertyValue('--home-cream-grain-opacity'),
+      grainSize: page.style.getPropertyValue('--home-cream-grain-size'),
+      grainStart: page.style.getPropertyValue('--home-cream-grain-start'),
+      grainEnd: page.style.getPropertyValue('--home-cream-grain-end'),
+    }
     const sync = () => {
       const vh = window.innerHeight / 100
       const servicesEnd = layoutBox(content, services).bottom
-      const faqEnd = layoutBox(content, faq).bottom
+      const proofTop = layoutBox(content, proof).top
       const whyTop = layoutBox(content, why).top
-      const ctaTop = layoutBox(content, cta).top
-      const lightStart = Math.max(0, servicesEnd + settings.lightTransitionStart * vh)
-      const lightEnd = Math.max(lightStart + 120, servicesEnd + settings.lightTransitionEnd * vh)
-      const darkStart = Math.max(lightEnd + 200, faqEnd + settings.darkReturnStart * vh)
-      const darkEnd = Math.max(darkStart + 120, faqEnd + settings.darkReturnEnd * vh, ctaTop + 20)
-      const creamAlpha = Math.max(0, Math.min(0.25, settings.creamLightStrength / 100))
-      const speckleAlpha = Math.max(0, Math.min(0.12, settings.speckleOpacity / 100))
-      const speckleSize = Math.max(24, 125 - settings.speckleDensity)
+      const faqEnd = layoutBox(content, faq).bottom
+      const ctaBottom = layoutBox(content, cta).bottom
+
+      const fadeLength = settings.servicesFadeLength * vh
+      const fadeStart = Math.max(0, servicesEnd - fadeLength * 0.38)
+      const fadeEnd = fadeStart + fadeLength
+      const curve = settings.servicesFadeCurve / 100
+      const darkHold = fadeStart + fadeLength * (0.25 + curve * 0.18)
+      const creamEntry = fadeStart + fadeLength * (0.68 + curve * 0.1)
+      const fadePct = (at: number) => `${(100 * at / fadeEnd).toFixed(2)}%`
+      const darkStart = Math.max(fadeEnd + 100, faqEnd + settings.darkReturnStart * vh)
+      const darkEnd = Math.min(ctaBottom, Math.max(darkStart + 180, darkStart + settings.darkReturnLength * vh))
+      const darkLength = darkEnd - darkStart
+      const darkRadius = Math.max(320, darkLength * 1.36)
+
+      const tone = Math.min(0.3, settings.creamTonalStrength / 100)
+      page.style.setProperty('--home-cream-grain-opacity', String(settings.creamTextureOpacity / 100))
+      page.style.setProperty('--home-cream-grain-size', `${Math.round(64 * settings.creamTextureScale)}px`)
+      page.style.setProperty('--home-cream-grain-start', `${Math.round(fadeEnd - 120)}px`)
+      page.style.setProperty('--home-cream-grain-end', `${Math.round(darkEnd)}px`)
+
+      const shade = rgb(settings.creamToneShade)
+      const light = rgb(settings.creamToneLight)
+      const darkness = settings.ctaDarkening / 100
 
       page.style.backgroundImage = [
-        grainTile(settings.grainOpacity),
-        `radial-gradient(circle at 2px 4px, rgba(8,9,9,${speckleAlpha}) 0 0.45px, transparent 0.7px)`,
-        `radial-gradient(circle at 13px 17px, rgba(8,9,9,${speckleAlpha * 0.65}) 0 0.35px, transparent 0.6px)`,
-        `linear-gradient(to bottom, transparent 0px, transparent ${darkStart}px, var(--home-bg-dark) ${darkEnd}px, var(--home-bg-dark) 100%)`,
-        `radial-gradient(ellipse 70% 680px at 25% ${whyTop}px, rgba(248,245,238,${creamAlpha}) 0%, transparent 75%)`,
-        `radial-gradient(ellipse 65% 560px at 80% ${Math.round((whyTop + faqEnd) / 2)}px, rgba(235,230,220,${creamAlpha * 0.5}) 0%, transparent 76%)`,
-        `linear-gradient(to bottom, var(--home-bg-dark) 0px, var(--home-bg-dark) ${lightStart}px, var(--home-bg-light) ${lightEnd}px, var(--home-bg-light) 100%)`,
+        `radial-gradient(ellipse 105% ${darkRadius}px at 50% ${darkEnd}px, rgba(8,9,9,${darkness}) 0%, rgba(17,18,14,${darkness * 0.92}) 36%, rgba(17,18,14,${darkness * 0.72}) 58%, rgba(17,18,14,0) 100%)`,
+        `linear-gradient(to bottom, transparent 0px, transparent ${darkStart}px, ${settings.creamToneShade} ${darkStart + darkLength * 0.18}px, #11120E ${darkEnd - darkLength * 0.12}px, #080909 ${darkEnd}px, #080909 100%)`,
+        `radial-gradient(ellipse 250% ${Math.max(fadeEnd, 1)}px at 50% 0px, #080909 0%, #080909 ${fadePct(fadeStart)}, #252820 ${fadePct(darkHold)}, #DCD8CD ${fadePct(creamEntry)}, rgba(243,240,232,0) 100%)`,
+        `radial-gradient(ellipse 85% 940px at 16% ${proofTop + 340}px, rgba(${light},${tone}) 0%, transparent 78%)`,
+        `radial-gradient(ellipse 82% 1060px at 88% ${whyTop + 180}px, rgba(${shade},${tone * 0.8}) 0%, transparent 82%)`,
+        `radial-gradient(ellipse 90% 960px at 20% ${faqEnd - 150}px, rgba(${light},${tone * 0.7}) 0%, transparent 82%)`,
       ].join(', ')
-      page.style.backgroundSize = `17px 17px, ${speckleSize}px ${speckleSize + 13}px, ${speckleSize + 31}px ${speckleSize + 7}px, auto, auto, auto, auto`
-      page.style.backgroundPosition = '0 0, 0 0, 19px 23px, 0 0, 0 0, 0 0, 0 0'
+      page.style.backgroundSize = 'auto'
+      page.style.backgroundPosition = '0 0'
+      page.style.backgroundRepeat = 'no-repeat'
     }
 
     sync()
     const observer = new ResizeObserver(sync)
     observer.observe(content)
-    for (const element of [services, why, faq, cta]) observer.observe(element)
+    for (const element of [services, proof, why, faq, cta]) observer.observe(element)
     window.addEventListener('resize', sync)
     return () => {
       observer.disconnect()
       window.removeEventListener('resize', sync)
-      page.style.backgroundImage = previousImage
-      page.style.backgroundSize = previousSize
-      page.style.backgroundPosition = previousPosition
+      page.style.backgroundImage = previous.backgroundImage
+      page.style.backgroundSize = previous.backgroundSize
+      page.style.backgroundPosition = previous.backgroundPosition
+      page.style.backgroundRepeat = previous.backgroundRepeat
+      if (previous.grainOpacity) page.style.setProperty('--home-cream-grain-opacity', previous.grainOpacity)
+      else page.style.removeProperty('--home-cream-grain-opacity')
+      if (previous.grainSize) page.style.setProperty('--home-cream-grain-size', previous.grainSize)
+      else page.style.removeProperty('--home-cream-grain-size')
+      if (previous.grainStart) page.style.setProperty('--home-cream-grain-start', previous.grainStart)
+      else page.style.removeProperty('--home-cream-grain-start')
+      if (previous.grainEnd) page.style.setProperty('--home-cream-grain-end', previous.grainEnd)
+      else page.style.removeProperty('--home-cream-grain-end')
     }
   }, [settings, targetRef])
 

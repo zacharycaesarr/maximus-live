@@ -1,3 +1,218 @@
+## 2026-09-28 — homepage color architecture (routing fix)
+
+- **Homepage Colors:** 9 semantic roles on `#home-page` only (Light/Dark BG + Surface, Text on Light/Dark, Muted, Line, Acid). Leva: Test Color Routing + Reset.
+- **Page scroll BG:** behavior only. Color stops read `--home-bg-dark` → `--home-bg-light`. No mocha/brown palette of its own.
+- **Remap:** sections + proof overlay + FAQ + footer + nav glass inherit home vars. How it works dropped independent canopy/card color pickers. Service-card artwork untouched.
+- **Tailwind:** home colors use RGB channel vars so `/40` opacity utilities actually paint.
+
+## 2026-09-27 — how art swap + proof fan fixes
+
+- **How art:** swapped to new wide line-art PNGs (`step-*-art.png?v=5`), same Railway placement + Leva.
+- **Proof fan:** arrows/autoplay direction corrected. Build-case thumbs use contain (full homepage in the box). Brickwork cockpit bars taller.
+- **Caps Leva:** `Maximus · V3` → `Nav` → `Caps dropdown` (opened by default now).
+
+## 2026-09-27 — transparent card art (Railway style)
+
+- **Why black boxes:** the chat PNGs were RGB with baked-in black (0% alpha). CSS cannot invent transparency. Told Zach; keyed black→RGBA into `/how/step-*-art.png` + `/nav/caps-web-art.png`.
+- **Placement:** absolute `<img>` inside `overflow:hidden` cards. No black wrappers, no blend modes, no art pockets. Cream/mocha card bg shows through. Caps web art lower-right, clipped.
+- **Leva:** scale / X / Y / opacity — `mr-v3-how-it-works-v12`, `mr-v3-nav-tuner-v12`.
+
+## 2026-09-27 — phrase hover fix + how/caps art swap
+
+- **Hero phrase hover (desktop):** pause cycle + arrow stays reliable. Parallax freezes on hover, leave is debounced, blur hold no longer restarts CSS animation, no scale nudge.
+- **How + Caps art:** chat PNGs into `/how/step-*-*.png` and `/nav/caps-web-visual.png`. How cards get a dark bottom pocket so black PNG bg blends (no cream black-box). Leva keys `mr-v3-how-it-works-v8`, `mr-v3-nav-tuner-v9`.
+
+## 2026-09-26 late3 — how PNGs, caps art, proof fan fill
+
+- **How it works (desktop):** step emojis → local PNGs (`/how/step-*`), Leva Art folder (`mr-v3-how-it-works-v7`). Tags `1.` / `2.` / `3.`. Mobile accordion stays text-only.
+- **Caps dropdown:** Web Dev tile solid mocha gradient + positioned PNG (`/nav/caps-web-visual.png`), Leva `mr-v3-nav-tuner-v8`. Ads/Creative side tiles solid night gradients (no transparent wash).
+- **Proof fan:** build-case thumbs ResizeObserver cover-fill (no corner gaps). Brickwork fan = CSS mini ads cockpit (Meta/Google + 47 CALLS / 4.2x ROAS), not stock thumb.
+
+## 2026-09-26 night2 — mobile layout pass + funnel + /start
+
+- **Reach Beacon:** off on mobile (no GSAP/ST cost on phones). Desktop unchanged.
+- **Services:** mobile = horizontal snap swipe (one card); desktop 3-up kept.
+- **Hero mobile:** smaller subtext (~13.5px); fixed 2-line phrase slot (no jump); closer gap under phrase; phrases centered (no arrow reserve on phone); snappier entrance after preloader.
+- **Get Started:** hero CTA → `/start` (not bottom of page).
+- **Why Maximus:** swipe between Maximus / Traditional on phone; title→pill gap tightened (`mb-5`).
+- **How it works:** mobile accordion (01/02/03, one open, light sweep); desktop cards untouched.
+- **MoneyFlow:** Meta/Google/TikTok chips smaller on mobile.
+- **Funnel:** darker mocha→gold colors (`mr-v3-ads-v9`); taller chart + thicker band so stage 1 is visible.
+
+## 2026-09-26 night — stars BG, hand gate, real 21st funnel, mobile hero
+
+- **Stars:** `ServicesStarField` sits on `#page-sections` (absolute band via `[data-services-band]`). Not inside Services / SectionFocus, so card scale no longer drags the dots.
+- **Hero phrase hover (desktop):** pause on current phrase + up arrow; leave resumes same phrase (no jump). Arrow width reserved so layout does not flicker the hit box.
+- **Hand:** only mounts / hit-tests after Get Started finishes animating in (`data-cta-armed` + `ctaArmed` timing).
+- **Ads funnel:** real 21st `@bklitai/funnel-chart` at `ui/funnel-chart.tsx` (framer-motion port, grid demo). Custom trapezoids removed. Brand cream/mocha colors stay in Leva. Decision bar kept.
+- **Mobile hero video:** byte-copied `Hero_Mobile_convertedhandbrake.mp4` → `/video/Hero-mobile-handbrake.mp4` (~6.6MB) + poster frame 1. Desktop unchanged. Pause off-screen / tab hide. `object-position: center top` so copy sits in the black sky above devices.
+
+## 2026-09-26 evening — stars redo, perf, ads funnel, nav polish
+
+- **ServicesStarField:** dots-only SVG layers inside Services (no `#020409` fill merge). Bottom CSS mask fades before Proof. Delete one mount to remove. Old `StarFieldBackground` deleted.
+- **Get started hard line:** caused by `overflow-hidden` clipping the gold blur. Reverted to `overflow-visible`.
+- **Perf (no visual redesign):** PageScrollGradient was repainting full multi-layer BG every rAF (~60fps, even pre-unlock) → ~800MB thrash feel. Now throttled ~12fps, paint-deduped, paused when tab hidden / motionAmount 0. ReachBeacon wrapped in `gsap.context`. Hand Lottie rAF skipped on mobile. Tubelight scroll poll 140→400ms.
+- **Hero:** hand off on mobile; emoji badge default off + never on mobile; desktop phrase hover arrow + click on left layout.
+- **Ads:** TikTok logo box nudged up; reporting bento removed (see `ADS-REPORTING-BENTO.md`); conversion funnel + Decision bar + Leva (`mr-v3-ads-v8`).
+- **Mobile nav:** hamburger icons (Ads/Creative/About/Portal); Web Dev + Home keep empty reserve slots; Tubelight animates out while hamburger open.
+
+## 2026-09-26 late — kill Network, stars, polish pass
+
+- **Reach Network gone:** deleted `ReachNetworkLayer.tsx` + `HomepageGrain.tsx` + all mounts/Leva. No canvas network, no extra rAF from it. Site motion back to normal browser ~60fps (Beacon/GSAP/Lenis only). Card pixel stars still ~12fps on card faces only.
+- **StarFieldBackground:** SVG-only night sky on Services band (`#020409`, ~57 warm dots, 3 CSS opacity groups 7/10/13s). Delete one mount to remove. Reduced-motion = static.
+- **Hero phrase:** rotating line wraps/stacks when squished; stem stays one line. Mobile: copy centered near top, Leva X/Y offsets zeroed.
+- **Footer void:** cream body was showing past dark footer. `data-home=1` paints body/`#root` `#0a0908`; dark footer solid `#0a0908` + mobile bottom pad; Get Started blur clipped.
+- **Why Maximus:** 5 → 3 rows (Ownership / Speed / Clarity). Research: first 3–5 comparison rows carry most attention (NN/g + SaaS pricing audits).
+- **Ads MoneyFlow:** Meta/Google/TikTok → soft boxes with `/brand/*.svg` + name under logo.
+- **Tubelight Work:** upward sheet → Web Dev / Ads / Creative.
+- **Caps dropdown + section titles:** white (not peach `#FFEDD5`).
+- **Page scroll BG Leva:** tint top/bottom labels + **Reset night→mocha (current)**. Main look = stepped radial mocha ramp (hardcoded stops). Soft wash = your Leva colors.
+- **iPhone casing (not swapped yet):** CSS frame is **220×~477** mobile / **260×~563** desktop (`aspect-ratio: 9/19.5`), bezel pad 10px, outer radius ~2.4rem, island 78×22.
+
+## 2026-09-26 am — perf cut on Beacon + Network
+
+- Beacon: killed refreshInit rebuild loop (was remounting GSAP on every ST refresh → RAM spike / lag / hero video stall). Rebuild only on debounced resize.
+- Network: fixed viewport canvas (~20fps), fewer points, pauses off-page, brighter so you can actually see it. Leva toggle to disable. Does not paint over hero. **(Removed later same day.)**
+
+## 2026-09-26 — hero lock, Railway mobile menu, Reach Beacon + Network
+
+- Hero layout v23: locked copy block (X43 Y145 scale 1.14) + hand (left, offsetX 279). Eyebrow scale Leva (default 0.85). Stem text size stays stable on narrow windows (phrase-only fit).
+- Mobile menu: Railway-style accordion + card rows with graphic slot (`/public/nav/mob-*.png` later).
+- Reach Beacon (GSAP MotionPath + ScrollTrigger) on homepage post-hero anchors. Leva: Reach Beacon.
+- ReachNetworkLayer canvas (seeded points, scroll-melted states) + independent HomepageGrain. Removable as single components.
+
+## 2026-09-25 late2 — tilt strength, night BG paint, proof build-cases
+
+- Hero tilt back to real values (`parallaxMaxTilt` 14 / strength 22). Key `mr-v3-hero-layout-v22`.
+- Page BG: Zach night/mocha grain CSS painted ON `#page-sections` (replaces cream). Key `mr-v3-page-scroll-bg-v7`. Brand stops `#0B0D13` `#2A1B1A` `#FFE6B9`.
+- Learn more: compact panel slides down from top with bullet stagger. Stays above card title.
+- Proof v7: Augusta + Shenandoah use Web Dev `BuildCase` after-homepages for fan + modal; logos beside titles. Brickwork Ads card = "Brickwork - Meta" / 3.8x ROAS (hover layer Spent $7K - 74 calls - 22 booked).
+
+## 2026-09-25 late — bg replace, tilt back, proof clients, learn-more
+
+- Hero content tilt restored (rotate + shift).
+- Services: removed white plate. Page BG after hero is the real mocha/night grain ramp (Zach CSS + brand swatches), not a cream layer with white on top. Extra grain overlay removed.
+- Learn more: small panel drops from top with motion; no longer covers bottom title.
+- Proof v5: Augusta Dental Arts + Shenandoah Craft Built thumbs/logos; Brickwork uses Ads Reporting `AnimatedCard`/`Visual1` as "Brickwork - Meta" / Spent $7K · 74 calls · 22 booked / 3.8x ROAS.
+
+- Services: solid white full-bleed (covers grain). No night gradients / fade stacks. Creative Studio card (was Systems). Learn more flap slides up *inside* the card. Pixel stars on card faces (denser). Leva `mr-v3-services-overview-v3`.
+- Hero copy block: position X/Y + scale + timing under **Hero layout · Copy block** with Reset. Dead Surfer / Watermark / side-column Leva removed. Hand Lottie inverted white. Content parallax = soft shift only (no rotate blur).
+- Proof: Client Two → Brickwork + logo in white box; new stats; Ridge Plumbing · Meta interactive visual; #1/#4 stock website scrolls; mobile CTA smaller. Key `mr-v3-proof-fan-v4`.
+
+- Hero left copy: slower fade + breathe delay (`copyBreathMs` / `subheadLagMs` in Hero layout). Whole-block `copyScale` + `ctaScale`. Bigger default headline. Subtext word-slide waits after “I want Maximus to”. Replay via Preloader → Replay intro.
+- Interactive demo canvas fully removed (provider, defaults, FUTURE-DEMO-CANVAS.md, hero mounts).
+- Services: night floor `#0F0E15` blending from hero; soft fade into next section. Card pixel-star layer from 21st `@uicapsule/background-pixel-stars` (card-scoped, 12fps, pause offscreen). Systems flap: harder squish + row nudge left so bullets stay visible (timing unchanged).
+- Capabilities dropdown: dark mega panel — Web Development feature tile (drop PNG at `/public/nav/caps-web-visual.png`), Ad Management + Creative Studio stacked. No fourth tile.
+- Gravity Stars: researched, **not shipped** (too heavy for home). Notes in `THEME-NIGHT.md`. Brand night swatches recorded there.
+- Memory: deleted obsolete `FUTURE-DEMO-CANVAS.md`; added `THEME-NIGHT.md`.
+
+## 2026-09-25 — hero desk loop + services tall cards + word slide + phone swipe
+
+- Hero desktop bg: `Hero-zachsitting-handbrake.mp4` (4K60 HandBrake, byte-copied). Poster frame 1 at `/video/Hero-zachsitting-poster.jpg`. Same pause-on-scroll + tab-hide pattern. Old floating-objects WebM/MP4 archived at `_archive/hero-floating-objects-2026-09-25/` with restore README.
+- Hero subtext: Motion-style word-by-word slide-up (`WordSlideUp`) for "Maximus Reach helps ambitious businesses…". Layout key `mr-v3-hero-layout-v19`.
+- Services cards: taller Designjoy height, no tag/status pills, symbol right of title, per-card color + ink in Leva (`mr-v3-services-overview-v2`). Flap slides out behind the card (width/opacity only — no letter anim glitch); other cards squish.
+- Phone carousel: dual-buffer CSS swipe back (current + incoming both painted) so next mock shows immediately with no black flash.
+
+## 2026-09-24 night — phone swap, showcase scroll lock, services cards redo
+
+- Phone arrows: instant swap (no CSS wipe / black flash).
+- Selected Builds overlay: Lenis `stop()` while open; wheel/touch blocked on page; only `[data-showcase-scroll]` rails scroll.
+- Services overview: removed laggy 21st fold bento. New cards use same `TiltSurface` method as Ads reporting proof cards (taller/bigger). Flip-out flap kept (CSS, tilt off while open). Leva folder `Services overview` (`mr-v3-services-overview-v1`).
+
+## 2026-09-24 — phone lag fix + full web mocks + services fold
+
+- Phone carousel: removed Framer `AnimatePresence`/`popLayout` (was remounting two full mock trees + 8 springs per arrow click). CSS translate slide; one reveal host; before still lazy on peek.
+- Selected Builds: full homepage before/after stages (nav/hero/body/stats) for Rounds HVAC, Augusta Dental Arts, Shenandoah Craft Built. Browse strip + focus cards show after by default, before on hover. Expanded stage fills the browser frame (no black void).
+- Safari pill: mocha `#c4a574` again, label `REQUEST` (no parentheses), same late pop-in.
+- How-we-build stock: hero house kept; media + two cards swapped to house/living/kitchen Unsplash.
+- Home services: old bento removed; `ServicesFoldBento` (tilt + fade shine, fold-out flap, click scale, tilt settles when open). Mobile stack + tap flap.
+
+## 2026-09-22 — phone fill final + builds cases + lag cuts
+
+- Phone HVAC/Plumbing: filled remaining empty area. Desktop = review/jobs + cut-off next section. Mobile = tiny “next section” peek. HVAC rethemed ember/charcoal (not blue). Dental starts first; autoplay waits until phone is on screen.
+- Befores: stronger ugly colors (no plain white). Precise before footer: Canva Website Builder.
+- Perf: mesh motion default off; ads grain ~45; one phone carousel mount; before mock lazy; CTA glow static; showcase rAF pauses offscreen.
+- Safari step 4: cream pill pops “(REQUEST)” after cursor press (late in timeline).
+- Selected Builds expanded: coded before/after case stages (Rounds HVAC, Augusta Dental Arts, Shenandoah Craft Built) + problem/change/result copy. Browse strip logistics unchanged.
+- Memory: zero mini-freeze requirement + attack plan in FINAL-WRAPUP + FUTURE-PERFORMANCE.
+
+## 2026-09-21 mid — phone polish + name playground v2
+
+- Phone labels: SMILEDESIGN / Rounds HVAC / Precise Plumbing. Logos in after navs (`logo-smile`, `logo-rounds`, `logo-precise`).
+- HVAC + plumbing after: divider line + real lower half (chips, hours, service area, review). No empty navy void.
+- Befores intentionally worse (uncropped photos, tables, yellow banners, old fonts). Unique backgrounds per mock.
+- Mock-only Google fonts (Libre Baskerville/DM Sans, Oswald/Barlow, Rubik) — not site NHG.
+- Name playground v2 (`mr-v3-about-name-play-v2`): comma in lockup, zoomed scale entrance, comma fades on rearrange, bigger default size, expo ease.
+
+## 2026-09-21 morning — real phone mocks + About GSAP playground
+
+- Safari URL: `youramazingwebsite.com`.
+- Phone mocks rebuilt from scratch with Zachary's photos only (`/public/phone-mocks/`). Real text (no gray bars). Before = outdated-but-real local mobile site; After = same business, premium redesign. No empty voids; content under Dynamic Island.
+- GSAP already in project (`gsap` + `@gsap/react`). About page: live NameSwapPlayground (MAXIMUS → ZACHARY letter slide-up, then word swap). Leva: duration, stagger, ease, swap arc, type size, Replay / Remember / Revert (`mr-v3-about-name-play-v1`).
+- About still clean-slate; old page in `_archive/about-page-2026-09-21/`.
+
+## 2026-09-21 dawn — phone mock rebuild, about clean slate, hero gap removed
+
+- Removed the thick hero→mobile design bridge on Web Dev.
+- Safari address: `Your amazing Website.com`.
+- Hero mesh Leva clearer: on/off, how far, how fast (storage `mr-v3-web-dev-v9`). Grain contrast bumped a tad (still Leva-editable).
+- Phone mocks rebuilt from refs: gray-line filler, short real hero + buttons, smiling arches (dental), HVAC photo card, fleshed before states. Content padded under Dynamic Island.
+- About: old page archived to `v3/_archive/about-page-2026-09-21/`. Live `/about` is clean slate with section copy buttons.
+
+## 2026-09-21 night2 — phone homepages, CTA slide, Start Lottie, safari lights
+
+- Phone mocks rebuilt as real mobile *homepages* (nav + hero + CTA) before/after for Ridge / Northline / Summit. Old filler layouts removed.
+- Ready when you are: slower + taller slide-up (y ~48–56px, ~3s).
+- Selected builds: text + card strip get scroll intros (lightbox still portals-free / not wrapped in transform).
+- Start: After Effects Lottie at `/lottie/start-middleanimation.json` above "Start here".
+- Safari traffic lights: tiny (6–7px), icons inset so they don't overlap; stage widens to 98% on trust/finish.
+- Hero → Mobile-first: soft mocha wash bridge (no copy).
+
+## 2026-09-21 night — phone mocks, safari reviews, lightbox, mesh drift
+
+- Safari How-we-build: reviews sit under "Built to be trusted" (cards can't cover them). Short gray lines in the mid gap. Traffic lights are real HTML circles (not stretched SVG ovals).
+- Phone section: 3 React phone-only before/after mocks (Ridge / Northline / Summit). Mouse-track peek. Control buttons centered under the phone.
+- Web builds lightbox: top nav hides while open; wheel over left text panel scrolls the right rail.
+- Grain: full Leva (amount / size / contrast / brightness) on Web Dev. Storage `mr-v3-web-dev-v8`.
+- CTA "Ready when you are": slower Reveal (~2.4–2.55s). Hero intro also slowed a bit.
+- Hero mesh: darker wash drifts horizontally. Leva: animate on/off, amount, speed. Remember / Revert still works.
+
+## 2026-09-21 late — home blend, grain, safari polish, phone reveal, ads trim
+
+- Home hero: fade lives INSIDE the hero (tall, delayed so laptop isn't eaten). External grey seam strip removed. Page sections match color0. Video/copy untouched.
+- Grain: dedicated overlay + contrast/brightness + Leva (Ads grain amount/contrast/brightness).
+- Safari How-we-build: real traffic lights; LIVE lines under badge; body text bars animate on step 4.
+- Web builds lightbox: z-200 over nav, Escape closes, body scroll lock, X stopPropagation.
+- Phone: 3 before/after slides with 21st mouse-track slot (hover desktop / hold-drag mobile); slides slide not fade.
+- Ads: removed SignalField, cursor hint, BudgetDial. Kept title + stretch + blurb + flow/report/CTA.
+
+- Hard lines: caused by separate solid section backgrounds. Ads now one continuous page gradient (dial/flow have no fill). Home seam fades into cream page BG + overlap, not grey `#f7f7f5`.
+- Grain: exact 21st SVG (0.9 / 2 octaves / overlay / 120px). Ads + Start + home Leva grain 0–100.
+- How we build: removed overflow-clip (it broke pin + shadow). Pin ends at Talk through CTA. Shadow padding restored.
+- Testimonials: triple-set rail, measure set width, while-loop reset (no blank gap).
+- Start: animated Bloom Field mesh (cream/mocha, not blue) + visible grain. Leva under Background.
+- Home hero video/copy untouched. Only the soft seam strip below the fold was recolored.
+- How we build: overflow clip + earlier unpin so the Safari window stops before testimonials (no hang past Talk through a build).
+- Subtext: body copy near-black (espresso). Accent lines like "Then everything else" stay muted.
+- About: "Hey, I'm Zachary" solid espresso (TextRoll was invisible under bg-clip gradient). Wipe starts with text hidden (no pre-flash).
+- Start: full-page light cream/mocha gradient; Cal lazy-mount; BreathingText removed (main lag).
+- Ads: Leva-tunable warm gradient + grain bg (user CSS). HeroBottomBlend softens hard hero cuts on Web/Ads/Mobile-first.
+- Creative: hero overflow-hidden + reel top padding so "Scroll to scrub" is not cut by CREATIVE type.
+- About hero restored to blur. Text-block wipe + text-roll on story ("Hey, I'm Zachary") not hero.
+- Logos: attached short/smooth black+white transparent PNGs in nav/footer (no invert hacks).
+- Testimonials featured panel fixed height, absolute crossfade (no layout shift).
+- Reveal default ~1.45–1.55s. Web Dev mesh cream/mocha bg. Desktop How-we-build stage larger.
+- Real badtzx0 AnimatedCard on Ads reporting. Start contact uses same 3D tilt; Ads cards tap on mobile.
+- Cal embed: data-lenis-prevent + overflow fix. Serotiva removed from Tailwind.
+
+## 2026-09-21 — Caps polish pass (Switzer, stretch, logos, interactive Ads/Creative)
+
+- Switzer replaces Serotiva sitewide on caps/subtext. Stretch hover glitch fixed; bigger stretch defaults + hoverBoost Leva. Reach Further nav stretches.
+- Logo: transparent short PNG + Leva smooth alt. Safari window shadow no longer clipped. Testimonials horizontal rail restored (glass look kept). Grain opacity + size sliders.
+- Ads: interactive sections restored + proof tilt cards with real sample metrics. Creative: mesh gradient hero (Leva colors) + ReelStrip + new blurb.
+- Start: slower Reveal + preview replay; Book a call weight-breath. About hero: text block wipe. Caps dropdown ~90% solid; Capabilities font matches nav.
+- Memory: INDEX trimmed; SESSION-2026-09-20 is the live snapshot.
+
 ## 2026-09-20 — Web Dev stretch fix + Safari chrome + cap pages cleanup
 
 - Checkpoint: branch `checkpoint/2026-09-20-caps-pages` @ `0e43737`.

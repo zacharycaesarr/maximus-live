@@ -6,9 +6,9 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { faqRichAnswer } from '@/lib/faqRichAnswers'
 
-/** Mocha / cream tokens for Maximus Reach (adapted from 21st FAQ Pro). */
+/** Homepage FAQ — light surfaces + text-on-light from Homepage Colors. */
 const themeClassName =
-  '[--ic-background:#f7f7f5] [--ic-foreground:#1a1612] [--ic-primary:#1a1612] [--ic-secondary:#6b5a4a] [--ic-border:#e4dfd6] [--ic-card:#ffffff] [--ic-card-foreground:#1a1612] [--ic-muted:#efeae2] [--ic-muted-foreground:#6b5a4a] [--ic-accent:#efeae2] [--ic-accent-foreground:#1a1612] [--ic-ring:rgba(44,37,32,0.16)] [--color-foreground:var(--ic-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-card:var(--ic-card)] [--color-border:var(--ic-border)] [--color-accent:var(--ic-accent)] [--color-ring:var(--ic-ring)]'
+  '[--ic-background:var(--home-surface-light)] [--ic-foreground:var(--home-text-light)] [--ic-primary:var(--home-text-light)] [--ic-secondary:var(--home-muted)] [--ic-border:var(--home-line)] [--ic-card:var(--home-bg-light)] [--ic-card-foreground:var(--home-text-light)] [--ic-muted:var(--home-surface-light)] [--ic-muted-foreground:var(--home-muted)] [--ic-accent:var(--home-surface-light)] [--ic-accent-foreground:var(--home-text-light)] [--ic-ring:var(--home-line)] [--color-foreground:var(--ic-foreground)] [--color-muted:var(--ic-muted)] [--color-muted-foreground:var(--ic-muted-foreground)] [--color-card:var(--ic-card)] [--color-border:var(--ic-border)] [--color-accent:var(--ic-accent)] [--color-ring:var(--ic-ring)]'
 
 const PANEL_EASE = [0.16, 1, 0.3, 1] as const
 const HEIGHT_TWEEN = { duration: 0.34, ease: PANEL_EASE }
@@ -37,7 +37,7 @@ function highlightText(text: string, query: string) {
   return parts.map((part, index) => {
     if (part.toLowerCase() === normalizedQuery.toLowerCase()) {
       return (
-        <mark className="rounded-sm bg-[#c4a574]/35 px-0.5 text-espresso" key={index}>
+        <mark className="rounded-sm bg-home-acid/35 px-0.5 text-home-on-light" key={index}>
           {part}
         </mark>
       )

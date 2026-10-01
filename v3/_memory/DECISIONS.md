@@ -1,5 +1,18 @@
 # Decisions — V3
 
+## 2026-09-25 — Night lean without killing light caps pages
+
+- Home can go darker (hero video, services `#0F0E15`, dark caps mega-menu). Capability pages (esp. Web Dev light look) stay on their own light systems.
+- Brand pocket: `#FFEDD5`, `#0B0D13`, `#2A1B1A`, `#FFE6B9`. Details in `THEME-NIGHT.md`.
+- Gravity Stars: not on homepage (perf). Pixel stars on service cards only, lightweight.
+- Interactive demo canvas: removed for good until a real Lottie exists.
+
+## 2026-09-21 — Soft hero bottoms (no hard line)
+
+- Prefer a tall multi-stop `HeroBottomBlend` (fade into the next section's fill) over hairline borders between heroes and body.
+- Better long-term option if a page still hard-cuts: `mask-image: linear-gradient(...)` on the hero *background* layer so it truly goes transparent (works with any next-section color). Creative Studio hero left alone; reel section gets a solid top cap so CREATIVE letters don't show cut off above "Scroll to scrub."
+- Do not run automatic "follow-up verify" agent passes after saying done. Zachary pays for those. Only re-check when he asks.
+
 ## 2026-09-17 — Mobile-only mode ACTIVE + aperture intro replaces dock
 
 - Standing rule: `WORKING-MODE-MOBILE.md` — edit mobile only until Zachary says switch to desktop (exceptions: aperture intro, Home nav link).

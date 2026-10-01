@@ -8,7 +8,8 @@ import ServicesOverviewCards from '@/components/sections/ServicesOverviewCards'
 import { useServicesOverviewTuner } from '@/context/ServicesOverviewTunerContext'
 import WhyComparisonMatrix from '@/components/sections/WhyComparisonMatrix'
 import MotionGetStarted from '@/components/sections/MotionGetStarted'
-import DynamicWaveCanvas from '@/components/sections/DynamicWaveCanvas'
+import CtaAtmosphere from '@/components/sections/CtaAtmosphere'
+import CreamNodeLayer from '@/components/sections/CreamNodeLayer'
 import SiteFooter from '@/components/sections/SiteFooter'
 import SectionBreak from '@/components/sections/SectionBreak'
 import PageScrollGradient from '@/components/sections/PageScrollGradient'
@@ -54,13 +55,14 @@ export default function PageSections() {
       id="page-sections"
       ref={rootRef}
       className="relative w-full overflow-x-clip"
-      style={{ backgroundColor: 'var(--home-bg-dark)' }}
+      style={{ backgroundColor: pageBg.creamBase }}
     >
       <PageScrollGradient settings={pageBg} targetRef={rootRef} />
-      <ServicesStarField opacity={pageBg.starsOpacity} fadeEnd={pageBg.starsFadeEnd} />
+      <ServicesStarField opacity={0.86} fadeEnd={100} />
+      <CreamNodeLayer settings={pageBg} targetRef={rootRef} />
       <ReachBeacon store={store} />
 
-      <div className="relative z-10">
+      <div className="relative z-[3]">
         <div data-services-band>
         {/*
           Equal 3-up cards already fill max-w-6xl. Keep focusScale at 1 so the
@@ -116,7 +118,7 @@ export default function PageSections() {
                     <NearMount minHeight={160}>
                       <DepthFlipText
                         phrases={[proof.flipPhraseA, proof.flipPhraseB]}
-                        textColor={proof.flipColor === 'var(--home-text-dark)' ? 'var(--home-text-light)' : proof.flipColor}
+                        textColor={proof.flipColor === '#fcfaf2' || proof.flipColor === 'var(--home-text-dark)' ? 'var(--home-text-light)' : proof.flipColor}
                         backgroundColor="transparent"
                         fontClassName="font-nhg"
                         loop
@@ -197,16 +199,12 @@ export default function PageSections() {
           </SectionParallax>
         </SectionFocus>
 
-        <div className="relative">
+        <div className="relative isolate">
           <BeaconAnchor id="get-started" className="left-1/2 top-10 -translate-x-1/2" />
-          <DynamicWaveCanvas
-            waveSpeed={pageBg.waveSpeed}
-            waveStrength={pageBg.waveStrength}
-            waveAcidAmount={pageBg.waveAcidAmount}
-          />
+          <CtaAtmosphere settings={pageBg} />
           <MotionGetStarted />
         </div>
-        <SiteFooter tone="onDark" />
+        <SiteFooter tone="onDark" seamless />
       </div>
     </div>
   )

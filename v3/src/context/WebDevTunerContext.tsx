@@ -29,6 +29,7 @@ export type WebDevTuner = {
   letterSpacing: number
   opticalSize: number
   stretchStagger: number
+  hoverBoost: number
   stickyEyebrow: string
   stickyTitle: string
   step1Label: string
@@ -50,31 +51,38 @@ export type WebDevTuner = {
   testimonialTitle: string
   submitLabel: string
   boxRadius: number
-  grainOpacity: number
+  grainAmount: number
+  grainSize: number
+  grainContrast: number
+  grainBrightness: number
+  meshMotion: boolean
+  meshMotionAmount: number
+  meshMotionSpeed: number
   ctaHeadline: string
   ctaBlurb: string
   ctaLabel: string
 }
 
 /** bump clears stale localStorage that blocked live stretch edits */
-export const WEB_DEV_STORAGE_KEY = 'mr-v3-web-dev-v6'
+export const WEB_DEV_STORAGE_KEY = 'mr-v3-web-dev-v9'
 
 export const defaultWebDevTuner: WebDevTuner = {
   heroEyebrow: 'Capabilities · Web',
   heroTitle: 'Web Development',
   heroBlurb:
-    'A site that looks like your business and gives you room to grow. Built mobile-first, then scaled up.',
+    'Websites built to look polished, load fast, and turn visits into real inquiries.',
   stretchEnabled: true,
   stretchTarget: 'Development',
   stretchFont: 'roboto-flex',
   stretchCurve: 'ramp',
-  baseWidth: 78,
+  baseWidth: 45,
   peakWidth: 151,
-  customWidths: '78,96,118,136,151,145,140,130,120,110,100',
+  customWidths: '45,70,95,120,145,151,140,125,110,95,80',
   weight: 720,
   letterSpacing: -0.025,
   opticalSize: 120,
   stretchStagger: 0.05,
+  hoverBoost: 22,
   stickyEyebrow: 'How we build',
   stickyTitle: 'From brief to something people trust.',
   step1Label: 'Direction',
@@ -100,7 +108,13 @@ export const defaultWebDevTuner: WebDevTuner = {
   testimonialTitle: 'Words from people we built with.',
   submitLabel: 'Have we worked together?',
   boxRadius: 11,
-  grainOpacity: 0.07,
+  grainAmount: 100,
+  grainSize: 120,
+  grainContrast: 1.55,
+  grainBrightness: 1.1,
+  meshMotion: false,
+  meshMotionAmount: 0.65,
+  meshMotionSpeed: 1,
   ctaHeadline: 'Ready when you are.',
   ctaBlurb: 'Tell me what you need. I map the build from there.',
   ctaLabel: 'Start a project',
@@ -154,6 +168,7 @@ function buildTuner(raw: Record<string, unknown>, base: WebDevTuner): WebDevTune
     letterSpacing: num(g('letterSpacing', base.letterSpacing), base.letterSpacing),
     opticalSize: num(g('opticalSize', base.opticalSize), base.opticalSize),
     stretchStagger: num(g('stretchStagger', base.stretchStagger), base.stretchStagger),
+    hoverBoost: num(g('hoverBoost', base.hoverBoost), base.hoverBoost),
     stickyEyebrow: String(g('stickyEyebrow', base.stickyEyebrow)),
     stickyTitle: String(g('stickyTitle', base.stickyTitle)),
     step1Label: String(g('step1Label', base.step1Label)),
@@ -175,7 +190,20 @@ function buildTuner(raw: Record<string, unknown>, base: WebDevTuner): WebDevTune
     testimonialTitle: String(g('testimonialTitle', base.testimonialTitle)),
     submitLabel: String(g('submitLabel', base.submitLabel)),
     boxRadius: num(g('boxRadius', base.boxRadius), base.boxRadius),
-    grainOpacity: num(g('grainOpacity', base.grainOpacity), base.grainOpacity),
+    grainAmount: (() => {
+      const amt = num(g('grainAmount', base.grainAmount), NaN)
+      if (Number.isFinite(amt)) return amt
+      // migrate old grainOpacity (0–0.35) → amount 0–100
+      const legacy = num(g('grainOpacity', NaN), NaN)
+      if (Number.isFinite(legacy)) return Math.min(100, Math.round((legacy / 0.1) * 100))
+      return base.grainAmount
+    })(),
+    grainSize: num(g('grainSize', base.grainSize), base.grainSize),
+    grainContrast: num(g('grainContrast', base.grainContrast), base.grainContrast),
+    grainBrightness: num(g('grainBrightness', base.grainBrightness), base.grainBrightness),
+    meshMotion: Boolean(g('meshMotion', base.meshMotion)),
+    meshMotionAmount: num(g('meshMotionAmount', base.meshMotionAmount), base.meshMotionAmount),
+    meshMotionSpeed: num(g('meshMotionSpeed', base.meshMotionSpeed), base.meshMotionSpeed),
     ctaHeadline: String(g('ctaHeadline', base.ctaHeadline)),
     ctaBlurb: String(g('ctaBlurb', base.ctaBlurb)),
     ctaLabel: String(g('ctaLabel', base.ctaLabel)),
@@ -253,6 +281,13 @@ export function WebDevTunerProvider({
         step: 1,
         label: 'optical size',
       },
+      hoverBoost: {
+        value: initial.hoverBoost,
+        min: 0,
+        max: 50,
+        step: 1,
+        label: 'hover stretch boost',
+      },
     },
     { store },
   )
@@ -312,12 +347,53 @@ export function WebDevTunerProvider({
       ),
       Texture: folder(
         {
-          grainOpacity: {
-            value: initial.grainOpacity,
+          grainAmount: {
+            value: initial.grainAmount,
             min: 0,
-            max: 0.2,
-            step: 0.005,
-            label: 'grain',
+            max: 100,
+            step: 1,
+            label: 'grain amount',
+          },
+          grainSize: {
+            value: initial.grainSize,
+            min: 60,
+            max: 320,
+            step: 5,
+            label: 'grain size (chunkier ↑)',
+          },
+          grainContrast: {
+            value: initial.grainContrast,
+            min: 1,
+            max: 2.2,
+            step: 0.05,
+            label: 'grain contrast',
+          },
+          grainBrightness: {
+            value: initial.grainBrightness,
+            min: 0.8,
+            max: 1.4,
+            step: 0.02,
+            label: 'grain brightness',
+          },
+        },
+        { collapsed: false },
+      ),
+      'Hero mesh': folder(
+        {
+          meshMotion: { value: initial.meshMotion, label: 'animate wash on/off' },
+          meshMotionAmount: {
+            value: initial.meshMotionAmount,
+            min: 0,
+            max: 1,
+            step: 0.05,
+            label: 'how far it drifts',
+          },
+          meshMotionSpeed: {
+            value: initial.meshMotionSpeed,
+            min: 0.15,
+            max: 3,
+            step: 0.05,
+            label: 'how fast it moves',
           },
         },
         { collapsed: false },

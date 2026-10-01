@@ -18,10 +18,11 @@ export function Safari({
   return (
     <div
       className={cn(
-        'relative flex h-full w-full flex-col overflow-hidden rounded-[12px] bg-[#E5E5E5] shadow-[0_30px_70px_-40px_rgba(44,37,32,0.55)]',
+        'relative h-full w-full rounded-[12px] shadow-[0_28px_64px_-18px_rgba(44,37,32,0.48)]',
         className,
       )}
     >
+    <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[12px] bg-[#E5E5E5]">
       <div
         className="relative h-[42px] shrink-0 md:h-[52px]"
         style={{ opacity: 'calc(0.22 + var(--chrome, 1) * 0.78)' }}
@@ -42,20 +43,28 @@ export function Safari({
             d="M1.067 12C1.067 5.925 5.992 1 12.067 1H1189.93C1196.01 1 1200.93 5.925 1200.93 12V51H1.067V12Z"
             fill="#fff"
           />
-          <circle cx="27" cy="25" r="6" fill="#E5E5E5" />
-          <circle cx="47" cy="25" r="6" fill="#E5E5E5" />
-          <circle cx="67" cy="25" r="6" fill="#E5E5E5" />
           <path
             d="M286 17C286 13.686 288.686 11 292 11H946C949.314 11 952 13.686 952 17V35C952 38.314 949.314 41 946 41H292C288.686 41 286 38.314 286 35V17Z"
             fill="#E5E5E5"
           />
         </svg>
-        {/* icons sit on top so they don't get stretched by preserveAspectRatio=none */}
+        {/* Tiny traffic lights — scale with --chrome so early steps stay clear */}
+        <div
+          className="pointer-events-none absolute left-[8px] top-1/2 z-[2] flex origin-left -translate-y-1/2 items-center gap-[3px] md:left-[10px]"
+          style={{
+            transform: 'translateY(-50%) scale(calc(0.55 + var(--chrome, 1) * 0.45))',
+          }}
+        >
+          <span className="block h-[5px] w-[5px] shrink-0 rounded-full bg-[#FF5F57] md:h-[6px] md:w-[6px]" />
+          <span className="block h-[5px] w-[5px] shrink-0 rounded-full bg-[#FEBC2E] md:h-[6px] md:w-[6px]" />
+          <span className="block h-[5px] w-[5px] shrink-0 rounded-full bg-[#28C840] md:h-[6px] md:w-[6px]" />
+        </div>
+        {/* icons: inset from left so they never sit under the lights */}
         <svg
           viewBox="0 0 1202 52"
-          className="pointer-events-none absolute inset-0 h-full w-full"
+          className="pointer-events-none absolute bottom-0 right-0 top-0 z-[1] h-full w-[calc(100%-32px)] md:w-[calc(100%-38px)]"
           aria-hidden
-          preserveAspectRatio="xMidYMid meet"
+          preserveAspectRatio="xMinYMid meet"
         >
           <g className="mix-blend-luminosity">
             <path
@@ -101,6 +110,7 @@ export function Safari({
         </div>
       </div>
       <div className="relative h-full min-h-0 flex-1 overflow-hidden bg-[#f8f6f1]">{children}</div>
+    </div>
     </div>
   )
 }

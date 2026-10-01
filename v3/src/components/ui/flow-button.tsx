@@ -12,6 +12,8 @@ type FlowButtonProps = {
   icon?: ReactNode
   /** When true, drives the hand Lottie hover/tap interaction */
   getStartedTrigger?: boolean
+  /** Hero arms this after Get Started finishes entering */
+  ctaArmed?: boolean
   /** Smooth in-page scroll (e.g. Lenis) instead of hard jump */
   onNavigate?: (href: string) => void
 }
@@ -36,6 +38,7 @@ export function FlowButton({
   className,
   icon,
   getStartedTrigger = false,
+  ctaArmed = true,
   onNavigate,
 }: FlowButtonProps) {
   const filled = variant === 'filled'
@@ -50,6 +53,8 @@ export function FlowButton({
     const onMove = (e: PointerEvent) => {
       const el = elRef.current
       if (!el) return
+      // Stay quiet until hero arms the Get Started CTA (after it finishes animating in)
+      if (el.getAttribute('data-cta-armed') !== '1') return
       const r = el.getBoundingClientRect()
       const inside =
         e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom
@@ -59,13 +64,13 @@ export function FlowButton({
 
     window.addEventListener('pointermove', onMove, { passive: true })
     return () => window.removeEventListener('pointermove', onMove)
-  }, [getStartedTrigger, hover.activate, hover.deactivate])
+  }, [getStartedTrigger, hover.activate, hover.deactivate, ctaArmed])
 
   const classes = cn(
-    'group relative inline-flex items-center gap-1 overflow-hidden rounded-[10px] border-[1.5px] px-8 py-3 font-nhg text-sm font-medium cursor-pointer transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-transparent hover:rounded-[10px] hover:text-white active:scale-[0.95]',
+    'group relative inline-flex items-center gap-1 overflow-hidden rounded-[10px] border-[1.5px] px-8 py-3 font-nhg text-sm font-medium cursor-pointer transition-all duration-[600ms] ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-transparent hover:rounded-[10px] active:scale-[0.95]',
     filled
-      ? 'relative z-[12] border-transparent bg-[#1a1612] text-[#FCFAF2] hover:border-transparent hover:bg-[#1a1612]'
-      : 'border-[#333333]/40 bg-transparent text-[#111111]',
+      ? 'relative z-[12] border-transparent bg-home-acid text-home-on-light hover:border-transparent hover:bg-home-acid hover:text-home-on-dark'
+      : 'border-home-line/50 bg-transparent text-home-on-dark hover:text-home-on-dark',
     className,
   )
 
@@ -88,7 +93,10 @@ export function FlowButton({
 
   const bindHover = getStartedTrigger
     ? {
-        onFocus: (_e: FocusEvent) => hover.activate(),
+        onFocus: (_e: FocusEvent) => {
+          if (!ctaArmed) return
+          hover.activate()
+        },
         onBlur: (_e: FocusEvent) => {
           if (isCoarsePointer()) return
           hover.deactivate()
@@ -125,6 +133,7 @@ export function FlowButton({
         className={classes}
         style={{ textDecoration: 'none' }}
         data-get-started-btn={getStartedTrigger ? '1' : undefined}
+        data-cta-armed={getStartedTrigger ? (ctaArmed ? '1' : '0') : undefined}
         {...bindHover}
       >
         {inner}
@@ -138,6 +147,7 @@ export function FlowButton({
       type="button"
       className={classes}
       data-get-started-btn={getStartedTrigger ? '1' : undefined}
+      data-cta-armed={getStartedTrigger ? (ctaArmed ? '1' : '0') : undefined}
       {...bindHover}
     >
       {inner}

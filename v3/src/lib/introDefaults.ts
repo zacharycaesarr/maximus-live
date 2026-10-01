@@ -1,4 +1,4 @@
-export const INTRO_STORAGE_KEY = 'mr-v3-intro-tuner-v4'
+export const INTRO_STORAGE_KEY = 'mr-v3-intro-tuner-v5'
 export const INTRO_SESSION_KEY = 'hasSeenIntro'
 
 export const defaultIntroTuner = {
@@ -21,10 +21,10 @@ export const defaultIntroTuner = {
   easeX2: 0.3,
   easeY2: 1,
   /** Hero chrome fade duration after aperture unlocks */
-  fadeInMs: 980,
-  fadeInStaggerMs: 110,
-  /** Tiny pause after chrome unlock before first element moves */
-  chromeDelayMs: 140,
+  fadeInMs: 1280,
+  fadeInStaggerMs: 160,
+  /** Pause after unlock before left copy — room breathes first */
+  chromeDelayMs: 380,
   /** Aperture duration (ms) */
   apertureMs: 1400,
 }

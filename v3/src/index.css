@@ -56,6 +56,57 @@ body {
   position: relative;
 }
 
+/* Homepage: theme lives on #home-page; body just matches dark floor while home is open */
+html[data-home='1'] body,
+html[data-home='1'] #root {
+  background: var(--home-bg-dark, #080909);
+}
+
+#home-page {
+  /* Fallback defaults if Leva style has not hydrated yet */
+  --home-bg-light: #f3f0e8;
+  --home-bg-dark: #080909;
+  --home-surface-light: #f8f5ee;
+  --home-surface-dark: #11120e;
+  --home-text-light: #080909;
+  --home-text-dark: #f3f0e8;
+  --home-muted: #786f63;
+  --home-line: #d8d0c3;
+  --home-acid: #c8ff3d;
+  --home-bg-light-rgb: 243 240 232;
+  --home-bg-dark-rgb: 8 9 9;
+  --home-surface-light-rgb: 248 245 238;
+  --home-surface-dark-rgb: 17 18 14;
+  --home-text-light-rgb: 8 9 9;
+  --home-text-dark-rgb: 243 240 232;
+  --home-muted-rgb: 120 111 99;
+  --home-line-rgb: 216 208 195;
+  --home-acid-rgb: 200 255 61;
+}
+
+/* One static film grain layer, revealed only in the cream environment. */
+#page-sections::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/textures/cream-grain-64.png');
+  background-size: var(--home-cream-grain-size, 64px);
+  background-repeat: repeat;
+  opacity: var(--home-cream-grain-opacity, 0.03);
+  mask-image: linear-gradient(to bottom, transparent 0, transparent var(--home-cream-grain-start, 0px), black calc(var(--home-cream-grain-start, 0px) + 180px), black var(--home-cream-grain-end, 100%), transparent 100%);
+}
+
+@keyframes mr-cta-noise-drift {
+  0%, 100% { transform: translate3d(-2%, -1%, 0); }
+  50% { transform: translate3d(2%, 1%, 0); }
+}
+
+.mr-cta-noise {
+  animation: mr-cta-noise-drift 28s ease-in-out infinite;
+}
+
 #root {
   overflow-x: clip;
   max-width: 100%;

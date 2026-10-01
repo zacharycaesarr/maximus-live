@@ -89,6 +89,23 @@ export default function SectionFocus({
   const x = useSpring(rawX, { stiffness: springStiffness, damping: springDamping, mass: 0.4 })
   const y = useSpring(rawY, { stiffness: springStiffness, damping: springDamping, mass: 0.4 })
 
+  // Only promote a GPU layer while the block is near the viewport.
+  // Same motion, less permanent compositor cost across five homepage sections.
+  const [nearView, setNearView] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setNearView(true)
+      return undefined
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => setNearView(Boolean(entry?.isIntersecting)),
+      { rootMargin: '20% 0px' },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
     <div
       ref={ref}
@@ -96,8 +113,13 @@ export default function SectionFocus({
       data-parallax-pause
     >
       <motion.div
-        style={{ scale, x, y, transformOrigin: origin }}
-        className="will-change-transform"
+        style={{
+          scale,
+          x,
+          y,
+          transformOrigin: origin,
+          willChange: nearView ? 'transform' : 'auto',
+        }}
       >
         {children}
       </motion.div>

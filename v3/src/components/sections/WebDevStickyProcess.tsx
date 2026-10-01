@@ -33,8 +33,8 @@ type Props = {
 /**
  * How we build.
  * Desktop: stage pinned left, steps scroll right.
- * Mobile: window pinned in the middle of the phone. Copy swaps under it.
- * No scroll-snap / no lenis.scrollTo. Progress only. That was the glitch.
+ * Pin ends at the last-step CTA so the window never rides into testimonials.
+ * No overflow clip on this section — that broke pin end + ate the Safari shadow.
  */
 export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide = 'left' }: Props) {
   const [active, setActive] = useState(0)
@@ -53,15 +53,22 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
 
       mm.add('(min-width: 768px)', () => {
         const pinEl = deskCanvas.current
+        const cta = section.querySelector('[data-build-cta]') as HTMLElement | null
+        const lastStep = section.querySelector('[data-build-step-last]') as HTMLElement | null
+        const endEl = cta || lastStep
+
         const pin =
           pinEl && !reduced
             ? ScrollTrigger.create({
                 trigger: section,
                 start: 'top top+=88',
-                end: 'bottom bottom-=80',
+                endTrigger: endEl || section,
+                // unpin as soon as the Talk through button sits near the lower third
+                end: endEl ? 'bottom bottom-=80' : 'bottom bottom-=280',
                 pin: pinEl,
-                pinSpacing: false,
+                pinSpacing: true,
                 anticipatePin: 1,
+                invalidateOnRefresh: true,
               })
             : null
 
@@ -101,7 +108,7 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
   )
 
   useEffect(() => {
-    const t = window.setTimeout(() => ScrollTrigger.refresh(), 500)
+    const t = window.setTimeout(() => ScrollTrigger.refresh(), 400)
     return () => window.clearTimeout(t)
   }, [])
 
@@ -111,11 +118,11 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
     <section
       ref={sectionRef}
       id="how-we-build"
-      className="relative overflow-x-clip border-t border-espresso/8 bg-[#f7f7f5]"
+      className="relative border-t border-espresso/8 bg-[#f7f7f5]"
     >
       <div className="mx-auto max-w-6xl px-6 pt-16 md:pt-24">
         <Reveal>
-          <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+          <p className="font-switzer text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
             {eyebrow}
           </p>
           <h2 className="mt-3 max-w-xl font-tiempos text-[clamp(1.85rem,3.5vw,2.75rem)] font-light tracking-tight text-espresso">
@@ -124,18 +131,16 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
         </Reveal>
       </div>
 
-      {/* DESKTOP */}
       <div
         className={cn(
-          'mx-auto hidden max-w-6xl gap-12 px-6 pb-10 md:grid md:grid-cols-2 md:gap-16 md:pb-16',
+          'mx-auto hidden max-w-6xl gap-10 px-6 pb-16 md:grid md:grid-cols-[1.15fr_0.85fr] md:gap-12 md:pb-20 lg:gap-14',
           mediaSide === 'right' && 'md:[direction:rtl] md:[&>*]:[direction:ltr]',
         )}
       >
+        {/* padding keeps Safari shadow; no overflow-hidden here */}
         <div ref={deskCanvas} className="relative self-start pt-6">
-          <div className="w-full max-w-[480px]">
-            <div className="max-h-[min(560px,68vh)] overflow-hidden">
-              <BuildSiteCanvas activeStep={active} reducedMotion={!!reduced} />
-            </div>
+          <div className="w-full max-w-none px-3 pb-8 pt-2 md:max-w-[540px] lg:max-w-[600px]">
+            <BuildSiteCanvas activeStep={active} reducedMotion={!!reduced} />
             <StepDots n={n} active={active} className="mt-6" />
           </div>
         </div>
@@ -144,15 +149,17 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
           {steps.map((s, i) => (
             <article
               key={s.id}
+              data-build-step=""
+              {...(i === n - 1 ? { 'data-build-step-last': '' } : {})}
               ref={(el) => {
                 stepRefs.current[i] = el
               }}
               className={cn(
                 'flex flex-col justify-center border-b border-espresso/8 py-16 last:border-b-0',
-                i === n - 1 ? 'min-h-[62vh] pb-10' : 'min-h-[80vh]',
+                i === n - 1 ? 'min-h-[40vh] pb-12' : 'min-h-[80vh]',
               )}
             >
-              <p className="font-serotiva text-[11px] uppercase tracking-[0.16em] text-espresso/35">
+              <p className="font-switzer text-[11px] uppercase tracking-[0.16em] text-espresso/40">
                 Step {String(i + 1).padStart(2, '0')} · {s.label}
               </p>
               <h3
@@ -164,13 +171,13 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
               >
                 {s.heading}
               </h3>
-              <p className="mt-4 max-w-md font-serotiva text-[15px] font-medium leading-relaxed text-espresso/55">
+              <p className="mt-4 max-w-md font-switzer text-[15px] font-medium leading-relaxed text-espresso">
                 {s.body}
               </p>
               {s.bullets.length > 0 && (
                 <ul className="mt-5 space-y-2">
                   {s.bullets.map((b) => (
-                    <li key={b} className="font-serotiva text-sm text-espresso/45">
+                    <li key={b} className="font-switzer text-sm text-espresso">
                       · {b}
                     </li>
                   ))}
@@ -180,7 +187,8 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
                 <Link
                   to={s.ctaHref}
                   data-magnetic
-                  className="mt-8 inline-flex w-fit items-center gap-1.5 rounded-[11px] border border-white/50 bg-white/55 px-4 py-2.5 font-serotiva text-[13px] font-medium text-espresso no-underline shadow-[0_8px_24px_-12px_rgba(44,37,32,0.35)] backdrop-blur-[6px]"
+                  data-build-cta=""
+                  className="mt-8 inline-flex w-fit items-center gap-1.5 rounded-[11px] border border-white/50 bg-white/55 px-4 py-2.5 font-switzer text-[13px] font-medium text-espresso no-underline shadow-[0_8px_24px_-12px_rgba(44,37,32,0.35)] backdrop-blur-[6px]"
                 >
                   {s.ctaLabel}
                   <ArrowUpRight size={14} />
@@ -191,7 +199,6 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
         </div>
       </div>
 
-      {/* MOBILE — pinned window, copy under, smooth progress */}
       <div
         ref={mobileTrack}
         className="relative md:hidden"
@@ -212,13 +219,13 @@ export default function WebDevStickyProcess({ eyebrow, title, steps, mediaSide =
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute inset-x-0 top-0"
               >
-                <p className="font-serotiva text-[10px] uppercase tracking-[0.18em] text-espresso/40">
+                <p className="font-switzer text-[10px] uppercase tracking-[0.18em] text-espresso/40">
                   {String(active + 1).padStart(2, '0')} · {step.label}
                 </p>
                 <h3 className="mt-2 font-tiempos text-[1.45rem] font-light leading-[1.1] text-espresso">
                   {step.heading}
                 </h3>
-                <p className="mt-2 font-serotiva text-[13px] font-medium leading-relaxed text-espresso/55">
+                <p className="mt-2 font-switzer text-[13px] font-medium leading-relaxed text-espresso">
                   {step.body}
                 </p>
               </motion.div>
@@ -248,9 +255,6 @@ function StepDots({ n, active, className }: { n: number; active: number; classNa
           )}
         />
       ))}
-      <span className="ml-3 font-serotiva text-[10px] uppercase tracking-[0.14em] text-espresso/35">
-        {String(active + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}
-      </span>
     </div>
   )
 }

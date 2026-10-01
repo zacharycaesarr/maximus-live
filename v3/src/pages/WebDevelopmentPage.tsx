@@ -15,26 +15,19 @@ import { MagneticCursor } from '@/components/ui/magnetic-cursor'
 import WebDevCtaSlab from '@/components/sections/WebDevCtaSlab'
 import { StretchText } from '@/components/ui/StretchText'
 import GrainOverlay from '@/components/ui/GrainOverlay'
+import StaticMeshGradient from '@/components/ui/static-mesh-gradient'
+import HeroBottomBlend from '@/components/ui/HeroBottomBlend'
 import { Reveal } from '@/components/ui/reveal'
 import { NavTunerProvider } from '@/context/NavTunerContext'
 import { LenisTunerProvider } from '@/context/LenisTunerContext'
 import { FooterTunerProvider } from '@/context/FooterTunerContext'
 import { WebDevTunerProvider, useWebDevTuner } from '@/context/WebDevTunerContext'
-import type { PhoneImage } from '@/components/ui/phone-mockups'
+import type { PhoneBeforeAfterSlide } from '@/components/ui/PhoneBeforeAfterCarousel'
 
-const PHONES: PhoneImage[] = [
-  {
-    src: 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=800&q=75',
-    alt: 'Ridge Plumbing after — mobile',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&q=75',
-    alt: 'Northline Dental after — mobile',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=75',
-    alt: 'Ridge before contrast — mobile',
-  },
+const PHONE_SLIDES: PhoneBeforeAfterSlide[] = [
+  { id: 'northline', label: 'SMILEDESIGN' },
+  { id: 'summit', label: 'Rounds HVAC' },
+  { id: 'ridge', label: 'Precise Plumbing' },
 ]
 
 function buildStickySteps(t: ReturnType<typeof useWebDevTuner>): StickyStep[] {
@@ -80,7 +73,7 @@ const TESTIMONIALS: WebTestimonial[] = [
     excerpt: 'The new site finally looks like us. Calls started coming in…',
     name: 'Marcus R.',
     role: 'Owner',
-    company: 'Ridge Plumbing Co.',
+    company: 'Precise Plumbing',
     category: 'Website',
     metric: 'Clearer offers · stronger calls',
   },
@@ -91,7 +84,7 @@ const TESTIMONIALS: WebTestimonial[] = [
     excerpt: 'Patients can book without calling. That alone was worth…',
     name: 'Dr. Elena N.',
     role: 'Practice lead',
-    company: 'Northline Dental',
+    company: 'SMILEDESIGN',
     category: 'Website',
     metric: 'Booking path front and center',
   },
@@ -142,17 +135,35 @@ function WebDevMain() {
     opticalSize: t.opticalSize,
     stretchFont: t.stretchFont,
     stagger: t.stretchStagger,
+    hoverBoost: t.hoverBoost,
   }
 
   const page = (
-      <div className="mr-caps-page min-h-screen bg-[#f3efe8] md:cursor-none">
-        <GrainOverlay opacity={Math.max(0.055, t.grainOpacity)} />
+      <div className="mr-caps-page relative min-h-screen bg-[#f3efe8] md:cursor-none">
+        <StaticMeshGradient
+          className="fixed inset-0 z-0"
+          colorA="#f3efe8"
+          colorB="#ebe4da"
+          colorC="#d9c3b0"
+          colorD="#c4a574"
+          grain={0.03}
+          animated={t.meshMotion}
+          motionAmount={t.meshMotionAmount}
+          motionSpeed={t.meshMotionSpeed}
+        />
+        <GrainOverlay
+          amount={t.grainAmount}
+          grainSize={t.grainSize}
+          contrast={t.grainContrast}
+          brightness={t.grainBrightness}
+          blend="overlay"
+        />
         <DirectNav />
 
-        <section className="relative overflow-x-clip px-5 pb-12 pt-24 md:px-6 md:pb-20 md:pt-36">
+        <section className="relative z-[1] overflow-x-clip px-5 pb-24 pt-24 md:px-6 md:pb-36 md:pt-36">
           <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-16">
-            <Reveal>
-              <p className="mb-3 font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+            <Reveal duration={2.1} delay={0.08}>
+              <p className="mb-3 font-switzer text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
                 {t.heroEyebrow}
               </p>
               <h1 className="m-0 max-w-[18ch] text-[clamp(2.4rem,8vw,4.75rem)] font-light leading-[0.95] tracking-tight text-espresso">
@@ -178,29 +189,31 @@ function WebDevMain() {
                 })}
               </h1>
             </Reveal>
-            <Reveal delay={0.08}>
-              <p className="m-0 max-w-sm font-serotiva text-[15px] font-medium leading-relaxed text-espresso/55 md:pb-2">
+            <Reveal duration={2.1} delay={0.28}>
+              <p className="m-0 max-w-sm font-switzer text-[15px] font-medium leading-relaxed text-espresso md:pb-2">
                 {t.heroBlurb}
               </p>
             </Reveal>
           </div>
+          <HeroBottomBlend toColor="#f3f1ec" height={200} />
         </section>
 
-        <MobileFirstSection phones={PHONES} />
+        <div className="relative z-[1]">
+        <MobileFirstSection slides={PHONE_SLIDES} />
 
         <section className="overflow-x-clip border-t border-espresso/8 bg-[#f7f7f5]/80 px-5 py-14 md:px-6 md:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <Reveal>
-                <p className="font-serotiva text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
+              <Reveal duration={2.2} delay={0.04} y={42}>
+                <p className="font-switzer text-[11px] font-medium uppercase tracking-[0.18em] text-espresso/40">
                   {t.proofEyebrow}
                 </p>
                 <h2 className="mt-2 font-tiempos text-[clamp(1.75rem,3.5vw,2.5rem)] font-light tracking-tight text-espresso">
                   {t.proofTitle}
                 </h2>
               </Reveal>
-              <Reveal delay={0.1}>
-                <p className="max-w-xs font-serotiva text-sm font-medium text-espresso/50">{t.proofHint}</p>
+              <Reveal duration={2.2} delay={0.18} y={36}>
+                <p className="max-w-xs font-switzer text-sm font-medium text-espresso">{t.proofHint}</p>
               </Reveal>
             </div>
             <WebDevShowcase />
@@ -225,6 +238,7 @@ function WebDevMain() {
         <WebDevCtaSlab headline={t.ctaHeadline} blurb={t.ctaBlurb} label={t.ctaLabel} />
 
         <SiteFooter />
+        </div>
       </div>
   )
 

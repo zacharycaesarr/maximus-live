@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { LinkPreview } from '@/components/ui/link-preview'
+import { AdsLineHoverMock, WebsiteHoverMock } from '@/components/ui/faq-hover-previews'
 
 const PLACEHOLDER =
   'https://cdn.21st.dev/assets/mirror/bf/bfc82fd647c38dffaf3692024acb366ee99ca95b1338490cfec2c2340d3674a1.jpg'
@@ -10,9 +11,11 @@ export function faqRichAnswer(id: string, plain: string): ReactNode {
     case 'what-is-maximus':
       return (
         <>
-          I build <LinkPreview imageSrc={PLACEHOLDER}>websites</LinkPreview>, run{' '}
-          <LinkPreview imageSrc={PLACEHOLDER}>ads</LinkPreview>, and set up automation so your business
-          looks sharper and converts better. One partner who can ship the full digital growth stack.
+          I build{' '}
+          <LinkPreview preview={<WebsiteHoverMock />}>websites</LinkPreview>, run{' '}
+          <LinkPreview preview={<AdsLineHoverMock />}>ads</LinkPreview>, and set up automation so your
+          business looks sharper and converts better. One partner who can ship the full digital growth
+          stack.
         </>
       )
     case 'how-fast':
@@ -27,8 +30,8 @@ export function faqRichAnswer(id: string, plain: string): ReactNode {
       return (
         <>
           Owners and operators who want results without agency bloat. If you need a site that converts,{' '}
-          <LinkPreview imageSrc={PLACEHOLDER}>ads</LinkPreview> that do not bleed budget, and systems
-          that follow up for you, we are a fit.
+          <LinkPreview preview={<AdsLineHoverMock />}>ads</LinkPreview> that do not bleed budget, and
+          systems that follow up for you, we are a fit.
         </>
       )
     case 'pricing':
