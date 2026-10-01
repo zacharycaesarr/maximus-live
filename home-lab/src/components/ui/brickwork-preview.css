@@ -1,0 +1,15 @@
+.brickwork-preview { position: relative; overflow: hidden; background: #080909; color: #f3f0e8; container-type: inline-size; border: 1px solid #ffffff16; font-family: var(--ff-display); }
+.brickwork-preview-content { position: absolute; inset: 0; padding: 7cqw; text-align: left; }
+.brickwork-preview-heading { display: flex; align-items: center; gap: 2cqw; font-size: 2.6cqw; letter-spacing: .13em; font-weight: 600; }
+.brickwork-preview-heading span + span { color: #9ca49f; font-size: 1.9cqw; letter-spacing: .08em; border-left: 1px solid #ffffff30; padding-left: 2cqw; }
+.brickwork-preview-result { margin-top: 5cqw; display: flex; align-items: baseline; gap: 2cqw; }
+.brickwork-preview-result strong { font-size: 16cqw; letter-spacing: -.06em; line-height: 1; font-weight: 600; color: #c8ff3d; }
+.brickwork-preview-result > span { font-size: 3cqw; letter-spacing: .1em; color: #d6dbd7; }
+.brickwork-preview-bottom { position: absolute; bottom: 7cqw; left: 7cqw; right: 7cqw; display: flex; align-items: flex-end; justify-content: space-between; }
+.brickwork-preview-bottom > div > span { font-size: 2.1cqw; color: #9ca49f; letter-spacing: .08em; }
+.brickwork-preview-bottom p { margin: 1cqw 0 0; font-size: 4cqw; letter-spacing: -.02em; }
+.brickwork-preview-bottom p span { color: #8c9690; margin: 0 1cqw; }
+.brickwork-preview-bottom p strong { font-weight: 500; color: #c8ff3d; }
+.brickwork-preview-marks { display: flex; gap: 2cqw; }
+.brickwork-preview-marks svg { width: 3.5cqw; height: 3.5cqw; }
+.brickwork-preview-bars { position: absolute; right: 7cqw; top: 24cqw; width: 23cqw; height: auto; opacity: .85; }

@@ -9,6 +9,7 @@ import { parseProofProjects, type ProofProject } from '@/lib/proofDefaults'
 import { useProofTuner } from '@/context/ProofTunerContext'
 import ProofShowcaseModal from '@/components/ui/proof-showcase-modal'
 import { BuildCaseHoverCard } from '@/work-mockups/build-case-stages'
+import { BrickworkPreview } from '@/components/ui/brickwork-preview'
 
 const springTransition = {
   type: 'spring' as const,
@@ -38,55 +39,6 @@ const FAN_THUMB =
   'aspect-[720/460] h-auto w-20 sm:w-24 md:w-32 lg:w-36'
 const FAN_CENTER =
   'aspect-[720/460] h-auto w-[min(92vw,22rem)] sm:w-[26rem] md:w-[32rem] lg:w-[36rem]'
-
-function isAdsCockpitFan(project: ProofProject) {
-  return (
-    project.visualType === 'ads-cockpit' ||
-    project.title === 'Brickwork' ||
-    project.id === '2'
-  )
-}
-
-function AdsCockpitFanFace({
-  sizeClass,
-  onReady,
-  filter,
-  opacity,
-}: {
-  sizeClass: string
-  onReady?: () => void
-  filter?: string
-  opacity?: number
-}) {
-  useEffect(() => {
-    onReady?.()
-  }, [onReady])
-
-  return (
-    <div
-      className={cn(
-        'relative overflow-hidden rounded-md border border-dashed border-white/28 bg-[#0e0d0c]',
-        sizeClass,
-      )}
-      style={{ filter, opacity }}
-    >
-      <div className="absolute right-1.5 top-1.5 flex items-center gap-1.5 sm:right-2.5 sm:top-2.5 sm:gap-2">
-        <img src="/brand/meta.svg" alt="" className="h-4 w-4 sm:h-5 sm:w-5" />
-        <img src="/brand/google.svg" alt="" className="h-4 w-4 sm:h-5 sm:w-5" />
-      </div>
-      <div className="absolute inset-x-2 bottom-2 top-[26%] sm:inset-x-2.5 sm:bottom-2.5">
-        <div className="absolute bottom-5 left-2 h-[68%] w-[20%] rounded-sm bg-[#0081FB]/85 sm:left-2.5" />
-        <div className="absolute bottom-5 right-2 h-[92%] w-[20%] rounded-sm bg-[#34A853]/85 sm:right-2.5" />
-        <span className="absolute bottom-1.5 left-2 font-nhg text-[6px] font-medium uppercase tracking-[0.12em] text-white/50 sm:left-2.5 sm:text-[7px]">
-          47 CALLS
-        </span>
-        <span className="absolute bottom-1.5 right-2 font-nhg text-[6px] font-medium uppercase tracking-[0.12em] text-white/50 sm:right-2.5 sm:text-[7px]">
-          4.2x ROAS
-        </span>
-      </div>
-    </div>
-  )
-}
 
 function LottieFanFace({
   src,
@@ -206,9 +158,9 @@ function ProofFace({
     )
   }
 
-  if (isAdsCockpitFan(project)) {
+  if (project.visualType === 'brickwork-dashboard') {
     return (
-      <AdsCockpitFanFace
+      <BrickworkPreview
         sizeClass={sizeClass}
         onReady={onReady}
         filter={filter}
@@ -233,6 +185,10 @@ function ProofFace({
     <img
       src={project.image}
       alt=""
+      width={720}
+      height={460}
+      loading="lazy"
+      decoding="async"
       onLoad={onReady}
       className={cn('object-cover transition-[filter,opacity] duration-300', sizeClass)}
       style={{ filter, opacity }}
@@ -342,14 +298,14 @@ export function ImageFanCarousel({ className }: { className?: string }) {
   const centerScale = proof.centerScale
 
   return (
-    <div className={cn('relative w-full select-none py-6 sm:py-10', className)}>
+    <div className={cn('proof-fan relative w-full select-none py-6 sm:py-10', className)}>
       <div className="relative flex w-full flex-col items-center justify-center">
         <div
           ref={containerRef}
-          className="relative flex aspect-[5/3] w-[96%] max-w-3xl items-center justify-center"
+          className="proof-fan-stage relative flex aspect-[5/3] w-[96%] max-w-3xl items-center justify-center"
         >
           <div
-            className="relative h-full w-full"
+            className="proof-fan-orbit relative h-full w-full"
             style={{ perspective: radius * PERSPECTIVE_MULTIPLIER }}
           >
             {projects.map((project, index) => {
@@ -414,7 +370,7 @@ export function ImageFanCarousel({ className }: { className?: string }) {
                 animate={{ opacity: 1, scale: centerScale }}
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: CROSSFADE_DURATION_S, ease: CROSSFADE_EASE }}
-                className="pointer-events-auto relative cursor-pointer overflow-hidden rounded-2xl border-0 bg-transparent p-0 shadow-[0_10px_35px_rgba(0,0,0,0.18)]"
+                className="proof-fan-center pointer-events-auto relative cursor-pointer overflow-hidden rounded-2xl border-0 bg-transparent p-0 shadow-[0_10px_35px_rgba(0,0,0,0.18)]"
                 onClick={() => centerProject && openDetail(centerProject)}
                 aria-label={centerProject ? `Open ${centerProject.title}` : 'Open project'}
               >
@@ -423,6 +379,7 @@ export function ImageFanCarousel({ className }: { className?: string }) {
                   <ProofFace
                     project={centerProject}
                     sizeClass={cn(
+                      'proof-fan-face',
                       FAN_CENTER,
                       centerLoaded ? 'opacity-100' : 'opacity-0',
                     )}

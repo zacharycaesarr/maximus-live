@@ -1,0 +1,32 @@
+.dogguard-comparison { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.dogguard-stage {
+  --reveal: 50%;
+  position: relative;
+  width: min(100%, calc(min(48dvh, 420px) * 9 / 16));
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #111110;
+  box-shadow: 0 12px 32px #0005;
+  touch-action: pan-y;
+  user-select: none;
+  cursor: ew-resize;
+}
+.dogguard-video, .dogguard-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.dogguard-final { clip-path: inset(0 0 0 var(--reveal)); }
+.dogguard-poster { opacity: 1; transition: opacity 350ms ease; }
+.dogguard-poster-ready { opacity: 0; }
+.dogguard-label { position: absolute; top: 12px; padding: 5px 8px; border: 1px solid #ffffff35; border-radius: 6px; background: #111c; color: #fff; font-size: 10px; letter-spacing: .12em; pointer-events: none; }
+.dogguard-raw-label { left: 12px; }
+.dogguard-final-label { right: 12px; }
+.dogguard-divider { position: absolute; top: 0; bottom: 0; left: var(--reveal); width: 48px; transform: translateX(-50%); touch-action: pan-y; }
+.dogguard-divider::before { content: ''; position: absolute; inset: 0 auto 0 23px; width: 2px; background: #fff; box-shadow: 0 0 8px #0007; }
+.dogguard-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid #ffffffb3; border-radius: 50%; background: #191918bb; color: #fff; font-size: 20px; }
+.dogguard-divider:focus-visible .dogguard-handle { outline: 3px solid var(--home-acid, #c8ff3d); outline-offset: 3px; }
+.dogguard-play { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); padding: 10px 16px; border: 1px solid #ffffff60; border-radius: 20px; background: #111e; color: #fff; white-space: nowrap; cursor: pointer; }
+.dogguard-comparison figcaption { text-align: center; font-size: 12px; line-height: 1.5; }
+.dogguard-caption { display: block; margin-top: 3px; font-size: 11px; opacity: .8; }
+.dogguard-mobile-hint { display: none; }
+@media (max-width: 767px) { .dogguard-desktop-hint { display: none; } .dogguard-mobile-hint { display: inline; } }
+@media (min-width: 768px) { .dogguard-stage { width: min(100%, calc(min(540px, 85dvh - 220px) * 9 / 16)); } }
+@media (prefers-reduced-motion: reduce) { .dogguard-poster { transition: none; } }

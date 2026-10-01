@@ -123,6 +123,27 @@ html[data-home='1'] #root {
 #page-sections #faq { padding-top: 20px; padding-bottom: 24px; }
 @media (max-width: 767px) {
   .home-proof-focus { margin-bottom: 16px; }
+  .proof-fan,
+  .proof-fan-stage {
+    min-width: 0;
+    max-width: 100%;
+  }
+  /* Reserve room for the existing 1.15 card and 1.05 section focus animations. */
+  .proof-fan .proof-fan-center {
+    width: 80%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .proof-fan-center .proof-fan-face {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+  }
+  /* Fit the existing 3D fan orbit too, rather than clipping its side previews. */
+  .proof-fan-orbit {
+    scale: 0.5;
+  }
   .home-why-band { padding-top: 0; margin-top: 0; margin-bottom: 0; }
   .home-faq-focus { margin-bottom: 8px; }
   #page-sections #faq { padding-top: 24px; padding-bottom: 24px; }

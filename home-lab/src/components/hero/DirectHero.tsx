@@ -1,14 +1,12 @@
 import { motion, type Variants } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { ChevronDown, Rocket } from 'lucide-react'
 import HeroKineticText from './HeroKineticText'
-import HandReachLottie from './HandReachLottie'
 import HeroBgParallax from './HeroBgParallax'
 import HeroContentParallax from './HeroContentParallax'
 import HeroVideoBackground from './HeroVideoBackground'
 import { FlowButton } from '@/components/ui/flow-button'
 import { PortalIcon } from '@/components/ui/icons-portal'
-import { MeshWaveBackground } from '@/components/ui/mesh-wave-background'
 import { cn } from '@/lib/utils'
 import { useHeroTextTuner } from '@/context/HeroTextTunerContext'
 import { useHeroLayoutTuner } from '@/context/HeroLayoutTunerContext'
@@ -17,6 +15,9 @@ import { useIntroTuner } from '@/context/IntroTunerContext'
 import { useLenisScroll } from '@/components/SmoothScroll'
 import { splitSubhead } from '@/lib/heroLayoutDefaults'
 import WordSlideUp from './WordSlideUp'
+
+const HandReachLottie = lazy(() => import('./HandReachLottie'))
+const MeshWaveBackground = lazy(() => import('@/components/ui/mesh-wave-background').then(module => ({ default: module.MeshWaveBackground })))
 
 /**
  * Left copy over desk-loop video. Breathe delay before chrome so the room reads first.
@@ -97,7 +98,8 @@ export default function DirectHero() {
 
   const left = layout.heroAlign === 'left'
   const onDark = left && layout.bgVideoEnabled
-  const blockScale = layout.copyScale ?? 1
+  // Mobile: desktop copyScale (often >1) blows the rotating phrase past the screen edges
+  const blockScale = isMobile ? 1 : (layout.copyScale ?? 1)
   const btnScale = layout.ctaScale ?? 1
   // Mobile: ignore desktop Leva copy offsets so everything stays centered near the top
   const copyX = isMobile ? 0 : (layout.copyOffsetX ?? 0)
@@ -149,7 +151,7 @@ export default function DirectHero() {
           />
         ) : (
           <HeroBgParallax className="absolute inset-[-4%] h-[108%] w-[108%]">
-            <MeshWaveBackground
+            <Suspense fallback={null}><MeshWaveBackground
               settings={{
                 color0: bg.color0,
                 color1: bg.color1,
@@ -160,12 +162,12 @@ export default function DirectHero() {
                 wireOpacity: bg.wireOpacity,
                 vignetteStrength: bg.vignetteStrength,
               }}
-            />
+            /></Suspense>
           </HeroBgParallax>
         )}
       </motion.div>
 
-      {chromeVisible && ctaArmed ? <HandReachLottie /> : null}
+      {chromeVisible && ctaArmed ? <Suspense fallback={null}><HandReachLottie /></Suspense> : null}
 
       <HeroContentParallax className="relative z-[4] flex flex-1 flex-col">
         <motion.div

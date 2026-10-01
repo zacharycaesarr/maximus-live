@@ -1,12 +1,12 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef } from 'react'
 import DepthFlipText from '@/components/ui/depth-flip-text'
-import ImageFanCarousel from '@/components/ui/image-fan-carousel'
 import { FaqPro } from '@/components/ui/faq-pro'
 import SectionFocus, { SectionParallax } from '@/components/sections/SectionFocus'
 import HowItWorksSection from '@/components/sections/HowItWorksSection'
 import ServicesOverviewCards from '@/components/sections/ServicesOverviewCards'
 import { useServicesOverviewTuner } from '@/context/ServicesOverviewTunerContext'
 import WhyComparisonMatrix from '@/components/sections/WhyComparisonMatrix'
+import { WhyVisualTuner } from '@/components/sections/WhyVisualTuner'
 import MotionGetStarted from '@/components/sections/MotionGetStarted'
 import CreamNodeLayer from '@/components/sections/CreamNodeLayer'
 import SiteFooter from '@/components/sections/SiteFooter'
@@ -21,6 +21,8 @@ import { useHomeLevaStore } from '@/context/HomeLevaStoreContext'
 import { NearMount } from '@/components/NearMount'
 import { cn } from '@/lib/utils'
 import './closing-scene.css'
+
+const ImageFanCarousel = lazy(() => import('@/components/ui/image-fan-carousel'))
 
 /** Section titles on dark environment */
 const titleOnDark = 'text-home-on-dark'
@@ -47,8 +49,6 @@ function CtaPaintedBeaconAnchor() {
     const picture = scene?.querySelector<HTMLElement>('.mr-closing-art')
     const image = picture?.querySelector('img')
     if (!anchor || !scene || !picture || !image) return undefined
-    // Prepare only the picture-selected artwork before its first visible paint.
-    void image.decode().catch(() => undefined)
     const measure = () => {
       if (!image.naturalWidth || !image.naturalHeight) return
       const mobile = window.matchMedia('(max-width: 767px)').matches
@@ -185,7 +185,7 @@ export default function PageSections() {
                       />
                     </NearMount>
                   </div>
-                  <div data-home-reveal><NearMount minHeight={420}><ImageFanCarousel /></NearMount></div>
+                  <div data-home-reveal><NearMount minHeight={420}><Suspense fallback={<div style={{ minHeight: 420 }} />}><ImageFanCarousel /></Suspense></NearMount></div>
                 </>
               )}
             </section>
@@ -196,7 +196,7 @@ export default function PageSections() {
           <BeaconAnchor id="how-it-works" className="left-1/2 top-6 -translate-x-1/2" />
           <HowItWorksSection />
         </div>
-        <div className="home-why-band"><WhyComparisonMatrix /></div>
+        <div className="home-why-band"><WhyVisualTuner><WhyComparisonMatrix /></WhyVisualTuner></div>
 
         <SectionFocus align="left" idleScale={0.86} focusScale={1} idleOffsetX={28} className="home-focus-tight home-faq-focus">
           <SectionParallax>
@@ -229,7 +229,7 @@ export default function PageSections() {
           <CtaPaintedBeaconAnchor />
           <picture className="mr-closing-art" aria-hidden="true">
             <source media="(max-width: 767px)" srcSet="/images/cta/maximus-cta-mobile.webp" type="image/webp" />
-            <img src="/images/cta/maximus-cta-desktop.webp" alt="" decoding="async" />
+            <img src="/images/cta/maximus-cta-desktop.webp" alt="" decoding="async" loading={window.location.hash === '#get-started' ? 'eager' : 'lazy'} />
           </picture>
           <MotionGetStarted />
           <SiteFooter tone="onLight" seamless />

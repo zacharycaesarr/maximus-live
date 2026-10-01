@@ -24,12 +24,12 @@ function PanelCopy({ index }: { index: number }) {
   </div>
 }
 
-function VisualPanel({ index, label, scrollProgress, windowRange, testimonialsPlaying }: {
-  index: number; label: string; scrollProgress: MotionValue<number>; windowRange: [number, number]; testimonialsPlaying: boolean
+function VisualPanel({ index, label, scrollProgress, windowRange, testimonialsPlaying, isActive }: {
+  index: number; label: string; scrollProgress: MotionValue<number>; windowRange: [number, number]; testimonialsPlaying: boolean; isActive: boolean
 }) {
   const progress = useTransform(scrollProgress, windowRange, [0, 1])
   return <div className="mr-why-visual-panel" data-home-reveal>
-    <WhyFeatureStage active={index} reducedMotion={false} label={label} progress={progress} testimonialsPlaying={testimonialsPlaying} />
+    <WhyFeatureStage active={index} reducedMotion={false} label={label} progress={progress} isActive={isActive} testimonialsPlaying={testimonialsPlaying} />
   </div>
 }
 
@@ -90,7 +90,7 @@ export default function WhyComparisonMatrix() {
       desktopActiveRef.current = nextActive
       setDesktopActive(nextActive)
     }
-    const nextTestimonialsActive = progress >= .86 && progress <= 1
+    const nextTestimonialsActive = progress >= .97 && progress <= 1
     if (nextTestimonialsActive !== testimonialsActiveRef.current) {
       testimonialsActiveRef.current = nextTestimonialsActive
       setTestimonialsActive(nextTestimonialsActive)
@@ -99,8 +99,7 @@ export default function WhyComparisonMatrix() {
 
   const selectMobile = (index: number) => {
     const carousel = carouselRef.current
-    const panel = carousel?.children[index] as HTMLElement | undefined
-    if (carousel && panel) carousel.scrollTo({ left: panel.offsetLeft - carousel.offsetLeft, behavior: reducedMotion ? 'instant' : 'smooth' })
+    if (carousel) carousel.scrollTo({ left: index * carousel.clientWidth, behavior: 'smooth' })
     setMobileActive(index)
   }
 
@@ -121,7 +120,7 @@ export default function WhyComparisonMatrix() {
       {!isMobile && !reducedMotion && <div className="mr-why-desktop-viewport">
         <div ref={visualViewportRef} className="mr-why-visual-viewport">
           <motion.div ref={visualTrackRef} className="mr-why-track" style={{ x }}>
-            {reasons.map((reason, index) => <VisualPanel key={reason.title} index={index} label={reason.label} scrollProgress={index === 0 ? scrollYProgress : reelProgress} windowRange={index === 0 ? [0, FIRST_PANEL_ASSEMBLY_END] : panelWindows[index] ?? [index / 4, Math.min(1, (index + .7) / 4)]} testimonialsPlaying={index === 4 && testimonialsActive} />)}
+            {reasons.map((reason, index) => <VisualPanel key={reason.title} index={index} label={reason.label} scrollProgress={index === 0 ? scrollYProgress : reelProgress} windowRange={index === 0 ? [0, FIRST_PANEL_ASSEMBLY_END] : panelWindows[index] ?? [index / 4, Math.min(1, (index + .7) / 4)]} isActive={index === desktopActive} testimonialsPlaying={index === 4 && index === desktopActive && testimonialsActive} />)}
           </motion.div>
         </div>
         <div className="mr-why-copy-viewport">

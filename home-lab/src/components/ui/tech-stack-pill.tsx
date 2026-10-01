@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { techLogoUrl } from '@/lib/techLogos'
 import { AfterEffectsMark } from '@/components/ui/after-effects-mark'
+import { PremiereProMark } from '@/components/ui/premiere-pro-mark'
 
 export function TechStackPill({ name }: { name: string }) {
   const logo = techLogoUrl(name)
@@ -11,7 +12,9 @@ export function TechStackPill({ name }: { name: string }) {
 
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-home-surface-light/90 px-2.5 py-1 font-nhg text-[11px] text-home-on-light">
-      {showFallback ? (
+      {name === 'Premiere Pro' ? (
+        <PremiereProMark className="h-5 w-5 shrink-0 rounded-[3px]" />
+      ) : showFallback ? (
         <AfterEffectsMark className="h-5 w-5 shrink-0 rounded-[3px]" />
       ) : showImg ? (
         <img

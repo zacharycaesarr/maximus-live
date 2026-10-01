@@ -107,7 +107,7 @@ export function ProofTunerProvider({ store, children }: { store: LevaStore; chil
                 value: 'autoscroll',
                 options: {
                   Autoscroll: 'autoscroll',
-                  'Ads cockpit': 'ads-cockpit',
+                  'Brickwork dashboard': 'brickwork-dashboard',
                   Lottie: 'lottie',
                 },
                 label: 'visual type',

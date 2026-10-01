@@ -87,6 +87,7 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
     let route: Point[] = []
     let pageTop = 0
     let sceneOffset: Point = { x: 0, y: 0 }
+    let whyBounds: { start: number; end: number } | null = null
     let mobileArrivalLead = 240
     const moveX = gsap.quickTo(beacon, 'x', { duration: reduced ? 0 : Math.min(.38, scrub), ease: 'power2.out' })
     const moveY = gsap.quickTo(beacon, 'y', { duration: reduced ? 0 : Math.min(.38, scrub), ease: 'power2.out' })
@@ -115,6 +116,12 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
         }
       }
       pageTop = page.getBoundingClientRect().top + window.scrollY
+      const why = page.querySelector<HTMLElement>('#why-maximus')
+      if (why) {
+        const pageRect = page.getBoundingClientRect()
+        const rect = why.getBoundingClientRect()
+        whyBounds = { start: rect.top - pageRect.top, end: rect.bottom - pageRect.top }
+      }
       const title = ctaScene?.querySelector<HTMLElement>('.mr-closing-headline')
       if (title && route.length) {
         const titleRect = title.getBoundingClientRect()
@@ -159,7 +166,11 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
       }
       const final = route[route.length - 1]
       const arrival = clamp01((cursor - (final.y - ctaFadeBefore)) / ctaFadeLength)
-      const opacity = glowOpacity * (1 - arrival)
+      // Let the route continue behind Why while the marker stays quiet there.
+      const whyQuiet = whyBounds
+        ? clamp01((cursor - whyBounds.start + 80) / 120) * (1 - clamp01((cursor - whyBounds.end + 40) / 120))
+        : 0
+      const opacity = glowOpacity * (1 - arrival) * (1 - whyQuiet * .9)
       const localReveal = ctaScene ? Math.max(0, Math.min(1, (point.y - sceneOffset.y) / 28)) : 0
       moveX(point.x)
       moveY(point.y)
@@ -205,7 +216,7 @@ export default function ReachBeacon({ store }: { store?: LevaStore }) {
     <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true" data-reach-beacon-root>
       <svg className="absolute inset-0 h-full w-full overflow-visible" fill="none" aria-hidden="true"><path ref={routeRef} stroke="rgba(53,77,47,.17)" strokeWidth="1" strokeDasharray="2 8" /></svg>
       <div ref={beaconRef} style={{ opacity: 0 }} className="pointer-events-none absolute left-0 top-0 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#1d3219]/70 bg-[#C8FF3D] shadow-[0_0_0_3px_rgba(63,92,39,.17),0_0_10px_3px_rgba(200,255,61,.48)] will-change-transform" />
-      {ctaScene && createPortal(<div className="pointer-events-none absolute inset-0 z-[2]" aria-hidden="true" data-reach-beacon-cta-layer>
+      {ctaScene && createPortal(<div className="pointer-events-none absolute inset-0 z-[11]" aria-hidden="true" data-reach-beacon-cta-layer>
         <div ref={ctaBeaconRef} style={{ opacity: 0 }} className="pointer-events-none absolute left-0 top-0 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#1d3219]/70 bg-[#C8FF3D] shadow-[0_0_0_3px_rgba(63,92,39,.17),0_0_10px_3px_rgba(200,255,61,.48)] will-change-transform" />
       </div>, ctaScene)}
     </div>

@@ -1,22 +1,34 @@
 'use client'
 
-import { useEffect } from 'react'
+import { createContext, lazy, Suspense, useContext, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
 import { Check, X } from 'lucide-react'
 import { Lottie } from 'lottie-react'
 import type { ProofProject } from '@/lib/proofDefaults'
 import { ProofCategoryIcon } from '@/lib/proofCategoryIcons'
 import { TechStackPill } from '@/components/ui/tech-stack-pill'
 import { BuildCaseStage } from '@/work-mockups/build-case-stages'
-import {
-  AnimatedCard,
-  CardBody,
-  CardDescription,
-  CardTitle,
-  CardVisual,
-  Visual1,
-} from '@/components/ui/animated-card'
+import { BrickworkPreview } from '@/components/ui/brickwork-preview'
+
+// Merely opening Proof or rotating the homepage fan never invokes this import.
+const DogGuardComparison = lazy(() => import('./dogguard-comparison'))
+const BrickworkDashboard = lazy(() => import('./brickwork-dashboard'))
+const ActiveProofProject = createContext<string | null>(null)
+
+function DogGuardPoster() {
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <img
+        src="/proof/dogguard-poster.webp"
+        alt="Dog Guard of the Valley short-form creative"
+        className="aspect-[9/16] rounded-2xl object-contain"
+        style={{ width: 'min(100%, calc(min(48dvh, 420px) * 9 / 16))' }}
+      />
+      <p className="m-0 text-center font-nhg text-xs text-home-muted">Raw footage → finished short-form creative</p>
+    </div>
+  )
+}
 
 function AutoscrollClean({ image, title }: { image: string; title: string }) {
   return (
@@ -71,36 +83,6 @@ function BuildCaseHomepage({ project }: { project: ProofProject }) {
   )
 }
 
-/** Exact Ads Reporting visual — AnimatedCard + Visual1 */
-function AdsCockpitRidge({ project }: { project: ProofProject }) {
-  const title = project.adsTitle || 'Brickwork - Meta'
-  const hoverBody = project.adsBody || 'Spent $7K - 74 calls - 22 booked'
-  return (
-    <div className="flex h-full min-h-[280px] items-center justify-center md:min-h-[360px]">
-      <div className="w-full max-w-[380px] rounded-2xl border border-dashed border-home-line/40 p-3">
-        <AnimatedCard className="w-full max-w-[356px] border-home-line/25 bg-home-surface-dark/80 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.45)]">
-          <CardVisual className="w-full !h-[200px] !w-full max-w-[356px]">
-            <Visual1
-              mainColor="#0081FB"
-              secondaryColor="#34A853"
-              layer4Title={title}
-              layer4Body={hoverBody}
-            />
-          </CardVisual>
-          <CardBody className="border-home-line/20">
-            <CardTitle className="font-switzer !text-home-on-dark">
-              {title}
-            </CardTitle>
-            <CardDescription className="font-switzer !text-home-muted">
-              {project.metricHighlight || '3.8x ROAS'}
-            </CardDescription>
-          </CardBody>
-        </AnimatedCard>
-      </div>
-    </div>
-  )
-}
-
 function LottiePreview({ src }: { src?: string }) {
   return (
     <div className="flex h-[280px] items-center justify-center overflow-hidden rounded-2xl border border-home-line/25 bg-home-surface-dark md:h-[360px]">
@@ -114,7 +96,17 @@ function LottiePreview({ src }: { src?: string }) {
 }
 
 function MediaPane({ project }: { project: ProofProject }) {
-  if (project.visualType === 'ads-cockpit') return <AdsCockpitRidge project={project} />
+  const activeId = useContext(ActiveProofProject)
+  if (project.visualType === 'video-comparison') {
+    // Exiting animated projects retain their old props, but see the live context.
+    if (activeId !== project.id) return <DogGuardPoster />
+    return <Suspense fallback={<DogGuardPoster />}><DogGuardComparison /></Suspense>
+  }
+  if (project.visualType === 'brickwork-dashboard') {
+    const preview = <BrickworkPreview sizeClass="aspect-[720/460] w-full rounded-2xl" />
+    if (activeId !== project.id) return preview
+    return <Suspense fallback={preview}><BrickworkDashboard /></Suspense>
+  }
   if (project.visualType === 'lottie') return <LottiePreview src={project.mediaUrl} />
   if (project.visualType === 'build-case' || project.buildCaseId) {
     return <BuildCaseHomepage project={project} />
@@ -144,6 +136,8 @@ export default function ProofShowcaseModal({
   onNext,
   titleSize = 28,
 }: Props) {
+  const isPresent = useIsPresent()
+  const tallMedia = project.visualType === 'video-comparison' || project.visualType === 'brickwork-dashboard'
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -213,16 +207,18 @@ export default function ProofShowcaseModal({
           </button>
         </div>
 
+        <ActiveProofProject.Provider value={isPresent ? project.id : null}>
         <AnimatePresence mode="wait">
           <motion.div
             key={project.id}
-            className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto md:grid-cols-5 md:overflow-hidden"
+            className={`grid min-h-0 flex-1 grid-cols-1 overflow-y-auto md:grid-cols-5 md:overflow-hidden${tallMedia ? ' auto-rows-max md:auto-rows-auto' : ''}`}
+            data-lenis-prevent={tallMedia ? '' : undefined}
             initial={{ opacity: 0, x: 18 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -18 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="min-h-0 overflow-hidden p-4 md:col-span-3 md:p-5">
+            <div className={project.visualType === 'brickwork-dashboard' ? 'min-w-0 p-4 md:col-span-3 md:min-h-0 md:overflow-y-auto md:p-5' : project.visualType === 'video-comparison' ? 'p-4 md:col-span-3 md:min-h-0 md:overflow-hidden md:p-5' : 'min-h-0 overflow-hidden p-4 md:col-span-3 md:p-5'}>
               <MediaPane project={project} />
             </div>
             <div className="flex flex-col border-t border-home-line/20 p-4 md:col-span-2 md:border-l md:border-t-0 md:p-5">
@@ -261,6 +257,7 @@ export default function ProofShowcaseModal({
             </div>
           </motion.div>
         </AnimatePresence>
+        </ActiveProofProject.Provider>
 
         <div className="flex flex-col gap-3 border-t border-home-line/20 px-4 py-3 md:grid md:grid-cols-[1fr_auto_1fr] md:items-center md:px-5">
           <p className="m-0 order-1 font-nhg text-[11px] text-home-muted md:order-none">

@@ -180,7 +180,9 @@ export default function HeroKineticText({
         settings.phraseHoverEnabled && !isMobile
           ? settings.phraseArrowSize + settings.phraseArrowGap + 8
           : 0
-      const available = Math.max(60, wrap.clientWidth - arrowReserve)
+      // Mobile: leave a little side breathing room so long phrases stay inside the screen
+      const sidePad = isMobile ? 12 : 0
+      const available = Math.max(60, wrap.clientWidth - arrowReserve - sidePad)
       const needed = probe.scrollWidth
       setPhraseMinW(needed + arrowReserve)
       if (available <= 0 || needed <= 0) return
@@ -281,9 +283,11 @@ export default function HeroKineticText({
   }
 
   if (useStack) {
+    // Mobile: slightly lower floor so long rotating phrases (e.g. "improve my SEO") stay on-screen
+    const phraseFloor = isMobile ? 18 : 22
     const phrasePx = phraseWraps
-      ? Math.max(22, Math.min(settings.fontSize, settings.fontSize * Math.max(fitScale, 0.72)))
-      : Math.max(22, settings.fontSize * fitScale)
+      ? Math.max(phraseFloor, Math.min(settings.fontSize, settings.fontSize * Math.max(fitScale, isMobile ? 0.62 : 0.72)))
+      : Math.max(phraseFloor, settings.fontSize * fitScale)
     const lineH = Math.max(settings.lineHeight, 1.05)
     // Always reserve 2 lines so rotating phrases never shove subtext/buttons
     const slotH = Math.ceil(phrasePx * lineH * 2.15 + 8)
@@ -379,16 +383,24 @@ export default function HeroKineticText({
                 }}
               >
                 <span
-                  className="pointer-events-none inline-flex max-w-full items-center justify-center"
+                  className="pointer-events-none inline-flex w-full max-w-full items-center justify-center"
                   style={{
                     fontSize: `${phrasePx}px`,
                     fontWeight: settings.phraseWeight,
                     gap: !isMobile && settings.phraseHoverEnabled ? settings.phraseArrowGap : 0,
                     textAlign: 'center',
-                    minWidth: phraseMinW > 0 ? Math.min(phraseMinW, wrapRef.current?.clientWidth || phraseMinW) : undefined,
+                    // Desktop keeps minWidth for hover/arrow layout. Mobile: never force a
+                    // wider box than the screen (that was shoving long phrases off the left).
+                    minWidth:
+                      !isMobile && phraseMinW > 0
+                        ? Math.min(phraseMinW, wrapRef.current?.clientWidth || phraseMinW)
+                        : undefined,
                   }}
                 >
-                  <span className="block w-full text-center" style={{ maxWidth: 'min(100%, 34ch)' }}>
+                  <span
+                    className="block w-full text-center"
+                    style={{ maxWidth: isMobile ? '100%' : 'min(100%, 34ch)' }}
+                  >
                     <BlurOutWords
                       key={phraseKey}
                       text={phrase}
