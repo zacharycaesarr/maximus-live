@@ -70,6 +70,7 @@ export const defaultProofProjects: ProofProject[] = [
     techStack: ['After Effects', 'Premiere Pro'],
     visualType: 'video-comparison',
     image: '/proof/dogguard-cover.webp',
+    logoUrl: '/proof/dogguard-logo.png',
   },
   {
     id: '4',
