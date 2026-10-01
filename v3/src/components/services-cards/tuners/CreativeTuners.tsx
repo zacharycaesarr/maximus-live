@@ -1,7 +1,7 @@
-import { button, folder, LevaInputs, useControls } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
-import { CREATIVE_POSES, creativePose, type CreativePose } from '../scenes/creativeGeometry'
-import { persistedSchema } from './persistTuners'
+import { button, folder, LevaInputs, useControls } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
+import { CREATIVE_POSES, creativePose, type CreativePose } from '@/components/services-cards/scenes/creativeGeometry'
+import { persistedSchema } from '@/components/services-cards/tuners/persistTuners'
 
 function poseControls(prefix: string, p: CreativePose) {
   return {

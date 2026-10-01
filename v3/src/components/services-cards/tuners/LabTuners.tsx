@@ -1,7 +1,7 @@
-import { useControls, folder, button } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
-import { webDetailControls } from './WebDetailControls'
-import { persistedSchema } from './persistTuners'
+import { useControls, folder, button } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
+import { webDetailControls } from '@/components/services-cards/tuners/WebDetailControls'
+import { persistedSchema } from '@/components/services-cards/tuners/persistTuners'
 
 /** Web card Leva folders. Returns values mapped for CSS vars. */
 export function useLabTuners(onReplayIntro: () => void = () => {}, store?: LevaStore) {

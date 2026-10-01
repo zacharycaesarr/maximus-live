@@ -194,7 +194,7 @@ function buildTuner(raw: Record<string, unknown>, base: WebDevTuner): WebDevTune
       const amt = num(g('grainAmount', base.grainAmount), NaN)
       if (Number.isFinite(amt)) return amt
       // migrate old grainOpacity (0–0.35) → amount 0–100
-      const legacy = num(g('grainOpacity', NaN), NaN)
+      const legacy = num(pick(raw, 'grainOpacity'), NaN)
       if (Number.isFinite(legacy)) return Math.min(100, Math.round((legacy / 0.1) * 100))
       return base.grainAmount
     })(),

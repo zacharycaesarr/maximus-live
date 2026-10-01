@@ -66,21 +66,21 @@ html[data-home='1'] #root {
   /* Fallback defaults if Leva style has not hydrated yet */
   --home-bg-light: #f3f0e8;
   --home-bg-dark: #080909;
-  --home-surface-light: #f8f5ee;
+  --home-surface-light: #faf8f2;
   --home-surface-dark: #11120e;
   --home-text-light: #080909;
   --home-text-dark: #f3f0e8;
-  --home-muted: #786f63;
-  --home-line: #d8d0c3;
+  --home-muted: #67706a;
+  --home-line: #d9ded8;
   --home-acid: #c8ff3d;
   --home-bg-light-rgb: 243 240 232;
   --home-bg-dark-rgb: 8 9 9;
-  --home-surface-light-rgb: 248 245 238;
+  --home-surface-light-rgb: 250 248 242;
   --home-surface-dark-rgb: 17 18 14;
   --home-text-light-rgb: 8 9 9;
   --home-text-dark-rgb: 243 240 232;
-  --home-muted-rgb: 120 111 99;
-  --home-line-rgb: 216 208 195;
+  --home-muted-rgb: 103 112 106;
+  --home-line-rgb: 217 222 216;
   --home-acid-rgb: 200 255 61;
 }
 
@@ -94,8 +94,16 @@ html[data-home='1'] #root {
   background-image: url('/textures/cream-grain-64.png');
   background-size: var(--home-cream-grain-size, 64px);
   background-repeat: repeat;
-  opacity: var(--home-cream-grain-opacity, 0.03);
+  opacity: var(--home-cream-grain-opacity, 0.06);
   mask-image: linear-gradient(to bottom, transparent 0, transparent var(--home-cream-grain-start, 0px), black calc(var(--home-cream-grain-start, 0px) + 180px), black var(--home-cream-grain-end, 100%), transparent 100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-home-reveal] { transition: opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1); }
+  [data-home-reveal]:not([data-home-visible="1"]) { opacity: 0; transform: translateY(16px); }
+  [data-home-reveal][data-home-visible="1"] { transform: translateY(0); }
+  .mr-why-point h3[data-home-reveal], .mr-closing-footer-grid [data-home-reveal]:nth-child(2) { transition-delay: 70ms; }
+  .mr-why-point p[data-home-reveal], .mr-closing-footer-grid [data-home-reveal]:nth-child(3) { transition-delay: 140ms; }
 }
 
 @keyframes mr-cta-noise-drift {
@@ -106,6 +114,46 @@ html[data-home='1'] #root {
 .mr-cta-noise {
   animation: mr-cta-noise-drift 28s ease-in-out infinite;
 }
+
+.home-focus-tight { padding-top: 24px; padding-bottom: 24px; }
+.home-focus-tight > div:last-child { height: 16px; }
+.home-proof-focus { padding-bottom: 0; margin-bottom: -36px; }
+.home-why-band { position: relative; padding-top: 0; margin-top: -20px; margin-bottom: 0; }
+.home-faq-focus { padding-top: 0; padding-bottom: 20px; margin-bottom: 0; }
+#page-sections #faq { padding-top: 20px; padding-bottom: 24px; }
+@media (max-width: 767px) {
+  .home-proof-focus { margin-bottom: 16px; }
+  .proof-fan,
+  .proof-fan-stage {
+    min-width: 0;
+    max-width: 100%;
+  }
+  /* Reserve room for the existing 1.15 card and 1.05 section focus animations. */
+  .proof-fan .proof-fan-center {
+    width: 80%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .proof-fan-center .proof-fan-face {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+  }
+  /* Fit the existing 3D fan orbit too, rather than clipping its side previews. */
+  .proof-fan-orbit {
+    scale: 0.5;
+  }
+  .home-why-band { padding-top: 0; margin-top: 0; margin-bottom: 0; }
+  .home-faq-focus { margin-bottom: 8px; }
+  #page-sections #faq { padding-top: 24px; padding-bottom: 24px; }
+}
+.mr-cta-orbit { position:absolute;left:50%;top:50%;width:min(76vw,930px);aspect-ratio:1.9;border:1px solid rgba(114,126,96,.09);border-radius:50%;transform:translate(-50%,-50%) rotate(-10deg);animation:mr-cta-breathe 36s ease-in-out infinite; }
+.mr-cta-orbit-two { width:min(58vw,710px);transform:translate(-50%,-50%) rotate(13deg);animation-duration:43s; }
+@keyframes mr-cta-breathe { 50% { opacity:.38; scale:1.025; } }
+.mr-cream-nodes { animation:mr-node-drift 360s ease-in-out infinite; }
+@keyframes mr-node-drift { 50% { translate:18px -12px; } }
+@media (prefers-reduced-motion:reduce) { .mr-cta-noise,.mr-cta-orbit,.mr-cream-nodes { animation:none!important; } }
 
 #root {
   overflow-x: clip;
@@ -161,6 +209,15 @@ html.lenis body {
   .mr-v3-leva-host {
     display: none !important;
   }
+  /* Opt-in mobile preview for the CTA beacon controls. */
+  .mr-beacon-tuning .mr-v3-leva-host {
+    display: block !important;
+    position: fixed;
+    z-index: 2000;
+    top: 82px;
+    right: 12px;
+    width: min(320px, calc(100vw - 24px));
+  }
 }
 .mr-v3-leva-host > * {
   pointer-events: auto;
@@ -213,5 +270,3 @@ html.lenis body {
     filter: blur(8px);
   }
 }
-
-

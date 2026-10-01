@@ -1,10 +1,10 @@
-import { MiniAnalytics } from '../parts/MiniAnalytics'
-import { MiniBrowser } from '../parts/MiniBrowser'
-import { SceneGrid } from '../parts/SceneGrid'
-import { ToolRail } from '../parts/ToolRail'
-import type { WebValues } from './webDetails'
+import { MiniAnalytics } from '@/components/services-cards/parts/MiniAnalytics'
+import { MiniBrowser } from '@/components/services-cards/parts/MiniBrowser'
+import { SceneGrid } from '@/components/services-cards/parts/SceneGrid'
+import { ToolRail } from '@/components/services-cards/parts/ToolRail'
+import type { WebValues } from '@/components/services-cards/scenes/webDetails'
 import * as m from 'framer-motion/m'
-import type { WebMotionSettings } from './webMotion'
+import type { WebMotionSettings } from '@/components/services-cards/scenes/webMotion'
 import type { ReactNode } from 'react'
 
 function AnimatedObject({ name, children, settings }: { name: 'browser' | 'rail' | 'analytics'; children: ReactNode; settings: WebMotionSettings }) {

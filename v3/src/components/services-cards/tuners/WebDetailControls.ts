@@ -1,5 +1,5 @@
-import { folder, LevaInputs } from 'leva'
-import { WEB_COLORS, WEB_CONTENT, WEB_FIELDS, WEB_MOVERS } from '../scenes/webDetails'
+import { folder, LevaInputs } from '@home-leva'
+import { WEB_COLORS, WEB_CONTENT, WEB_FIELDS, WEB_MOVERS } from '@/components/services-cards/scenes/webDetails'
 
 const collapsed = { collapsed: true }
 export function webDetailControls() {

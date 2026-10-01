@@ -1,0 +1,137 @@
+/* Shared material system. Shadows are layered to keep the near edge crisp. */
+.mr-feature-stage{perspective:1100px;background:radial-gradient(ellipse at 50% 12%,#fffefa 0%,transparent 56%),radial-gradient(ellipse at 52% 75%,color-mix(in srgb,var(--why-sage) 34%,transparent),transparent 65%),var(--why-stage)}
+.mr-feature-stage::after{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 #fff9,inset 0 -1px 0 #9eaf9833}
+.why-art,.why-testimonial-art{transform-style:preserve-3d}
+.why-one-card,.why-stack-card,.why-flow-card,.why-results-main,.why-results-metrics,.why-testimonial-card{border-color:color-mix(in srgb,var(--why-border) 82%,#fff);background:linear-gradient(156deg,#fff 0%,var(--why-surface) 54%,color-mix(in srgb,var(--why-surface) 93%,var(--why-sage)) 100%);box-shadow:0 2px 2px #11170e0a,0 calc(var(--why-shadow-y) * .5 * var(--why-shadow-depth)) calc(var(--why-shadow-blur) * .65 * var(--why-shadow-depth)) rgba(8,9,9,var(--why-shadow-opacity)),0 calc(22px * var(--why-shadow-depth)) calc(42px * var(--why-shadow-depth)) #11170e10,inset 0 1px 0 #fff,inset 0 -1px 0 #cad6c522;backface-visibility:hidden;transition:scale .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,rotate .28s ease,filter .28s ease}
+.why-one-card::before,.why-stack-card::before,.why-flow-card::before,.why-results-main::before,.why-results-metrics::before,.why-testimonial-card::before{content:"";position:absolute;inset:1px;border-radius:inherit;pointer-events:none;border:1px solid #fff9;mask-image:linear-gradient(145deg,#000,transparent 60%)}
+.why-one-card:hover,.why-stack-card:hover,.why-flow-card:hover,.why-results-main:hover,.why-testimonial-card--center:hover,.mr-feature-stage [data-pressed="true"]{scale:calc(1 + .025 * var(--why-hover-response));box-shadow:0 3px 5px #11170e0d,0 calc(12px * var(--why-shadow-depth)) calc(26px * var(--why-shadow-depth)) #11170e25,0 calc(27px * var(--why-shadow-depth)) calc(50px * var(--why-shadow-depth)) #11170e15,inset 0 1px 0 #fff;filter:brightness(1.012)}
+.why-one-card svg,.why-stack-card>svg,.why-flow-card>svg,.why-testimonial-avatar,.why-testimonial-controls>button{transition:scale .3s ease,rotate .3s ease,background-color .3s ease,box-shadow .3s ease}
+.why-one-card:hover svg,.why-one-card[data-pressed] svg,.why-flow-card:hover>svg,.why-flow-card[data-pressed]>svg{scale:calc(1 + .08 * var(--why-hover-response));rotate:-5deg}
+
+/* 01: structured routes, common dot baseline, layered logo block. */
+.why-one-lines{z-index:1;filter:drop-shadow(0 1px 0 #fff9)}
+.why-one-lines g>path:not(.why-one-line-glow){stroke:#647965;stroke-width:var(--why-connector-width);stroke-linejoin:round;stroke-linecap:round}
+.why-one-lines .why-one-line-glow{stroke:#fff;stroke-width:calc(var(--why-connector-width) + 4);opacity:.58}
+.why-one-rings{z-index:0;filter:drop-shadow(0 1px 0 #fff)}
+.why-one-rings i{border-color:#b2c5ad;box-shadow:0 0 14px #91b08014}
+.why-one-hub{z-index:2;border:1px solid #222a1e;background:linear-gradient(145deg,#292d26 0%,#0e100d 55%,#080908 100%);box-shadow:0 3px 3px #0d110d26,0 calc(16px * var(--why-shadow-depth)) calc(28px * var(--why-shadow-depth)) #11170e3d,0 27px 50px #11170e1f,inset 0 1px 0 #818c783b,inset 0 -2px 0 #0008;transition:scale .28s ease,box-shadow .28s ease}
+.why-one-hub::before{content:"";position:absolute;inset:4px;border-radius:22%;border:1px solid #ffffff13;pointer-events:none}
+.why-one-hub:hover,.why-one-hub[data-pressed]{scale:calc(1 + .025 * var(--why-hover-response));box-shadow:0 5px 5px #0d110d30,0 22px 40px #11170e4d,0 0 0 1px #a9fb0040,inset 0 1px 0 #818c783b}
+.why-one-hub img{filter:drop-shadow(0 3px 4px #0005)}
+.why-one-card{z-index:3}
+.why-one-card i,.why-one-card--ads i{right:var(--why-dot-inset);top:var(--why-dot-y);translate:0 -50%;width:11px;height:11px;border:2px solid #fff;box-shadow:0 0 0 1px #8bd13e69,0 2px 4px #0002}
+
+/* 02: the active object sits closest to the viewer. */
+.why-two-dots{opacity:.35;mask-image:radial-gradient(ellipse,#000 8%,transparent 70%)}
+.why-stack-card{rotate:1 0 0 var(--why-stack-tilt);transform-origin:center;translate:0 0 4px}
+.why-stack-card:not(.why-stack-card--strategy){box-shadow:0 2px 2px #11170e0a,0 calc(var(--why-shadow-y) * var(--why-stack-shadow) * var(--why-shadow-depth)) calc(var(--why-shadow-blur) * var(--why-stack-shadow)) rgba(8,9,9,var(--why-shadow-opacity)),0 23px 42px #11170e0d,inset 0 1px 0 #fff}
+.why-stack-card--goals{z-index:1}.why-stack-card--audience{z-index:2}.why-stack-card--strategy{z-index:4;rotate:1 0 0 calc(var(--why-stack-tilt) * -.7);background:linear-gradient(140deg,#252922 0%,var(--why-active) 47%,#090b08 100%);border-color:#323b2e;box-shadow:0 3px 4px #0004,0 calc(14px * var(--why-active-emphasis)) calc(30px * var(--why-shadow-depth)) #0d140b50,0 26px 42px #0d140b29,inset 0 1px 0 #a6b39d44,inset 0 -1px 0 #0009}.why-stack-card--creative{z-index:3}
+.why-stack-card--strategy::after{content:"";position:absolute;inset:2px;border-radius:inherit;pointer-events:none;background:linear-gradient(110deg,#ffffff14,transparent 42%,#a9fb0009 75%,transparent)}
+.why-stack-card--strategy .why-stack-plus{box-shadow:0 3px 9px #a9fb0040,inset 0 1px 0 #fff7}
+.why-stack-card:hover,.why-stack-card[data-pressed]{translate:0 calc(var(--why-stack-hover) * -1) 12px;rotate:0 1 0 var(--why-tilt)}
+.why-stack-card:hover>svg,.why-stack-card[data-pressed]>svg{scale:calc(1 + .1 * var(--why-icon-response));rotate:-5deg}
+.why-stack-card:hover .why-stack-plus,.why-stack-card[data-pressed] .why-stack-plus{scale:calc(1 + .1 * var(--why-icon-response));rotate:35deg}
+.why-stack-plus{transition:scale .28s ease,rotate .28s ease}
+
+/* 03: a clean forward sequence, with a quiet unarrowed repeat path. */
+.why-three-grid{filter:drop-shadow(0 1px 0 #fff)}
+.why-three-arrows{z-index:2;filter:drop-shadow(0 1px 0 #fff)}
+.why-three-arrows>path{stroke:#49684e;stroke-width:1.8;vector-effect:non-scaling-stroke}
+.why-three-arrows marker{scale:var(--why-arrow-scale);transform-origin:center}
+.why-three-arrows .why-three-return{stroke:#8aa08a;stroke-width:1.25;stroke-dasharray:5 7;opacity:.52}
+.why-three-repeat{z-index:3;box-shadow:0 4px 10px #15231412,inset 0 1px 0 #fff}
+.why-flow-card{z-index:4}
+.why-flow-card>span{border:1px solid #e9ece5;box-shadow:0 2px 3px #0001,0 6px 13px #0001,inset 0 1px 0 #fff}
+.why-flow-card:last-child>svg{filter:drop-shadow(0 1px 3px #a9fb004a)}
+.why-flow-card:hover>span,.why-flow-card[data-pressed]>span{background:#eff9e5;color:#314e25;scale:calc(1 + .06 * var(--why-stage-emphasis))}
+.why-flow-card>span{transition:background-color .3s ease,color .3s ease,scale .3s ease}
+
+/* 04: reporting typography and a quiet outlined endpoint. */
+.why-results-layout{filter:drop-shadow(0 11px 20px #2540220c)}
+.why-results-main{background:linear-gradient(160deg,#fff 0%,#fffefa 62%,#f8fbf5 100%);border-color:#d9e1d5;box-shadow:0 3px 4px #0e170d0d,0 calc(13px * var(--why-chart-shadow) * var(--why-shadow-depth)) 30px #11170e1c,0 30px 48px #11170e12,inset 0 1px 0 #fff,inset 0 -1px 0 #c8d6c242}
+.why-results-main::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,#ffffff80,transparent 35%,transparent 76%,#e7f2e251)}
+.why-results-heading{font-size:clamp(13px,2.5cqw,17px)}
+.why-results-heading i{box-shadow:0 0 0 3px #a9fb001b}
+.why-results-heading button{border-color:#e0e9db;box-shadow:0 2px 3px #0e170d0c,0 5px 10px #0e170d0b,inset 0 1px 0 #fff;transition:scale .2s ease,box-shadow .2s ease}
+.why-results-heading button:hover{scale:1.035;box-shadow:0 4px 10px #0e170d22}
+.why-results-total{font-size:clamp(42px,8.8cqw,64px)}
+.why-results-growth{font-size:clamp(11px,2.05cqw,15px)}
+.why-results-growth b{color:#6dbb0d}
+.why-results-metrics{position:relative;background:linear-gradient(150deg,#fff,#fcfef9);border-color:#dbe3d7;box-shadow:0 3px 4px #0e170d0c,0 calc(11px * var(--why-shadow-depth)) 24px #11170e15,inset 0 1px 0 #fff}
+.why-results-metrics span{font-size:clamp(11px,calc(2.15cqw * var(--why-label-scale)),18px);font-weight:600;letter-spacing:-.025em;color:#667367}
+.why-results-metrics strong{font-size:clamp(18px,calc(3.65cqw * var(--why-value-scale)),28px);font-weight:700}
+.why-results-metrics b{margin-left:var(--why-arrow-gap);transform:translateY(var(--why-arrow-y));font-size:.94em;vertical-align:baseline}
+.why-results-graph path{stroke-width:var(--why-line-width);stroke-linejoin:round;stroke-linecap:round}
+.why-results-graph circle{fill:#fff;stroke:var(--why-line);stroke-width:2.4;filter:drop-shadow(0 1px 2px #284d2645)}
+.why-endpoint-minimal .why-results-graph circle{fill:var(--why-line);stroke:#fff;stroke-width:2}
+.why-endpoint-halo .why-results-graph circle{fill:var(--why-highlight);stroke:#fff;stroke-width:3;filter:drop-shadow(0 0 5px #a9fb00a0)}
+.why-results-bars i{box-shadow:inset 0 1px 0 #fff8}
+
+/* 05: a foreground quote and receding supporting cards. */
+.why-testimonial-art{perspective:950px}
+.why-testimonial-card{border-color:#dce4d8;background:linear-gradient(155deg,#fff 0%,var(--why-testimonial-surface) 67%,#f6faf3 100%);box-shadow:0 3px 4px #0e170d0c,0 calc(11px * var(--why-carousel-shadow) * var(--why-shadow-depth)) 24px #11170e20,0 26px 45px #11170e11,inset 0 1px 0 #fff}
+.why-testimonial-card--center{border-color:#d1ddcb;box-shadow:0 4px 5px #0e170d15,0 calc(19px * var(--why-carousel-shadow) * var(--why-shadow-depth)) 36px #11170e2c,0 37px 55px #11170e12,inset 0 1px 0 #fff}
+.why-testimonial-card--left,.why-testimonial-card--right{filter:saturate(.86) brightness(.99)}
+.why-testimonial-card:hover,.why-testimonial-card[data-pressed]{filter:saturate(1.05) brightness(1.015)}
+.why-testimonial-avatar{box-shadow:0 2px 5px #0e170d34,inset 0 1px 0 #ffffff2e}
+.why-testimonial-card blockquote.is-placeholder{color:#5b665a;font-weight:500}
+.why-testimonial-card blockquote.is-placeholder small{color:#8c9788;font-size:.64em;line-height:1.3}
+.why-testimonial-controls>button{border-color:#dbe4d5;box-shadow:0 3px 5px #0e170d13,0 8px 16px #0e170d12,inset 0 1px 0 #fff}
+.why-testimonial-controls>button:hover,.why-testimonial-controls>button:active{scale:1.11;background:#f4fce9;box-shadow:0 5px 13px #0e170d20}
+.why-testimonial-dots button:hover{scale:1.2}
+
+/* Intro and ambient run on separate properties so the objects keep responding. */
+.is-intro-active .why-art,.is-intro-active .why-testimonial-art{animation:why-premium-scene var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) backwards}
+.is-intro-active .why-one-card,.is-intro-active .why-stack-card,.is-intro-active .why-flow-card{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) calc(var(--why-sequence,0) * var(--why-intro-stagger)) backwards}
+.is-intro-active .why-results-main{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) backwards}
+.is-intro-active .why-results-metrics{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) var(--why-intro-stagger) backwards}
+.is-ambient-active .why-one-rings{animation:why-premium-orbit var(--why-ambient-duration) ease-in-out infinite alternate}
+.is-ambient-active .why-one-hub{animation:why-premium-hub var(--why-ambient-duration) ease-in-out infinite alternate}
+.is-ambient-active .why-one-card{animation:why-premium-float calc(var(--why-ambient-duration) * var(--why-one-float)) ease-in-out infinite alternate}
+.why-one-card--web{--why-float-delay:-.4s}.why-one-card--ads{--why-float-delay:-1.8s}.why-one-card--creative{--why-float-delay:-3.2s}
+.is-ambient-active .why-one-card{animation-delay:var(--why-float-delay)}
+.is-ambient-active .why-stack-card{animation:why-premium-float var(--why-ambient-duration) ease-in-out infinite alternate}
+.why-stack-card--goals{--why-float-delay:-.4s}.why-stack-card--audience{--why-float-delay:-1.6s}.why-stack-card--strategy{--why-float-delay:-2.7s}.why-stack-card--creative{--why-float-delay:-3.9s}
+.is-ambient-active .why-stack-card{animation-delay:var(--why-float-delay)}
+.is-ambient-active .why-stack-card--strategy .why-stack-plus{animation:why-premium-accent calc(var(--why-ambient-duration) * .75) ease-in-out infinite alternate}
+.is-ambient-active .why-flow-card{animation:why-premium-float calc(var(--why-ambient-duration) * var(--why-flow-float)) ease-in-out infinite alternate}
+.why-flow-card:nth-last-child(3){--why-float-delay:-.6s}.why-flow-card:nth-last-child(2){--why-float-delay:-2.3s}.why-flow-card:nth-last-child(1){--why-float-delay:-4s}
+.is-ambient-active .why-flow-card{animation-delay:var(--why-float-delay)}
+.is-ambient-active .why-three-arrows>path:not(.why-three-return){animation:why-premium-route var(--why-route-speed) ease-in-out infinite}
+.is-ambient-active .why-three-arrows>path:nth-of-type(2){animation-delay:calc(var(--why-route-speed) * -.5)}
+.is-ambient-active .why-three-repeat{animation:why-premium-label var(--why-route-speed) ease-in-out infinite alternate}
+.is-ambient-active .why-results-bars i{transform-origin:bottom;animation:why-premium-bar var(--why-ambient-duration) ease-in-out infinite alternate}
+.is-ambient-active .why-results-bars i:nth-child(2){animation-delay:-1s}.is-ambient-active .why-results-bars i:nth-child(3){animation-delay:-2s}.is-ambient-active .why-results-bars i:nth-child(4){animation-delay:-3s}.is-ambient-active .why-results-bars i:nth-child(5){animation-delay:-4s}
+.is-ambient-active .why-results-graph circle{transform-box:fill-box;transform-origin:center;animation:why-premium-point var(--why-ambient-duration) ease-in-out infinite alternate}
+.is-ambient-active .why-results-growth b{animation:why-premium-label var(--why-ambient-duration) ease-in-out infinite alternate}
+.is-ambient-active .why-testimonial-card--center{animation:why-premium-quote var(--why-ambient-duration) ease-in-out infinite alternate}
+.is-ambient-active .why-testimonial-card--left{animation:why-premium-quote calc(var(--why-ambient-duration) * 1.15) ease-in-out -1.9s infinite alternate}
+.is-ambient-active .why-testimonial-card--right{animation:why-premium-quote calc(var(--why-ambient-duration) * 1.2) ease-in-out -3.1s infinite alternate}
+.is-ambient-active.is-intro-active .why-one-card{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) calc(var(--why-sequence,0) * var(--why-intro-stagger)) backwards,why-premium-float calc(var(--why-ambient-duration) * var(--why-one-float)) ease-in-out infinite var(--why-float-delay) alternate}
+.is-ambient-active.is-intro-active .why-stack-card{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) calc(var(--why-sequence,0) * var(--why-intro-stagger)) backwards,why-premium-float var(--why-ambient-duration) ease-in-out infinite var(--why-float-delay) alternate}
+.is-ambient-active.is-intro-active .why-flow-card{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) calc(var(--why-sequence,0) * var(--why-intro-stagger)) backwards,why-premium-float calc(var(--why-ambient-duration) * var(--why-flow-float)) ease-in-out infinite var(--why-float-delay) alternate}
+.is-interacting .why-art *,.is-interacting .why-testimonial-art *{animation-play-state:paused!important}
+
+/* The graph keeps its completed path when its panel becomes inactive. */
+.why-four.chart-intro-idle .why-results-graph path,.why-four.chart-intro-running .why-results-graph path{stroke-dasharray:720;stroke-dashoffset:720}
+.why-four.chart-intro-running .why-results-graph path{animation:why-premium-draw calc(var(--why-intro-duration) * 1.45) cubic-bezier(.18,.7,.26,1) forwards}
+.why-four.chart-intro-done .why-results-graph path{stroke-dasharray:none;stroke-dashoffset:0}
+.why-four.chart-intro-idle .why-results-graph circle{opacity:0}
+.why-four.chart-intro-running .why-results-graph circle{animation:why-premium-endpoint .3s ease-out calc(var(--why-intro-duration) * 1.3) backwards}
+
+@keyframes why-premium-scene{from{opacity:0;filter:blur(5px);translate:-50% calc(-50% + 11px)}to{opacity:1;filter:blur(0);translate:-50% -50%}}
+@keyframes why-premium-item{from{opacity:0;scale:.965}to{opacity:1;scale:1}}
+@keyframes why-premium-float{from{translate:0 0 0}to{translate:0 var(--why-float-neg) 0}}
+@keyframes why-premium-hub{from{translate:0 0 0}to{translate:0 calc(var(--why-center-lift) * -1) 0}}
+@keyframes why-premium-orbit{from{scale:1;opacity:.8}to{scale:1.025;opacity:1}}
+@keyframes why-premium-accent{from{scale:1;box-shadow:0 3px 9px #a9fb0030}to{scale:1.07;box-shadow:0 3px 12px #a9fb0060}}
+@keyframes why-premium-route{0%,100%{opacity:.62;stroke-dashoffset:0}50%{opacity:1;stroke-dashoffset:-14}}
+@keyframes why-premium-label{from{opacity:.7}to{opacity:1}}
+@keyframes why-premium-bar{from{scale:1 1}to{scale:1 calc(1 + .018 * var(--why-chart-ambient))}}
+@keyframes why-premium-point{from{scale:1}to{scale:calc(1 + .1 * var(--why-chart-ambient))}}
+@keyframes why-premium-quote{from{translate:0 0}to{translate:0 var(--why-float-neg)}}
+@keyframes why-premium-draw{from{stroke-dashoffset:720}to{stroke-dashoffset:0}}
+@keyframes why-premium-endpoint{from{opacity:0;scale:.5}to{opacity:1;scale:1}}
+
+@media(max-width:767px){.why-one-card i,.why-one-card--ads i{width:8px;height:8px;border-width:1.5px}.why-results-total{font-size:clamp(36px,10cqw,47px)}.why-results-heading{font-size:clamp(11px,3cqw,14px)}.why-results-metrics span{font-size:calc(11px * var(--why-label-scale))}.why-results-metrics strong{font-size:calc(17px * var(--why-value-scale))}.why-results-metrics b{margin-left:calc(var(--why-arrow-gap) * .6)}}
+@media(prefers-reduced-motion:reduce){.mr-feature-stage *{animation:none!important;transition:none!important}.why-four.chart-intro-idle .why-results-graph path,.why-four.chart-intro-running .why-results-graph path{stroke-dasharray:none;stroke-dashoffset:0}.why-four.chart-intro-idle .why-results-graph circle{opacity:1}}

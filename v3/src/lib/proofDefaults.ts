@@ -1,7 +1,9 @@
-﻿export const PROOF_STORAGE_KEY = 'mr-v3-proof-fan-v8'
+export const PROOF_STORAGE_KEY = 'mr-v3-proof-fan-v8'
+
+import { brickworkResults } from '@/lib/brickworkProof'
 
 export type ProofCategory = 'web' | 'ads' | 'creative'
-export type ProofVisualType = 'autoscroll' | 'ads-cockpit' | 'lottie' | 'build-case'
+export type ProofVisualType = 'autoscroll' | 'brickwork-dashboard' | 'lottie' | 'build-case' | 'video-comparison'
 export type ProofBuildCaseId = 'summit-hvac' | 'northline-dental' | 'ridge-plumbing'
 
 export type ProofProject = {
@@ -22,9 +24,6 @@ export type ProofProject = {
   logoUrl?: string
   /** Web Dev Selected Builds case (after homepage) */
   buildCaseId?: ProofBuildCaseId
-  /** Ads cockpit card title / body overrides */
-  adsTitle?: string
-  adsBody?: string
 }
 
 export const defaultProofProjects: ProofProject[] = [
@@ -50,30 +49,28 @@ export const defaultProofProjects: ProofProject[] = [
     categoryIcon: 'Ad Management',
     tag: 'Home services',
     bullets: [
-      'Cut cost per lead from $42 to $18',
-      'Generated 186 qualified leads in 30 days',
-      'Scaled monthly ad spend from $2.5K to $7K',
+      `Cut cost per lead from ${brickworkResults.cpl.before} to ${brickworkResults.cpl.after}`,
+      `Generated ${brickworkResults.leads.after} qualified leads in 30 days`,
+      'Scaled monthly ad budget from $2.5K to $7K after proving performance',
     ],
-    metricHighlight: '3.8x ROAS',
+    metricHighlight: `${brickworkResults.roas.after} ROAS`,
     techStack: ['Meta Ads Manager', 'Google Ads', 'Klaviyo'],
-    visualType: 'ads-cockpit',
+    visualType: 'brickwork-dashboard',
     image: '',
     logoUrl: '/proof/brickwork-logo.png',
-    adsTitle: 'Brickwork - Meta',
-    adsBody: 'Spent $7K - 74 calls - 22 booked',
   },
   {
     id: '3',
-    title: 'Room 17 Audio',
+    title: 'Dog Guard of the Valley',
     category: 'creative',
     categoryIcon: 'Video Motion',
-    tag: 'Creator brand',
-    bullets: ['CRM setup', 'Creative system', 'SEO foundation'],
-    metricHighlight: '2.8x Watch Time',
-    techStack: ['After Effects', 'Lottie', 'Notion'],
-    visualType: 'lottie',
-    image: '',
-    mediaUrl: '/lottie/room-17-audio.json',
+    tag: 'SHORT-FORM SOCIAL CREATIVE',
+    bullets: ['Hook-first edit', 'Motion graphics', 'Branded social creative'],
+    metricHighlight: 'Short-Form Video Creative',
+    techStack: ['After Effects', 'Premiere Pro'],
+    visualType: 'video-comparison',
+    image: '/proof/dogguard-cover.webp',
+    logoUrl: '/proof/dogguard-logo.png',
   },
   {
     id: '4',

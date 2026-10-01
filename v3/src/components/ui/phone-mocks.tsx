@@ -144,7 +144,7 @@ export function PhoneMockBefore({ id }: { id: PhoneMockId }) {
           <tbody>
             <tr>
               <td className="bg-[#003366] px-2 py-1.5">
-                <p className="m-0 text-[9px] font-bold text-white">Rounds HVAC Inc.</p>
+                <p className="m-0 text-[9px] font-bold text-white">BCCU Temp</p>
                 <p className="m-0 text-[5px] text-[#99ccff]">Heating Cooling &amp; More!</p>
               </td>
               <td className="bg-[#cc0000] px-1.5 text-center text-[7px] font-bold text-white">
@@ -170,7 +170,7 @@ export function PhoneMockBefore({ id }: { id: PhoneMockId }) {
             Your Local HVAC Experts
           </p>
           <p className="m-0 mt-1.5 text-[7px] leading-relaxed text-[#333]">
-            Welcome to Rounds HVAC website. We fix AC units furnaces heat pumps and do installs in
+            Welcome to BCCU Temp website. We fix AC units furnaces heat pumps and do installs in
             Staunton Augusta County and surrounding areas. Family owned.
           </p>
           <button
@@ -203,7 +203,7 @@ export function PhoneMockBefore({ id }: { id: PhoneMockId }) {
           </table>
         </div>
         <p className="mt-auto bg-[#003366] py-1.5 text-center text-[7px] text-white">
-          (540) 555-0199 · rounds-hvac.biz
+          (540) 555-0199 · BCCU Temp
         </p>
       </Screen>
     )
@@ -383,8 +383,8 @@ export function PhoneMockAfter({ id }: { id: PhoneMockId }) {
               className="m-0 text-[11px] font-semibold uppercase tracking-wide"
               style={{ fontFamily: F.roundsDisplay }}
             >
-              <span className="text-[#f07828]">Rounds</span>
-              <span className="ml-1 text-[8px] font-medium text-[#FBF6EF]/55">HVAC</span>
+              <span className="text-[#f07828]">BCCU</span>
+              <span className="ml-1 text-[8px] font-medium text-[#FBF6EF]/55">Temp</span>
             </p>
           </div>
           <span className="text-[11px] text-[#FBF6EF]/45">☰</span>

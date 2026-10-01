@@ -4,11 +4,16 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Lottie, type LottieHandle } from 'lottie-react'
 import { useGetStartedHover } from '@/context/GetStartedHoverContext'
 import { useHeroLayoutTuner } from '@/context/HeroLayoutTunerContext'
+import handAnimationSource from '../../../public/lottie/hand-sketch-reach.json?raw'
+
+// Keep the exact artwork in this already-lazy module. Returning to the hero
+// reuses its parsed source instead of issuing another XHR on every player mount.
+const handAnimation = JSON.parse(handAnimationSource)
 
 type Dock = { top: number; left: number; width: number; ready: boolean }
 
 /**
- * Fixed + body portal. Tracks Get Started via getBoundingClientRect every frame.
+ * Fixed + body portal. Tracks the button during interaction; caches it at rest.
  * handLayer below = sits under the CTA; above = on top for tuning.
  */
 export default function HandReachLottie() {
@@ -21,7 +26,7 @@ export default function HandReachLottie() {
   const [posedIn, setPosedIn] = useState(false)
   const [dock, setDock] = useState<Dock>({ top: 0, left: 0, width: 200, ready: false })
   const [mounted, setMounted] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
 
   const active = hoverActive || layout.handPreview
   const onRight = layout.handSide === 'right'
@@ -52,12 +57,26 @@ export default function HandReachLottie() {
   useEffect(() => {
     if (!layout.handEnabled || isMobile) return undefined
 
+    const btn = document.querySelector('[data-get-started-btn]') as HTMLElement | null
+    if (!btn) return undefined
     let raf = 0
+    let visible = true
+    let settleUntil = 0
+    const hide = () => setDock((dock) => dock.ready ? { ...dock, ready: false } : dock)
+    const schedule = () => {
+      if (!raf && visible && !document.hidden) raf = requestAnimationFrame(place)
+    }
+    const continueTracking = () => {
+      if (active || posedIn || performance.now() < settleUntil) schedule()
+    }
+    // Keep following the original spring/hover motion until it settles, but
+    // don't force a geometry read every frame when the invisible hand is idle.
+    const geometryChanged = () => { settleUntil = performance.now() + 1000; schedule() }
     const place = () => {
-      const btn = document.querySelector('[data-get-started-btn]') as HTMLElement | null
-      if (!btn || btn.getAttribute('data-cta-armed') !== '1') {
-        setDock((d) => ({ ...d, ready: false }))
-        raf = requestAnimationFrame(place)
+      raf = 0
+      if (btn.getAttribute('data-cta-armed') !== '1') {
+        hide()
+        continueTracking()
         return
       }
 
@@ -68,8 +87,8 @@ export default function HandReachLottie() {
 
       const onScreen = br.bottom > 24 && br.top < vh - 24 && br.width > 8
       if (!onScreen) {
-        setDock((d) => ({ ...d, ready: false }))
-        raf = requestAnimationFrame(place)
+        hide()
+        continueTracking()
         return
       }
 
@@ -93,13 +112,48 @@ export default function HandReachLottie() {
         Math.max(4, br.top + br.height * 0.42 - width * 0.35 + (layout.handOffsetY || 0)),
       )
 
-      setDock({ top, left, width, ready: true })
-      raf = requestAnimationFrame(place)
+      setDock((dock) => dock.ready && dock.top === top && dock.left === left && dock.width === width
+        ? dock
+        : { top, left, width, ready: true })
+      continueTracking()
     }
 
-    raf = requestAnimationFrame(place)
-    return () => cancelAnimationFrame(raf)
-  }, [layout.handEnabled, layout.handOffsetX, layout.handOffsetY, layout.handSide, onRight, isMobile])
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible) schedule()
+      else {
+        cancelAnimationFrame(raf)
+        raf = 0
+        hide()
+      }
+    }, { rootMargin: '-24px 0px -24px 0px' })
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      } else geometryChanged()
+    }
+    observer.observe(btn)
+    const sizeObserver = new ResizeObserver(geometryChanged)
+    sizeObserver.observe(btn)
+    const armedObserver = new MutationObserver(geometryChanged)
+    armedObserver.observe(btn, { attributes: true, attributeFilter: ['data-cta-armed'] })
+    window.addEventListener('resize', geometryChanged)
+    window.addEventListener('scroll', geometryChanged, { passive: true })
+    window.addEventListener('pointermove', geometryChanged, { passive: true })
+    document.addEventListener('visibilitychange', onVisibility)
+    schedule()
+    return () => {
+      observer.disconnect()
+      sizeObserver.disconnect()
+      armedObserver.disconnect()
+      window.removeEventListener('resize', geometryChanged)
+      window.removeEventListener('scroll', geometryChanged)
+      window.removeEventListener('pointermove', geometryChanged)
+      document.removeEventListener('visibilitychange', onVisibility)
+      cancelAnimationFrame(raf)
+    }
+  }, [layout.handEnabled, layout.handOffsetX, layout.handOffsetY, layout.handSide, onRight, isMobile, active, posedIn])
 
   useEffect(() => {
     if (isMobile) return undefined
@@ -209,7 +263,7 @@ export default function HandReachLottie() {
       >
         <Lottie
           lottieRef={lottieRef}
-          src="/lottie/hand-sketch-reach.json"
+          src={handAnimation}
           loop={false}
           autoplay={false}
           className="h-auto w-full"

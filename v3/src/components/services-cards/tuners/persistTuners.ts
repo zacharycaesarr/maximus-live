@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { levaStore } from 'leva'
+import { levaStore } from '@home-leva'
 
 const STORAGE_KEY = 'mr-v3-services-lab-cards-v1'
 const CARD_FOLDERS = ['01 · Web Development', '02 · Ad Management', '03 · Creative Studio']
@@ -43,6 +43,7 @@ export function persistedSchema<T extends Record<string, unknown>>(folderName: s
 /** Keep every card's editable Leva values in this browser across reloads. */
 export function usePersistTuners() {
   useEffect(() => {
+    if (!import.meta.env.DEV) return undefined
     let pending: number | undefined
     function save() {
       const next: SavedValues = {}

@@ -1,7 +1,7 @@
-import { PerformanceGraph } from './PerformanceGraph'
-import { webText, type WebValues } from '../scenes/webDetails'
+import { PerformanceGraph } from '@/components/services-cards/parts/PerformanceGraph'
+import { webText, type WebValues } from '@/components/services-cards/scenes/webDetails'
 import * as m from 'framer-motion/m'
-import { fade } from '../scenes/webMotion'
+import { fade } from '@/components/services-cards/scenes/webMotion'
 
 export function MiniAnalytics({ values = {}, animated = false, introStagger = .17 }: { values?: WebValues; animated?: boolean; introStagger?: number }) {
   return (

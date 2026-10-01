@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState, type CSSProperties } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 import * as m from 'framer-motion/m'
-import { MonitorIcon, ServiceCard } from '../ServiceCard'
-import { SceneWeb } from './SceneWeb'
-import { tunersToCssVars, type LabTunerValues } from '../tuners/LabTuners'
-import { webDetailCss, webText } from './webDetails'
-import { entrance, type WebMotionSettings } from './webMotion'
+import { MonitorIcon, ServiceCard } from '@/components/services-cards/ServiceCard'
+import { SceneWeb } from '@/components/services-cards/scenes/SceneWeb'
+import { tunersToCssVars, type LabTunerValues } from '@/components/services-cards/tuners/LabTuners'
+import { webDetailCss, webText } from '@/components/services-cards/scenes/webDetails'
+import { entrance, type WebMotionSettings } from '@/components/services-cards/scenes/webMotion'
 import { useDocumentVisible } from '@/hooks/useDocumentVisible'
-import '../styles/web-motion.css'
+import '@/components/services-cards/styles/web-motion.css'
 
 export function WebAnimatedCard({ values: t }: { values: LabTunerValues }) {
   const ref = useRef<HTMLDivElement>(null)

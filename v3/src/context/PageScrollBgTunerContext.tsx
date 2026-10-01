@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
-import { useControls, folder } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 import {
   defaultPageScrollBg,
   loadPageScrollBg,
@@ -20,15 +20,14 @@ export function PageScrollBgTunerProvider({ store, children }: { store: LevaStor
       creamToneLight: { value: initial.creamToneLight, label: 'Cream Light Tone' },
       creamToneShade: { value: initial.creamToneShade, label: 'Cream Shade Tone' },
       creamTonalStrength: { value: initial.creamTonalStrength, min: 0, max: 30, step: 1, label: 'Cream Tonal Strength' },
-      creamTextureOpacity: { value: initial.creamTextureOpacity, min: 0, max: 10, step: 0.5, label: 'Grain Opacity' },
+      creamTextureOpacity: { value: initial.creamTextureOpacity, min: 0, max: 20, step: 0.5, label: 'Grain Opacity' },
       creamTextureScale: { value: initial.creamTextureScale, min: 0.5, max: 2, step: 0.05, label: 'Grain Scale' },
       nodeOpacity: { value: initial.nodeOpacity, min: 0, max: 15, step: 0.5, label: 'Node Opacity' },
       nodeScale: { value: initial.nodeScale, min: 0.6, max: 1.6, step: 0.05, label: 'Node Scale' },
+      nodeMotion: { value: initial.nodeMotion, min: 0, max: 2, step: 0.1, label: 'Node Motion Strength' },
+      nodeDensity: { value: initial.nodeDensity, min: 1, max: 3, step: 1, label: 'Node Density' },
       nodeLineColor: { value: initial.nodeLineColor, label: 'Node Line Color' },
       nodeDotColor: { value: initial.nodeDotColor, label: 'Node Dot Color' },
-      darkReturnOffsetV3: { value: initial.darkReturnStart, min: -25, max: 60, step: 1, label: 'Dark Return Start (vh)' },
-      darkReturnLength: { value: initial.darkReturnLength, min: 35, max: 110, step: 1, label: 'Dark Return Length (vh)' },
-      ctaDarkening: { value: initial.ctaDarkening, min: 45, max: 100, step: 1, label: 'CTA Darkening' },
       ctaBurstColor: { value: initial.ctaBurstColor, label: 'CTA Burst Color' },
       ctaBurstOpacity: { value: initial.ctaBurstOpacity, min: 0, max: 35, step: 1, label: 'CTA Burst Opacity' },
       ctaBurstSize: { value: initial.ctaBurstSize, min: 0.5, max: 1.7, step: 0.05, label: 'CTA Burst Size' },
@@ -39,8 +38,7 @@ export function PageScrollBgTunerProvider({ store, children }: { store: LevaStor
   }, { store })
 
   const settings = useMemo(() => {
-    const { darkReturnOffsetV3, ...rest } = values
-    return { ...defaultPageScrollBg, ...rest, darkReturnStart: darkReturnOffsetV3 } as PageScrollBgTuner
+    return { ...defaultPageScrollBg, ...values } as PageScrollBgTuner
   }, [values])
   useEffect(() => {
     try { localStorage.setItem(PAGE_SCROLL_BG_STORAGE_KEY, JSON.stringify(settings)) }

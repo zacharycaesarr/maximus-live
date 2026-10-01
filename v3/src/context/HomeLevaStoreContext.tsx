@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from 'react'
-import type { LevaStore } from '@/lib/levaStore'
+import type { LevaStore } from '@/home/lib/levaStore'
 
 const Ctx = createContext<LevaStore | null>(null)
 

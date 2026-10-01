@@ -1,0 +1,77 @@
+.brickwork-dashboard { container: brickwork / inline-size; width: 100%; min-width: 0; color: #f3f0e8; font-family: var(--ff-display); text-align: left; }
+.brickwork-dashboard-shell { background: #080909; border: 1px solid #ffffff18; border-radius: 16px; padding: 16px; animation: brickwork-fade 200ms ease-out both; }
+.brickwork-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #ffffff14; }
+.brickwork-channels { display: flex; gap: 6px; }
+.brickwork-channels > span { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; padding: 6px 10px; border: 1px solid #ffffff20; border-radius: 7px; background: #151918; }
+.brickwork-channels svg { width: 14px; height: 14px; }
+.brickwork-date { font-size: 10px; color: #a8b0aa; white-space: nowrap; }
+.brickwork-dashboard h4 { margin: 0; color: #f3f0e8; font-size: 12px; font-weight: 500; letter-spacing: -.02em; }
+.brickwork-campaigns { padding-top: 16px; }
+.brickwork-campaigns h4 { margin-bottom: 12px; }
+.brickwork-campaigns table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 10px; }
+.brickwork-campaigns thead th { padding: 0 3px 9px; font-size: 8px; font-weight: 400; color: #8c9690; text-align: right; }
+.brickwork-campaigns thead th:first-child { width: 70%; text-align: left; }
+.brickwork-campaigns tbody tr { border-top: 1px solid #ffffff12; animation: brickwork-rise 280ms ease-out both; }
+.brickwork-campaigns tbody tr:nth-child(1) { animation-delay: 100ms; }
+.brickwork-campaigns tbody tr:nth-child(2) { animation-delay: 170ms; }
+.brickwork-campaigns tbody tr:nth-child(3) { animation-delay: 240ms; }
+.brickwork-campaigns tbody th { padding: 12px 3px 12px 0; text-align: left; font-weight: 400; }
+.brickwork-campaigns td { padding: 10px 3px; text-align: right; color: #88938c; }
+.brickwork-campaign-icon { display: inline-flex; vertical-align: middle; width: 30px; height: 32px; align-items: center; justify-content: center; border-radius: 7px; background: #151918; border: 1px solid #ffffff16; color: #cdd3cd; margin-right: 8px; }
+.brickwork-campaign-icon svg { width: 23px; height: 23px; }
+.brickwork-campaign-title { display: inline-grid; vertical-align: middle; grid-template-columns: auto 1fr; gap: 3px 5px; }
+.brickwork-campaign-title small { grid-row: 1; align-self: center; color: #6f7b73; font-size: 8px; }
+.brickwork-campaign-title strong { font-size: 10px; color: #ebede8; font-weight: 500; }
+.brickwork-campaign-channel { display: inline-flex; align-items: center; gap: 6px; color: #a9b1ab; font-size: 9px; }
+.brickwork-campaign-channel svg { width: 12px; height: 12px; }
+.brickwork-data-note { margin: 7px 0 0; font-size: 8px; color: #919d94; line-height: 1.5; }
+.brickwork-lower { margin-top: 18px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; align-items: stretch; }
+.brickwork-comparison { min-width: 0; padding: 14px 12px; border: 1px solid #ffffff15; border-radius: 10px; background: #101411; }
+.brickwork-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 9px; font-size: 8px; color: #a9b1ab; }
+.brickwork-legend span { display: inline-flex; align-items: center; gap: 4px; }
+.brickwork-legend span::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: #929b96; }
+.brickwork-legend span + span::before { background: #c8ff3d; }
+.brickwork-kpis { margin: 20px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.brickwork-kpi { min-width: 0; padding-top: 10px; border-top: 1px solid #ffffff1c; }
+.brickwork-kpi dt { min-height: 26px; color: #abb3ad; font-size: 8px; line-height: 1.4; }
+.brickwork-kpi dd { margin: 7px 0 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.brickwork-before { color: #ced4ce; font-size: 11px; }
+.brickwork-kpi-arrow { color: #778578; font-size: 10px; }
+.brickwork-after { color: #c8ff3d; font-size: 26px; font-weight: 500; letter-spacing: -.04em; animation: brickwork-rise 240ms ease-out 560ms both; }
+.brickwork-reporting { margin: 16px 0 0; border-top: 1px solid #ffffff1c; }
+.brickwork-reporting > div { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 5px 10px; margin-top: 9px; }
+.brickwork-reporting dt { color: #abb3ad; font-size: 8px; }
+.brickwork-reporting dd { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px; color: #ced4ce; font-size: 11px; }
+.brickwork-reporting strong { color: #f3f0e8; font-weight: 500; }
+.brickwork-comparison-note { margin: 16px 0 0; font-size: 8px; color: #a9b1ab; }
+.brickwork-creative { min-width: 0; margin: 0; animation: brickwork-rise 260ms ease-out 650ms both; }
+.brickwork-creative figcaption { margin-bottom: 9px; font-size: 9px; color: #a9b1ab; }
+.brickwork-ad { position: relative; background: #f3f0e8; border-radius: 9px; padding: 12px; color: #172018; }
+.brickwork-ad > svg:not(.brickwork-ad-mark) { display: block; width: 100%; height: 72px; margin: 8px 0 4px; color: #5b6b5d; }
+.brickwork-ad .brickwork-ad-mark { position: absolute; right: 10px; top: 10px; width: 11px; height: 11px; }
+.brickwork-ad h4 { color: #172018; font-size: 19px; line-height: 1.02; font-weight: 600; letter-spacing: -.05em; }
+.brickwork-ad p { margin: 9px 0; font-size: 9px; color: #536153; line-height: 1.4; }
+.brickwork-ad-cta { display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 7px 8px; border-radius: 5px; background: #172018; color: #f3f0e8; font-size: 8px; white-space: nowrap; }
+@keyframes brickwork-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes brickwork-rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+@container brickwork (max-width: 440px) {
+  .brickwork-dashboard-shell { padding: 14px; }
+  .brickwork-campaigns table, .brickwork-campaigns tbody { display: block; }
+  .brickwork-campaigns thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .brickwork-campaigns tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px; padding: 11px 0; }
+  .brickwork-campaigns tbody th { padding: 0; }
+  .brickwork-campaigns td { padding: 0; align-self: center; }
+  .brickwork-lower { grid-template-columns: 1fr; }
+  .brickwork-kpi dt { font-size: 9px; min-height: 25px; }
+  .brickwork-kpi dd { gap: 6px; }
+  .brickwork-before { font-size: 13px; }
+  .brickwork-after { font-size: 22px; }
+  .brickwork-ad { display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px 14px; padding: 18px; }
+  .brickwork-ad > svg:not(.brickwork-ad-mark) { grid-row: 1 / 4; height: 100%; min-height: 95px; margin: 0; }
+  .brickwork-ad h4, .brickwork-ad p, .brickwork-ad-cta { grid-column: 2; }
+  .brickwork-ad p { margin: 0; }
+  .brickwork-ad-cta { margin-top: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brickwork-dashboard-shell, .brickwork-campaigns tbody tr, .brickwork-after, .brickwork-creative { animation: none; }
+}

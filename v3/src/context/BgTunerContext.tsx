@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
-import { useControls, folder, button } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder, button } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 import { defaultBgTuner, loadBgTuner, BG_STORAGE_KEY, type BgTuner } from '@/lib/bgDefaults'
 
 const BgCtx = createContext<BgTuner>(defaultBgTuner)

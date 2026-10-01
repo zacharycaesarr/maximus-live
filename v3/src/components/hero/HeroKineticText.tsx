@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import BlurOutWords from './BlurOutWords'
-import PhraseServiceBadge from './PhraseServiceBadge'
+import { motion, useInView } from 'framer-motion'
+import BlurOutWords from '@/components/hero/BlurOutWords'
+import PhraseServiceBadge from '@/components/hero/PhraseServiceBadge'
 import {
   parsePhrases,
   parsePhraseBadges,
   emojiForPhrase,
   type HeroTextTuner,
-} from './heroTextDefaults'
+} from '@/components/hero/heroTextDefaults'
 import {
   ArrowTrendingUpIcon,
   type ArrowTrendingUpIconHandle,
 } from '@/components/ui/arrow-trending-up-icon'
 import { cn } from '@/lib/utils'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
 
 type Props = {
   settings: HeroTextTuner
@@ -51,13 +52,16 @@ export default function HeroKineticText({
   const [phraseHovered, setPhraseHovered] = useState(false)
   const [phraseArmed, setPhraseArmed] = useState(false)
   const [phraseMinW, setPhraseMinW] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
 
   const wrapRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLSpanElement>(null)
   const arrowRef = useRef<ArrowTrendingUpIconHandle>(null)
   const resumeTimer = useRef<number | null>(null)
   const phraseHoveredRef = useRef(false)
+  const visible = useInView(wrapRef, { margin: '10% 0px', initial: true })
+  const documentVisible = useDocumentVisible()
+  const animationHeld = scrollActivated || phraseHovered || !visible || !documentVisible
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
@@ -77,7 +81,7 @@ export default function HeroKineticText({
   // Stacked = centered hero (stem line, rotating phrase below). Left layout
   // wants the plain wrap-like-a-sentence branch, so this now follows the prop only.
   const useStack = stacked
-  const cyclePaused = settings.pauseCycle || phraseHovered
+  const cyclePaused = settings.pauseCycle || phraseHovered || !visible || !documentVisible
   const headlineFontClass = settings.headlineFont === 'tiempos' ? 'font-tiempos' : 'font-nhg'
 
   const glow =
@@ -106,7 +110,7 @@ export default function HeroKineticText({
   }, [stemFull, settings.typeSpeed, instantStem, chromeVisible])
 
   useEffect(() => {
-    if (!chromeVisible || instantStem || stemDone) return undefined
+    if (!chromeVisible || instantStem || stemDone || !visible || !documentVisible) return undefined
     if (typed.length >= stemFull.length) {
       setStemDone(true)
       return undefined
@@ -115,7 +119,7 @@ export default function HeroKineticText({
       setTyped(stemFull.slice(0, typed.length + 1))
     }, settings.typeSpeed)
     return () => window.clearTimeout(timer)
-  }, [typed, stemFull, stemDone, settings.typeSpeed, instantStem, chromeVisible])
+  }, [typed, stemFull, stemDone, settings.typeSpeed, instantStem, chromeVisible, visible, documentVisible])
 
   useEffect(() => {
     if (!stemDone || scrollActivated || cyclePaused || phrases.length === 0) return undefined
@@ -180,7 +184,9 @@ export default function HeroKineticText({
         settings.phraseHoverEnabled && !isMobile
           ? settings.phraseArrowSize + settings.phraseArrowGap + 8
           : 0
-      const available = Math.max(60, wrap.clientWidth - arrowReserve)
+      // Mobile: leave a little side breathing room so long phrases stay inside the screen
+      const sidePad = isMobile ? 12 : 0
+      const available = Math.max(60, wrap.clientWidth - arrowReserve - sidePad)
       const needed = probe.scrollWidth
       setPhraseMinW(needed + arrowReserve)
       if (available <= 0 || needed <= 0) return
@@ -281,9 +287,11 @@ export default function HeroKineticText({
   }
 
   if (useStack) {
+    // Mobile: slightly lower floor so long rotating phrases (e.g. "improve my SEO") stay on-screen
+    const phraseFloor = isMobile ? 18 : 22
     const phrasePx = phraseWraps
-      ? Math.max(22, Math.min(settings.fontSize, settings.fontSize * Math.max(fitScale, 0.72)))
-      : Math.max(22, settings.fontSize * fitScale)
+      ? Math.max(phraseFloor, Math.min(settings.fontSize, settings.fontSize * Math.max(fitScale, isMobile ? 0.62 : 0.72)))
+      : Math.max(phraseFloor, settings.fontSize * fitScale)
     const lineH = Math.max(settings.lineHeight, 1.05)
     // Always reserve 2 lines so rotating phrases never shove subtext/buttons
     const slotH = Math.ceil(phrasePx * lineH * 2.15 + 8)
@@ -379,16 +387,24 @@ export default function HeroKineticText({
                 }}
               >
                 <span
-                  className="pointer-events-none inline-flex max-w-full items-center justify-center"
+                  className="pointer-events-none inline-flex w-full max-w-full items-center justify-center"
                   style={{
                     fontSize: `${phrasePx}px`,
                     fontWeight: settings.phraseWeight,
                     gap: !isMobile && settings.phraseHoverEnabled ? settings.phraseArrowGap : 0,
                     textAlign: 'center',
-                    minWidth: phraseMinW > 0 ? Math.min(phraseMinW, wrapRef.current?.clientWidth || phraseMinW) : undefined,
+                    // Desktop keeps minWidth for hover/arrow layout. Mobile: never force a
+                    // wider box than the screen (that was shoving long phrases off the left).
+                    minWidth:
+                      !isMobile && phraseMinW > 0
+                        ? Math.min(phraseMinW, wrapRef.current?.clientWidth || phraseMinW)
+                        : undefined,
                   }}
                 >
-                  <span className="block w-full text-center" style={{ maxWidth: 'min(100%, 34ch)' }}>
+                  <span
+                    className="block w-full text-center"
+                    style={{ maxWidth: isMobile ? '100%' : 'min(100%, 34ch)' }}
+                  >
                     <BlurOutWords
                       key={phraseKey}
                       text={phrase}
@@ -399,7 +415,7 @@ export default function HeroKineticText({
                       color={settings.phraseColor}
                       fontWeight={settings.phraseWeight}
                       textShadow={glow}
-                      hold={scrollActivated || phraseHovered}
+                      hold={animationHeld}
                       className="text-center"
                     />
                   </span>
@@ -510,7 +526,7 @@ export default function HeroKineticText({
                   color={settings.phraseColor}
                   fontWeight={settings.phraseWeight}
                   textShadow={glow}
-                  hold={scrollActivated || phraseHovered}
+                  hold={animationHeld}
                   className="whitespace-normal"
                 />
                 {settings.phraseHoverEnabled && !scrollActivated ? (
@@ -628,7 +644,7 @@ export default function HeroKineticText({
                   color={settings.phraseColor}
                   fontWeight={settings.phraseWeight}
                   textShadow={glow}
-                  hold={scrollActivated || phraseHovered}
+                  hold={animationHeld}
                 />
                 {settings.phraseHoverEnabled && !scrollActivated ? (
                   <motion.span

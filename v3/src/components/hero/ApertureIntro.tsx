@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import { useIntroTuner } from '@/context/IntroTunerContext'
-import { clearIntroSeenThisSession } from '@/lib/introDefaults'
+import { useIntroTuner } from '@/home/context/IntroTunerContext'
+import { clearIntroSeenThisSession } from '@/home/lib/introDefaults'
 
 // Resets on hard refresh / new tab; survives HMR.
 let introPlayedThisLoad = false
@@ -76,7 +76,6 @@ export default function ApertureIntro() {
     const durMs = forceIntro ? 4000 : Number(intro.apertureMs) || 1400
     const dur = Number.isFinite(durMs) ? Math.max(1000, durMs) : 1400
     const hold = Math.max(0, Number(intro.holdMs) || 500)
-    const cream = intro.bg || '#F8F7F4'
 
     let cancelled = false
     let docked = false
@@ -87,16 +86,18 @@ export default function ApertureIntro() {
     const startW = 96
     const startH = 64
     const startR = 28
+    let viewportWidth = window.innerWidth
+    let viewportHeight = window.innerHeight
+    const updateViewport = () => { viewportWidth = window.innerWidth; viewportHeight = window.innerHeight }
+    window.addEventListener('resize', updateViewport)
 
     const easeInOut = (t: number) =>
       t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 
     const placeHole = (p: number) => {
-      const vw = window.innerWidth
-      const vh = window.innerHeight
       // Expand to cover the full viewport with a little overshoot so edges clear
-      const endW = vw + 80
-      const endH = vh + 80
+      const endW = viewportWidth + 80
+      const endH = viewportHeight + 80
       const w = startW + (endW - startW) * p
       const h = startH + (endH - startH) * p
       // Keep corners visibly rounded until late so the aperture reads as a card, not a square
@@ -104,7 +105,6 @@ export default function ApertureIntro() {
       hole.style.width = `${w}px`
       hole.style.height = `${h}px`
       hole.style.borderRadius = `${r}px`
-      hole.style.boxShadow = `0 0 0 100vmax ${cream}`
     }
 
     const begin = () => {
@@ -173,6 +173,7 @@ export default function ApertureIntro() {
       window.clearTimeout(startTimer)
       window.cancelAnimationFrame(raf)
       window.clearTimeout(fail)
+      window.removeEventListener('resize', updateViewport)
     }
   }, [skip, intro.runId, intro.apertureMs, intro.holdMs, intro.preview, intro.bg, forceIntro])
 

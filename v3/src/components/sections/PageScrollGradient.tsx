@@ -55,25 +55,16 @@ export default function PageScrollGradient({ settings, targetRef }: Props) {
       const darkHold = fadeStart + fadeLength * (0.25 + curve * 0.18)
       const creamEntry = fadeStart + fadeLength * (0.68 + curve * 0.1)
       const fadePct = (at: number) => `${(100 * at / fadeEnd).toFixed(2)}%`
-      const darkStart = Math.max(fadeEnd + 100, faqEnd + settings.darkReturnStart * vh)
-      const darkEnd = Math.min(ctaBottom, Math.max(darkStart + 180, darkStart + settings.darkReturnLength * vh))
-      const darkLength = darkEnd - darkStart
-      const darkRadius = Math.max(320, darkLength * 1.36)
-
       const tone = Math.min(0.3, settings.creamTonalStrength / 100)
       page.style.setProperty('--home-cream-grain-opacity', String(settings.creamTextureOpacity / 100))
       page.style.setProperty('--home-cream-grain-size', `${Math.round(64 * settings.creamTextureScale)}px`)
       page.style.setProperty('--home-cream-grain-start', `${Math.round(fadeEnd - 120)}px`)
-      page.style.setProperty('--home-cream-grain-end', `${Math.round(darkEnd)}px`)
+      page.style.setProperty('--home-cream-grain-end', `${Math.round(ctaBottom)}px`)
 
       const shade = rgb(settings.creamToneShade)
       const light = rgb(settings.creamToneLight)
-      const darkness = settings.ctaDarkening / 100
-
       page.style.backgroundImage = [
-        `radial-gradient(ellipse 105% ${darkRadius}px at 50% ${darkEnd}px, rgba(8,9,9,${darkness}) 0%, rgba(17,18,14,${darkness * 0.92}) 36%, rgba(17,18,14,${darkness * 0.72}) 58%, rgba(17,18,14,0) 100%)`,
-        `linear-gradient(to bottom, transparent 0px, transparent ${darkStart}px, ${settings.creamToneShade} ${darkStart + darkLength * 0.18}px, #11120E ${darkEnd - darkLength * 0.12}px, #080909 ${darkEnd}px, #080909 100%)`,
-        `radial-gradient(ellipse 250% ${Math.max(fadeEnd, 1)}px at 50% 0px, #080909 0%, #080909 ${fadePct(fadeStart)}, #252820 ${fadePct(darkHold)}, #DCD8CD ${fadePct(creamEntry)}, rgba(243,240,232,0) 100%)`,
+        `radial-gradient(ellipse 250% ${Math.max(fadeEnd, 1)}px at 50% 0px, #080909 0%, #080909 ${fadePct(fadeStart)}, #11120E ${fadePct(darkHold)}, #F3F0E8 ${fadePct(creamEntry)}, rgba(243,240,232,0) 100%)`,
         `radial-gradient(ellipse 85% 940px at 16% ${proofTop + 340}px, rgba(${light},${tone}) 0%, transparent 78%)`,
         `radial-gradient(ellipse 82% 1060px at 88% ${whyTop + 180}px, rgba(${shade},${tone * 0.8}) 0%, transparent 82%)`,
         `radial-gradient(ellipse 90% 960px at 20% ${faqEnd - 150}px, rgba(${light},${tone * 0.7}) 0%, transparent 82%)`,

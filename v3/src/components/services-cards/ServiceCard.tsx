@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import * as m from 'framer-motion/m'
-import { creativeEntrance, type CreativeMotionSettings } from './scenes/creativeMotion'
-import './styles/services.css'
+import { creativeEntrance, type CreativeMotionSettings } from '@/components/services-cards/scenes/creativeMotion'
+import '@/components/services-cards/styles/services.css'
 
 type ServiceCardProps = {
   number: string

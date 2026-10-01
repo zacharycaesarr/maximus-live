@@ -51,17 +51,6 @@ export default function HeroVideoBackground({
 
   useEffect(() => {
     const el = videoRef.current
-    if (!el || reduceMotion) return
-
-    const cur = el.getAttribute('src') || ''
-    if (cur !== src) {
-      el.src = src
-      el.load()
-    }
-  }, [reduceMotion, src])
-
-  useEffect(() => {
-    const el = videoRef.current
     if (!el) return undefined
 
     const tryPlay = () => {
@@ -108,6 +97,7 @@ export default function HeroVideoBackground({
     >
       <video
         ref={videoRef}
+        src={reduceMotion ? undefined : src}
         className="absolute left-0 w-full object-cover"
         poster={poster}
         muted

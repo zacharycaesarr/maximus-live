@@ -1,8 +1,9 @@
 import type { CSSProperties, ReactNode } from 'react'
+import { serviceImageSource } from '@/lib/serviceImages'
 import * as m from 'framer-motion/m'
-import { creativePose, creativeTransform, type CreativePose } from './creativeGeometry'
-import { creativeEntrance, type CreativeMotionSettings } from './creativeMotion'
-import '../styles/creative.css'
+import { creativePose, creativeTransform, type CreativePose } from '@/components/services-cards/scenes/creativeGeometry'
+import { creativeEntrance, type CreativeMotionSettings } from '@/components/services-cards/scenes/creativeMotion'
+import '@/components/services-cards/styles/creative.css'
 
 type CreativeValues = Record<string, number | string>
 
@@ -67,7 +68,7 @@ export function SceneCreative({ values: t, motionSettings }: { values: CreativeV
     '--creative-detail-size': `${t.brandDetailSize}px`, '--creative-detail-bottom': `${t.brandDetailBottom}px`,
   } as CSSProperties
   const media = (key: string) => <div className={`creative-media creative-media--${key}`} style={{ width: `${t[`${key}MediaWidth`]}%`, transform: `translate(${t[`${key}MediaX`]}%,${t[`${key}MediaY`]}%) scale(${t[`${key}MediaScale`]})` }}>
-    {t[`${key}Image`] ? <img src={String(t[`${key}Image`])} style={{ objectFit: t[`${key}MediaFit`] as CSSProperties['objectFit'] }} alt="" draggable={false} /> : null}
+    {t[`${key}Image`] ? <img src={serviceImageSource(String(t[`${key}Image`]))} style={{ objectFit: t[`${key}MediaFit`] as CSSProperties['objectFit'] }} alt="" draggable={false} /> : null}
   </div>
 
   return <div className="creative-scene" style={vars} aria-hidden="true">

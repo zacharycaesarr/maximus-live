@@ -1,330 +1,231 @@
 'use client'
 
-/**
- * Reach Beacon — light champagne signal that travels on scroll.
- * Keep this cheap: one timeline, rebuild only on real resize (debounced).
- */
-
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
-import { useControls, folder } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder, button } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
+gsap.registerPlugin(ScrollTrigger)
 
-const ANCHOR_IDS = [
-  'services',
-  'work',
-  'how-it-works',
-  'why-maximus',
-  'faq',
-  'get-started',
-] as const
-
-const CHAMPAGNE = '#F5E6C8'
-const IVORY = '#FFEDD5'
-
+const ANCHOR_IDS = ['services', 'work', 'how-it-works', 'why-maximus', 'faq', 'get-started'] as const
 type Point = { x: number; y: number }
 
-function cubicPath(a: Point, b: Point) {
-  const dy = b.y - a.y
-  return `M ${a.x} ${a.y} C ${a.x} ${a.y + dy * 0.42}, ${b.x} ${b.y - dy * 0.42}, ${b.x} ${b.y}`
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value))
+const CTA_TUNING_KEY = 'home-lab:cta-beacon:'
+const CTA_TUNING_FIELDS = ['ctaLeadMobile', 'ctaLeadDesktop', 'ctaLeadStart', 'ctaLeadEnd', 'ctaOffsetX', 'ctaOffsetY', 'ctaFadeBefore', 'ctaFadeLength'] as const
+const savedCtaValue = (key: string, fallback: number) => {
+  try {
+    const saved = window.localStorage.getItem(CTA_TUNING_KEY + key)
+    const value = Number(saved)
+    return saved !== null && Number.isFinite(value) ? value : fallback
+  } catch { return fallback }
+}
+const saveCtaValue = (key: string) => (value: number) => {
+  try { window.localStorage.setItem(CTA_TUNING_KEY + key, String(value)) } catch { /* Private browsing may disable storage. */ }
 }
 
-type Props = { store?: LevaStore }
-
-export default function ReachBeacon({ store }: Props) {
-  const svgRef = useRef<SVGSVGElement>(null)
+export default function ReachBeacon({ store }: { store?: LevaStore }) {
   const beaconRef = useRef<HTMLDivElement>(null)
-  const ringRef = useRef<HTMLDivElement>(null)
-  const trailRef = useRef<SVGPathElement>(null)
-  const pathsLayerRef = useRef<SVGGElement>(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 767px)')
-    const apply = () => setIsMobile(mq.matches)
-    apply()
-    mq.addEventListener('change', apply)
-    return () => mq.removeEventListener('change', apply)
-  }, [])
-
+  const ctaBeaconRef = useRef<HTMLDivElement>(null)
+  const routeRef = useRef<SVGPathElement>(null)
+  const [ctaScene, setCtaScene] = useState<HTMLElement | null>(null)
   const isDev = import.meta.env.DEV
-  const controls = useControls(
-    {
-      'Reach Beacon': folder(
-        {
-          enabled: true,
-          markers: { value: false, label: 'ST markers (dev)' },
-          scrub: { value: 0.7, min: 0.3, max: 1.2, step: 0.05 },
-          glowOpacity: { value: 0.9, min: 0.2, max: 1, step: 0.05 },
-        },
-        { collapsed: true },
-      ),
-    },
-    store ? { store } : undefined,
-  )
-
+  const controls = useControls({
+    'Reach Beacon': folder({
+      enabled: true,
+      markers: { value: false, label: 'ST markers (dev)' },
+      scrub: { value: .7, min: .3, max: 1.2, step: .05 },
+      glowOpacity: { value: .9, min: .2, max: 1, step: .05 },
+      'CTA blend': folder({
+        ctaLeadMobile: { value: savedCtaValue('ctaLeadMobile', 80), min: -160, max: 160, step: 1, label: 'Mobile timing adjust (px)', onChange: saveCtaValue('ctaLeadMobile') },
+        ctaLeadDesktop: { value: savedCtaValue('ctaLeadDesktop', 360), min: 0, max: 360, step: 1, label: 'Desktop arrival lead (px)', onChange: saveCtaValue('ctaLeadDesktop') },
+        ctaLeadStart: { value: savedCtaValue('ctaLeadStart', .96), min: .5, max: 1.2, step: .01, label: 'Lead starts (viewport)', onChange: saveCtaValue('ctaLeadStart') },
+        ctaLeadEnd: { value: savedCtaValue('ctaLeadEnd', .44), min: .1, max: .5, step: .01, label: 'Lead fully on (viewport)', onChange: saveCtaValue('ctaLeadEnd') },
+        ctaOffsetX: { value: savedCtaValue('ctaOffsetX', 0), min: -80, max: 80, step: 1, label: 'Beacon X alignment (px)', onChange: saveCtaValue('ctaOffsetX') },
+        ctaOffsetY: { value: savedCtaValue('ctaOffsetY', 0), min: -80, max: 80, step: 1, label: 'Beacon Y alignment (px)', onChange: saveCtaValue('ctaOffsetY') },
+        ctaFadeBefore: { value: savedCtaValue('ctaFadeBefore', 12), min: 0, max: 120, step: 1, label: 'Fade before target (px)', onChange: saveCtaValue('ctaFadeBefore') },
+        ctaFadeLength: { value: savedCtaValue('ctaFadeLength', 50), min: 10, max: 200, step: 1, label: 'Fade distance (px)', onChange: saveCtaValue('ctaFadeLength') },
+        resetCtaBlend: button(() => {
+          CTA_TUNING_FIELDS.forEach(key => window.localStorage.removeItem(CTA_TUNING_KEY + key))
+          window.location.reload()
+        }),
+      }, { collapsed: true }),
+    }, { collapsed: true }),
+  }, store ? { store } : undefined)
   const enabled = Boolean((controls as { enabled?: boolean }).enabled ?? true)
   const markers = Boolean((controls as { markers?: boolean }).markers) && isDev
-  const scrub = Number((controls as { scrub?: number }).scrub ?? 0.7)
-  const glowOpacity = Number((controls as { glowOpacity?: number }).glowOpacity ?? 0.9)
+  const scrub = Number((controls as { scrub?: number }).scrub ?? .7)
+  const glowOpacity = Number((controls as { glowOpacity?: number }).glowOpacity ?? .9)
+  const ctaLeadMobile = Number((controls as { ctaLeadMobile?: number }).ctaLeadMobile ?? 80)
+  const ctaLeadDesktop = Number((controls as { ctaLeadDesktop?: number }).ctaLeadDesktop ?? 360)
+  const ctaLeadStart = Number((controls as { ctaLeadStart?: number }).ctaLeadStart ?? .96)
+  const ctaLeadEnd = Number((controls as { ctaLeadEnd?: number }).ctaLeadEnd ?? .44)
+  const ctaOffsetX = Number((controls as { ctaOffsetX?: number }).ctaOffsetX ?? 0)
+  const ctaOffsetY = Number((controls as { ctaOffsetY?: number }).ctaOffsetY ?? 0)
+  const ctaFadeBefore = Number((controls as { ctaFadeBefore?: number }).ctaFadeBefore ?? 12)
+  const ctaFadeLength = Number((controls as { ctaFadeLength?: number }).ctaFadeLength ?? 50)
 
   useEffect(() => {
-    if (!enabled || isMobile) return undefined
+    if (!isDev || !new URLSearchParams(window.location.search).has('beacon-tune')) return undefined
+    document.documentElement.classList.add('mr-beacon-tuning')
+    return () => document.documentElement.classList.remove('mr-beacon-tuning')
+  }, [isDev])
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  useEffect(() => {
+    setCtaScene(document.querySelector<HTMLElement>('#page-sections .mr-closing-scene'))
+  }, [])
+
+  useEffect(() => {
     const page = document.getElementById('page-sections')
-    const svg = svgRef.current
     const beacon = beaconRef.current
-    const ring = ringRef.current
-    const trail = trailRef.current
-    const pathsLayer = pathsLayerRef.current
-    if (!page || !svg || !beacon || !ring || !trail || !pathsLayer) return undefined
+    // Wait for the portal target so startup creates one route/trigger, rather
+    // than creating it, refreshing, then immediately replacing it for the CTA.
+    if (!enabled || !page || !beacon || !ctaScene) return undefined
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const sections = ANCHOR_IDS.map(id => page.querySelector<HTMLElement>(`#${id}`)).filter((el): el is HTMLElement => Boolean(el))
+    let refreshTimer = 0
+    let disposed = false
+    let route: Point[] = []
+    let pageTop = 0
+    let sceneOffset: Point = { x: 0, y: 0 }
+    let whyBounds: { start: number; end: number } | null = null
+    let mobileArrivalLead = 240
+    const moveX = gsap.quickTo(beacon, 'x', { duration: reduced ? 0 : Math.min(.38, scrub), ease: 'power2.out' })
+    const moveY = gsap.quickTo(beacon, 'y', { duration: reduced ? 0 : Math.min(.38, scrub), ease: 'power2.out' })
+    const fade = gsap.quickTo(beacon, 'opacity', { duration: reduced ? 0 : .25, ease: 'power2.out' })
+    const localBeacon = ctaBeaconRef.current
+    const localX = localBeacon && gsap.quickTo(localBeacon, 'x', { duration: reduced ? 0 : Math.min(.38, scrub), ease: 'power2.out' })
+    const localY = localBeacon && gsap.quickTo(localBeacon, 'y', { duration: reduced ? 0 : Math.min(.38, scrub), ease: 'power2.out' })
+    const localFade = localBeacon && gsap.quickTo(localBeacon, 'opacity', { duration: reduced ? 0 : .25, ease: 'power2.out' })
 
-    let cleanupExtra: (() => void) | undefined
-    const ctx = gsap.context(() => {
-    let tl: gsap.core.Timeline | null = null
-    let breathe: gsap.core.Tween | null = null
-    let enterSt: ScrollTrigger | null = null
-    let creamTone: boolean | null = null
-
-    const pulse = (final = false) => {
-      gsap.fromTo(
-        ring,
-        { scale: 0.35, opacity: 0.5 },
-        {
-          scale: final ? 2.8 : 2,
-          opacity: 0,
-          duration: final ? 0.7 : 0.45,
-          ease: 'power2.out',
-          overwrite: true,
-        },
-      )
-    }
-
-    const readPts = (): Point[] => {
-      const scrollY = window.scrollY || document.documentElement.scrollTop
+    const points = (): Point[] => {
       const pageRect = page.getBoundingClientRect()
-      const pageTop = pageRect.top + scrollY
-      const pageLeft = pageRect.left
-      const isMobile = window.innerWidth < 768
-      const cx = page.clientWidth * 0.5
-
-      return ANCHOR_IDS.map((id) => {
-        const el = page.querySelector(`[data-beacon-anchor="${id}"]`) as HTMLElement | null
-        if (!el) return { x: cx, y: 0 }
-        const r = el.getBoundingClientRect()
-        let x = r.left + r.width / 2 - pageLeft
-        const y = r.top + scrollY + r.height / 2 - pageTop
-        if (isMobile) x = gsap.utils.interpolate(x, cx, 0.55)
-        return { x, y }
-      })
+      return ANCHOR_IDS.map(id => page.querySelector<HTMLElement>(`[data-beacon-anchor="${id}"]`))
+        .filter((el): el is HTMLElement => Boolean(el))
+        .map(el => {
+          const rect = el.getBoundingClientRect()
+          return { x: rect.left + rect.width / 2 - pageRect.left, y: rect.top + rect.height / 2 - pageRect.top }
+        })
     }
 
-    const build = () => {
-      tl?.scrollTrigger?.kill()
-      tl?.kill()
-      breathe?.kill()
-      enterSt?.kill()
-      pathsLayer.innerHTML = ''
-
-      const pts = readPts()
-      if (pts.length < 2) return
-
-      const setTone = (y: number) => {
-        const isCream = y >= pts[1].y - 120 && y <= pts[5].y + 130
-        if (creamTone === isCream) return
-        creamTone = isCream
-        beacon.dataset.tone = isCream ? 'cream' : 'dark'
-        beacon.style.setProperty('--beacon-core', isCream ? '#11120E' : IVORY)
-        beacon.style.setProperty('--beacon-edge', isCream ? '#3A3E33' : CHAMPAGNE)
-        beacon.style.setProperty('--beacon-shadow', isCream
-          ? '0 0 13px 3px rgba(17,18,14,0.16), 0 0 4px 1px rgba(17,18,14,0.32)'
-          : '0 0 20px 6px rgba(255,237,213,0.32), 0 0 5px 1px rgba(245,230,200,0.5)')
-        beacon.style.setProperty('--beacon-ring', isCream ? 'rgba(17,18,14,0.3)' : 'rgba(255,237,213,0.45)')
-        trail.setAttribute('stroke', isCream ? '#252820' : IVORY)
+    const measure = () => {
+      route = points()
+      if (route.length) {
+        route[route.length - 1] = {
+          x: route[route.length - 1].x + ctaOffsetX,
+          y: route[route.length - 1].y + ctaOffsetY,
+        }
       }
-
-      const h = Math.max(page.scrollHeight, page.offsetHeight)
-      const w = Math.max(page.clientWidth, page.offsetWidth)
-      svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
-      svg.style.width = `${w}px`
-      svg.style.height = `${h}px`
-
-      gsap.set(beacon, {
-        x: pts[0].x,
-        y: pts[0].y,
-        xPercent: -50,
-        yPercent: -50,
-        opacity: glowOpacity,
-      })
-      setTone(pts[0].y)
-      gsap.set(ring, { scale: 0.4, opacity: 0 })
-      gsap.set(trail, { opacity: 0 })
-
-      if (reduce) return
-
-      const paths: SVGPathElement[] = []
-      for (let i = 0; i < pts.length - 1; i++) {
-        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-        p.setAttribute('d', cubicPath(pts[i], pts[i + 1]))
-        p.setAttribute('fill', 'none')
-        p.setAttribute('stroke', CHAMPAGNE)
-        p.setAttribute('stroke-width', '0.6')
-        p.setAttribute('stroke-opacity', '0.04')
-        pathsLayer.appendChild(p)
-        paths.push(p)
+      pageTop = page.getBoundingClientRect().top + window.scrollY
+      const why = page.querySelector<HTMLElement>('#why-maximus')
+      if (why) {
+        const pageRect = page.getBoundingClientRect()
+        const rect = why.getBoundingClientRect()
+        whyBounds = { start: rect.top - pageRect.top, end: rect.bottom - pageRect.top }
       }
-
-      breathe = gsap.to(beacon, {
-        opacity: glowOpacity * 0.75,
-        duration: 2,
-        yoyo: true,
-        repeat: -1,
-        ease: 'sine.inOut',
-      })
-
-      tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          id: 'reach-beacon-master',
-          trigger: page,
-          start: 'top 60%',
-          end: 'bottom 75%',
-          scrub,
-          markers,
-          invalidateOnRefresh: false,
-        },
-      })
-
-      paths.forEach((path, i) => {
-        const len = path.getTotalLength()
-        tl!.to(
-          beacon,
-          {
-            duration: 1,
-            motionPath: {
-              path,
-              align: path,
-              alignOrigin: [0.5, 0.5],
-              autoRotate: false,
-            },
-            onStart: () => {
-              breathe?.pause()
-              gsap.set(trail, {
-                attr: { d: path.getAttribute('d') || '' },
-                strokeDasharray: `22 ${Math.max(36, len)}`,
-                strokeDashoffset: 0,
-                opacity: 0.28,
-              })
-            },
-            onUpdate() {
-              setTone(Number(gsap.getProperty(beacon, 'y')))
-              gsap.set(trail, {
-                strokeDashoffset: -this.progress() * len,
-                opacity: 0.28 * (1 - this.progress() * 0.45),
-              })
-            },
-            onComplete: () => {
-              gsap.to(trail, { opacity: 0, duration: 0.2, overwrite: true })
-              const last = i === paths.length - 1
-              pulse(last)
-              if (!last) breathe?.restart()
-            },
-          },
-          i,
-        )
-      })
-
-      enterSt = ScrollTrigger.create({
-        id: 'reach-beacon-enter',
-        trigger: page.querySelector('[data-beacon-anchor="services"]') || page,
-        start: 'top 75%',
-        once: true,
-        onEnter: () => pulse(false),
-      })
+      const title = ctaScene?.querySelector<HTMLElement>('.mr-closing-headline')
+      if (title && route.length) {
+        const titleRect = title.getBoundingClientRect()
+        const pageRect = page.getBoundingClientRect()
+        const titleCenter = titleRect.top + titleRect.height / 2 - pageRect.top
+        // At the headline's viewport midpoint, the route reaches the painted light.
+        mobileArrivalLead = route[route.length - 1].y - titleCenter + window.innerHeight * .05
+      }
+      if (ctaScene) {
+        const pageRect = page.getBoundingClientRect()
+        const sceneRect = ctaScene.getBoundingClientRect()
+        sceneOffset = { x: sceneRect.left - pageRect.left, y: sceneRect.top - pageRect.top }
+      }
+      if (route.length < 2) return
+      const commands = [`M ${route[0].x} ${route[0].y}`]
+      for (let i = 0; i < route.length - 1; i++) {
+        const from = route[i]
+        const to = route[i + 1]
+        const dy = to.y - from.y
+        commands.push(`C ${from.x} ${from.y + dy * .35} ${to.x} ${to.y - dy * .35} ${to.x} ${to.y}`)
+      }
+      routeRef.current?.setAttribute('d', commands.join(' '))
     }
 
-    build()
-
-    let resizeTimer = 0
-    const onResize = () => {
-      window.clearTimeout(resizeTimer)
-      resizeTimer = window.setTimeout(() => {
-        build()
-        ScrollTrigger.refresh()
-      }, 220)
+    const sync = () => {
+      if (route.length < 2) return
+      const mobile = window.innerWidth < 768
+      const baseCursor = window.scrollY + window.innerHeight * (mobile ? .45 : .55) - pageTop
+      const sceneViewportTop = sceneOffset.y + pageTop - window.scrollY
+      const leadSpan = Math.max(.01, ctaLeadStart - ctaLeadEnd)
+      const leadProgress = ctaScene ? clamp01((ctaLeadStart - sceneViewportTop / window.innerHeight) / leadSpan) : 0
+      const easedLead = leadProgress * leadProgress * (3 - 2 * leadProgress)
+      const cursor = baseCursor + (mobile ? mobileArrivalLead + ctaLeadMobile : ctaLeadDesktop) * easedLead
+      let point = route[0]
+      for (let i = 0; i < route.length - 1; i++) {
+        const from = route[i]
+        const to = route[i + 1]
+        if (cursor < from.y) break
+        const t = Math.max(0, Math.min(1, (cursor - from.y) / Math.max(1, to.y - from.y)))
+        point = { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t }
+        if (cursor <= to.y) break
+      }
+      const final = route[route.length - 1]
+      const arrival = clamp01((cursor - (final.y - ctaFadeBefore)) / ctaFadeLength)
+      // Let the route continue behind Why while the marker stays quiet there.
+      const whyQuiet = whyBounds
+        ? clamp01((cursor - whyBounds.start + 80) / 120) * (1 - clamp01((cursor - whyBounds.end + 40) / 120))
+        : 0
+      const opacity = glowOpacity * (1 - arrival) * (1 - whyQuiet * .9)
+      const localReveal = ctaScene ? Math.max(0, Math.min(1, (point.y - sceneOffset.y) / 28)) : 0
+      moveX(point.x)
+      moveY(point.y)
+      fade(opacity * (1 - localReveal))
+      localX?.(point.x - sceneOffset.x)
+      localY?.(point.y - sceneOffset.y)
+      localFade?.(opacity * localReveal)
     }
-    window.addEventListener('resize', onResize)
-    const boot = window.setTimeout(() => {
-      build()
-      ScrollTrigger.refresh()
-    }, 400)
 
-    cleanupExtra = () => {
-      window.clearTimeout(boot)
-      window.clearTimeout(resizeTimer)
-      window.removeEventListener('resize', onResize)
-      tl?.scrollTrigger?.kill()
-      tl?.kill()
-      breathe?.kill()
-      enterSt?.kill()
-      ScrollTrigger.getById('reach-beacon-master')?.kill()
-      ScrollTrigger.getById('reach-beacon-enter')?.kill()
-    }
+    const trigger = ScrollTrigger.create({
+      id: 'home-reach-beacon', trigger: page, start: 'top bottom', end: 'bottom top',
+      markers, onUpdate: sync, onRefresh: () => { measure(); sync() },
     })
-
-    return () => {
-      cleanupExtra?.()
-      ctx.revert()
+    const refresh = () => {
+      if (disposed) return
+      window.clearTimeout(refreshTimer)
+      // onRefresh already measures and syncs this route after trigger geometry
+      // settles. Avoid doing the same layout reads twice in one refresh.
+      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 120)
     }
-  }, [enabled, markers, scrub, glowOpacity, isMobile])
+    const resize = new ResizeObserver(refresh)
+    resize.observe(page)
+    sections.forEach(section => resize.observe(section))
+    window.addEventListener('resize', refresh)
+    window.visualViewport?.addEventListener('resize', refresh)
+    window.addEventListener('mr-beacon-anchor-change', refresh)
+    document.fonts.addEventListener?.('loadingdone', refresh)
+    document.fonts.ready.then(refresh).catch(() => undefined)
+    measure()
+    sync()
+    return () => {
+      disposed = true
+      window.clearTimeout(refreshTimer)
+      resize.disconnect()
+      window.removeEventListener('resize', refresh)
+      window.visualViewport?.removeEventListener('resize', refresh)
+      window.removeEventListener('mr-beacon-anchor-change', refresh)
+      document.fonts.removeEventListener?.('loadingdone', refresh)
+      trigger.kill()
+      gsap.killTweensOf(beacon)
+      if (localBeacon) gsap.killTweensOf(localBeacon)
+    }
+  }, [enabled, markers, scrub, glowOpacity, ctaScene, ctaLeadMobile, ctaLeadDesktop, ctaLeadStart, ctaLeadEnd, ctaOffsetX, ctaOffsetY, ctaFadeBefore, ctaFadeLength])
 
-  if (!enabled || isMobile) return null
-
+  if (!enabled) return null
   return (
-    <div
-      className="pointer-events-none absolute inset-0 z-[2] overflow-visible"
-      aria-hidden
-      data-reach-beacon-root
-    >
-      <svg
-        ref={svgRef}
-        className="pointer-events-none absolute left-0 top-0 overflow-visible"
-        aria-hidden
-      >
-        <g ref={pathsLayerRef} />
-        <path
-          ref={trailRef}
-          fill="none"
-          stroke={IVORY}
-          strokeWidth={1}
-          strokeLinecap="round"
-          opacity={0}
-        />
-      </svg>
-
-      <div
-        ref={beaconRef}
-        className="pointer-events-none absolute left-0 top-0 will-change-transform"
-        style={{ width: 8, height: 8 }}
-      >
-        <span
-          className="absolute left-1/2 top-1/2 block h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            background: `radial-gradient(circle, var(--beacon-core, ${IVORY}) 0%, var(--beacon-edge, ${CHAMPAGNE}) 45%, transparent 72%)`,
-            boxShadow: 'var(--beacon-shadow, 0 0 20px 6px rgba(255,237,213,0.32))',
-          }}
-        />
-        <span
-          ref={ringRef}
-          className="absolute left-1/2 top-1/2 block h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border"
-          style={{ opacity: 0, borderColor: 'var(--beacon-ring, rgba(255,237,213,0.45))' }}
-        />
-      </div>
+    <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true" data-reach-beacon-root>
+      <svg className="absolute inset-0 h-full w-full overflow-visible" fill="none" aria-hidden="true"><path ref={routeRef} stroke="rgba(53,77,47,.17)" strokeWidth="1" strokeDasharray="2 8" /></svg>
+      <div ref={beaconRef} style={{ opacity: 0 }} className="pointer-events-none absolute left-0 top-0 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#1d3219]/70 bg-[#C8FF3D] shadow-[0_0_0_3px_rgba(63,92,39,.17),0_0_10px_3px_rgba(200,255,61,.48)] will-change-transform" />
+      {ctaScene && createPortal(<div className="pointer-events-none absolute inset-0 z-[11]" aria-hidden="true" data-reach-beacon-cta-layer>
+        <div ref={ctaBeaconRef} style={{ opacity: 0 }} className="pointer-events-none absolute left-0 top-0 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#1d3219]/70 bg-[#C8FF3D] shadow-[0_0_0_3px_rgba(63,92,39,.17),0_0_10px_3px_rgba(200,255,61,.48)] will-change-transform" />
+      </div>, ctaScene)}
     </div>
   )
 }

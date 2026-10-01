@@ -6,8 +6,8 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { useControls, folder } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 import { useLabTuners, type LabTunerValues } from '@/components/services-cards/tuners/LabTuners'
 import { useAdsTuners, type AdsTunerValues } from '@/components/services-cards/tuners/AdsTuners'
 import {

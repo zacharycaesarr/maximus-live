@@ -1,240 +1,151 @@
-'use client'
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import WhyFeatureStage from '@/components/sections/WhyFeatureStage'
+import '@/components/sections/why-workspace.css'
 
-import { useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import {
-  CheckCircle2,
-  Clock3,
-  MessageSquareWarning,
-  ShieldCheck,
-  Sparkles,
-  Users,
-  type LucideIcon,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+const reasons = [
+  { title: 'One partner', body: 'Web, ads and creative stay connected rather than being split across unrelated vendors.', label: 'Everything connected' },
+  { title: 'Built around you', body: 'Custom direction rather than a reskinned template.', label: 'A distinctive foundation' },
+  { title: 'Launch, then improve', body: 'Launch begins the refinement process rather than ending it.', label: 'Made to evolve' },
+  { title: 'Know what’s working', body: 'Clear visibility into meaningful leads, performance and what changed.', label: 'Clarity in the numbers' },
+  { title: 'Stay connected', body: 'Direct communication and a clear understanding of where the project stands.', label: 'A direct line' },
+] as const
 
-type Side = {
-  title: string
-  description: string
-  Icon: LucideIcon
+// The first panel settles in place before the two belts begin to scrub.
+const FIRST_PANEL_HOLD = .095
+
+function PanelCopy({ index }: { index: number }) {
+  const reason = reasons[index]
+  return <div className="mr-why-slide-copy" data-home-reveal>
+    <span>0{index + 1} / 05</span>
+    <h3>{reason.title}</h3>
+    <p>{reason.body}</p>
+  </div>
 }
 
-type Row = {
-  id: string
-  category: string
-  maximus: Side
-  traditional: Side
+function VisualPanel({ index, label, testimonialsPlaying, isActive }: {
+  index: number; label: string; testimonialsPlaying: boolean; isActive: boolean
+}) {
+  return <div className="mr-why-visual-panel" data-home-reveal>
+    <WhyFeatureStage active={index} reducedMotion={false} label={label} isActive={isActive} testimonialsPlaying={testimonialsPlaying} />
+  </div>
 }
 
-const ROWS: Row[] = [
-  {
-    id: 'ownership',
-    category: 'Ownership',
-    maximus: {
-      title: 'One partner who ships',
-      description: 'Web, ads, and creative under one roof so nothing falls between vendors.',
-      Icon: ShieldCheck,
-    },
-    traditional: {
-      title: 'Agency handoffs',
-      description: 'Separate teams for site, ads, and creative. Slow loops and mixed priorities.',
-      Icon: Users,
-    },
-  },
-  {
-    id: 'speed',
-    category: 'Speed',
-    maximus: {
-      title: 'Build → launch → tune',
-      description: 'Pages and campaigns move together so traffic hits a page that converts.',
-      Icon: Sparkles,
-    },
-    traditional: {
-      title: 'Waiting on the queue',
-      description: 'Tickets, revisions, and weekly meetings before anything ships live.',
-      Icon: Clock3,
-    },
-  },
-  {
-    id: 'clarity',
-    category: 'Clarity',
-    maximus: {
-      title: 'Plain numbers',
-      description: 'Qualified leads, cost per lead, and what changed this week. No fog.',
-      Icon: CheckCircle2,
-    },
-    traditional: {
-      title: 'Vanity reports',
-      description: 'Impressions and reach decks that look busy but do not explain revenue.',
-      Icon: MessageSquareWarning,
-    },
-  },
-]
+/** Desktop-only subscription. Mobile never initializes the unused scroll reel. */
+function DesktopReel({ sectionRef, onActiveChange }: { sectionRef: RefObject<HTMLElement>; onActiveChange: (index: number) => void }) {
+  const visualViewportRef = useRef<HTMLDivElement>(null)
+  const visualTrackRef = useRef<HTMLDivElement>(null)
+  const [desktopActive, setDesktopActive] = useState(0)
+  const [testimonialsActive, setTestimonialsActive] = useState(false)
+  const desktopActiveRef = useRef(0)
+  const testimonialsActiveRef = useRef(false)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
+  const reelProgress = useTransform(scrollYProgress, [0, FIRST_PANEL_HOLD, 1], [0, 0, 1])
+  const horizontalDistance = useMotionValue(0)
+  const x = useTransform(() => -reelProgress.get() * horizontalDistance.get())
 
-/**
- * Placeholder comparison matrix for Why Maximus Reach.
- * Sync-hover rows. Mobile: pill + swipe between columns.
- */
-export default function WhyComparisonMatrix() {
-  const [hovered, setHovered] = useState<string | null>(null)
-  const [mobileTab, setMobileTab] = useState<'maximus' | 'traditional'>('maximus')
-  const touchX = useRef<number | null>(null)
+  useLayoutEffect(() => {
+    const viewport = visualViewportRef.current
+    const track = visualTrackRef.current
+    if (!viewport || !track) return undefined
+    let disposed = false
+    const measure = () => {
+      if (disposed) return
+      const distance = Math.max(0, track.scrollWidth - viewport.clientWidth)
+      horizontalDistance.set(distance)
+    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(viewport)
+    observer.observe(track)
+    window.addEventListener('resize', measure)
+    document.fonts.ready.then(measure).catch(() => undefined)
+    measure()
+    return () => { disposed = true; observer.disconnect(); window.removeEventListener('resize', measure) }
+  }, [horizontalDistance])
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchX.current = e.changedTouches[0]?.clientX ?? null
-  }
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const start = touchX.current
-    touchX.current = null
-    if (start == null) return
-    const end = e.changedTouches[0]?.clientX ?? start
-    const dx = end - start
-    if (Math.abs(dx) < 48) return
-    // Swipe left → Traditional, swipe right → Maximus
-    if (dx < 0) setMobileTab('traditional')
-    else setMobileTab('maximus')
-  }
+  useMotionValueEvent(reelProgress, 'change', progress => {
+    const nextActive = Math.max(0, Math.min(4, Math.round(progress * 4)))
+    if (nextActive !== desktopActiveRef.current) {
+      desktopActiveRef.current = nextActive
+      setDesktopActive(nextActive)
+      onActiveChange(nextActive)
+    }
+    const nextTestimonialsActive = progress >= .97 && progress <= 1
+    if (nextTestimonialsActive !== testimonialsActiveRef.current) {
+      testimonialsActiveRef.current = nextTestimonialsActive
+      setTestimonialsActive(nextTestimonialsActive)
+    }
+  })
 
-  return (
-    <div className="w-full">
-      {/* Mobile tabs */}
-      <div className="mb-4 flex justify-center md:mb-5 md:hidden">
-        <div className="inline-flex rounded-full border border-home-line/60 bg-home-surface-light/80 p-1 backdrop-blur">
-          <button
-            type="button"
-            className={cn(
-              'rounded-full px-4 py-2 font-nhg text-[12px] font-medium transition',
-              mobileTab === 'maximus' ? 'bg-home-surface-dark text-home-on-dark' : 'text-home-muted',
-            )}
-            onClick={() => setMobileTab('maximus')}
-          >
-            Maximus Reach
-          </button>
-          <button
-            type="button"
-            className={cn(
-              'rounded-full px-4 py-2 font-nhg text-[12px] font-medium transition',
-              mobileTab === 'traditional' ? 'bg-home-surface-dark text-home-on-dark' : 'text-home-muted',
-            )}
-            onClick={() => setMobileTab('traditional')}
-          >
-            Traditional
-          </button>
-        </div>
-      </div>
-
-      <div
-        className="relative overflow-hidden rounded-3xl border border-home-line/50 bg-home-surface-light/40 p-3 md:p-4"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <div className="relative grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-0">
-          <div className="pointer-events-none absolute inset-y-6 left-1/2 z-20 hidden -translate-x-1/2 md:block" aria-hidden>
-            <div className="mx-auto h-full w-px bg-home-line/60" />
-            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-home-line bg-home-surface-light px-2.5 py-1 font-nhg text-[10px] font-semibold tracking-[0.18em] text-home-muted">
-              VS
-            </span>
-          </div>
-
-          <div
-            className={cn(
-              'rounded-2xl bg-home-surface-dark p-4 md:rounded-r-none md:p-5',
-              mobileTab !== 'maximus' && 'hidden md:block',
-            )}
-          >
-            <p className="mb-4 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-acid">
-              Maximus Reach
-            </p>
-            <div className="flex flex-col gap-2.5">
-              {ROWS.map((row, i) => {
-                const active = hovered === row.id
-                const dim = hovered !== null && !active
-                const Icon = row.maximus.Icon
-                return (
-                  <motion.div
-                    key={`m-${row.id}`}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ delay: i * 0.05, duration: 0.35 }}
-                    onMouseEnter={() => setHovered(row.id)}
-                    onMouseLeave={() => setHovered(null)}
-                    className={cn(
-                      'rounded-xl border border-home-line/20 bg-home-on-dark/[0.03] p-3.5 transition-all duration-250 md:p-4',
-                      active && 'border-home-acid/45 bg-home-acid/10',
-                      dim && 'opacity-55',
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-home-acid" aria-hidden />
-                      <div>
-                        <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.12em] text-home-muted/70">
-                          {row.category}
-                        </p>
-                        <h3 className="mt-1 m-0 font-nhg text-[15px] font-semibold text-home-on-dark md:text-base">
-                          {row.maximus.title}
-                        </h3>
-                        <p className="mt-1.5 m-0 font-nhg text-[13px] leading-relaxed text-home-muted">
-                          {row.maximus.description}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div
-            className={cn(
-              'rounded-2xl border border-home-line/40 bg-home-surface-light/90 p-4 md:rounded-l-none md:border-l-0 md:p-5',
-              mobileTab !== 'traditional' && 'hidden md:block',
-            )}
-          >
-            <p className="mb-4 font-nhg text-[11px] font-medium uppercase tracking-[0.16em] text-home-muted">
-              Traditional agency
-            </p>
-            <div className="flex flex-col gap-2.5">
-              {ROWS.map((row, i) => {
-                const active = hovered === row.id
-                const dim = hovered !== null && !active
-                const Icon = row.traditional.Icon
-                return (
-                  <motion.div
-                    key={`t-${row.id}`}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ delay: i * 0.05 + 0.04, duration: 0.35 }}
-                    onMouseEnter={() => setHovered(row.id)}
-                    onMouseLeave={() => setHovered(null)}
-                    className={cn(
-                      'rounded-xl border border-home-line/50 bg-home-bg-light/50 p-3.5 transition-all duration-250 md:p-4',
-                      active && 'border-home-line bg-home-surface-light',
-                      dim && 'opacity-55',
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-home-muted" aria-hidden />
-                      <div>
-                        <p className="m-0 font-nhg text-[11px] uppercase tracking-[0.12em] text-home-muted/80">
-                          {row.category}
-                        </p>
-                        <h3 className="mt-1 m-0 font-nhg text-[15px] font-semibold text-home-on-light md:text-base">
-                          {row.traditional.title}
-                        </h3>
-                        <p className="mt-1.5 m-0 font-nhg text-[13px] leading-relaxed text-home-muted">
-                          {row.traditional.description}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
+  return <div className="mr-why-desktop-viewport">
+    <div ref={visualViewportRef} className="mr-why-visual-viewport">
+      <motion.div ref={visualTrackRef} className="mr-why-track" style={{ x }}>
+        {reasons.map((reason, index) => <VisualPanel key={reason.title} index={index} label={reason.label} isActive={index === desktopActive} testimonialsPlaying={index === 4 && index === desktopActive && testimonialsActive} />)}
+      </motion.div>
     </div>
-  )
+    <div className="mr-why-copy-viewport">
+      <motion.div className="mr-why-track" style={{ x }}>
+        {reasons.map((reason, index) => <div className="mr-why-copy-panel" key={reason.title}><PanelCopy index={index} /></div>)}
+      </motion.div>
+    </div>
+  </div>
+}
+
+/** Five full panels scrub with vertical page scrolling. Both belts share one x value. */
+export default function WhyComparisonMatrix() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const carouselRef = useRef<HTMLDivElement>(null)
+  const [mobileActive, setMobileActive] = useState(0)
+  const [desktopActive, setDesktopActive] = useState(0)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
+  const reducedMotion = useReducedMotion()
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 767px)')
+    const update = () => setIsMobile(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  const selectMobile = (index: number) => {
+    const carousel = carouselRef.current
+    if (carousel) carousel.scrollTo({ left: index * carousel.clientWidth, behavior: 'smooth' })
+    setMobileActive(index)
+  }
+
+  const updateMobile = () => {
+    const carousel = carouselRef.current
+    if (carousel) setMobileActive(Math.max(0, Math.min(4, Math.round(carousel.scrollLeft / Math.max(1, carousel.clientWidth)))))
+  }
+
+  return <section id="why-maximus" ref={sectionRef} data-parallax-pause className={`mr-why-section ${reducedMotion ? 'mr-why-reduced' : ''}`} aria-label="Why Maximus Reach">
+    <span data-beacon-anchor="why-maximus" className="pointer-events-none absolute left-[8%] top-6 h-px w-px" aria-hidden="true" />
+    <div className="mr-why-pin">
+      <div className="mr-why-heading">
+        <p data-home-reveal className="mr-why-eyebrow">04</p>
+        <div><h2 data-home-reveal>Why Maximus Reach</h2><p data-home-reveal>What working with Maximus Reach actually feels like.</p></div>
+        <span className="mr-why-current" aria-hidden="true">0{desktopActive + 1} / 05</span>
+      </div>
+
+      {!isMobile && !reducedMotion && <DesktopReel sectionRef={sectionRef} onActiveChange={setDesktopActive} />}
+
+      {!isMobile && reducedMotion && <div className="mr-why-reduced-list">
+        {reasons.map((reason, index) => <article key={reason.title}>
+          <WhyFeatureStage active={index} reducedMotion label={reason.label} isActive />
+          <PanelCopy index={index} />
+        </article>)}
+      </div>}
+
+      {isMobile && <div className="mr-why-mobile">
+        <div ref={carouselRef} className="mr-why-mobile-carousel" onScroll={updateMobile} aria-label="Five reasons to work with Maximus Reach">
+          {reasons.map((reason, index) => <article className="mr-why-mobile-panel" key={reason.title}>
+            <div className="mr-why-mobile-visual" data-home-reveal><WhyFeatureStage active={index} reducedMotion={Boolean(reducedMotion)} label={reason.label} isActive={mobileActive === index} testimonialsPlaying={mobileActive === index && index === 4} /></div>
+            <PanelCopy index={index} />
+          </article>)}
+        </div>
+        <div className="mr-why-tabs" role="group" aria-label="Choose a reason">
+          {reasons.map((reason, index) => <button key={reason.title} type="button" aria-label={`${index + 1}: ${reason.title}`} aria-current={mobileActive === index ? 'step' : undefined} onClick={() => selectMobile(index)}>0{index + 1}</button>)}
+        </div>
+      </div>}
+    </div>
+  </section>
 }

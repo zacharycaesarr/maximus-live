@@ -1,22 +1,44 @@
-import { motion, type Variants } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion, useAnimate, useInView, type Variants, type AnimationPlaybackControls } from 'framer-motion'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { ChevronDown, Rocket } from 'lucide-react'
-import HeroKineticText from './HeroKineticText'
-import HandReachLottie from './HandReachLottie'
-import HeroBgParallax from './HeroBgParallax'
-import HeroContentParallax from './HeroContentParallax'
-import HeroVideoBackground from './HeroVideoBackground'
+import HeroKineticText from '@/components/hero/HeroKineticText'
+import HeroBgParallax from '@/components/hero/HeroBgParallax'
+import HeroContentParallax from '@/components/hero/HeroContentParallax'
+import HeroVideoBackground from '@/components/hero/HeroVideoBackground'
 import { FlowButton } from '@/components/ui/flow-button'
 import { PortalIcon } from '@/components/ui/icons-portal'
-import { MeshWaveBackground } from '@/components/ui/mesh-wave-background'
 import { cn } from '@/lib/utils'
 import { useHeroTextTuner } from '@/context/HeroTextTunerContext'
 import { useHeroLayoutTuner } from '@/context/HeroLayoutTunerContext'
 import { useBgTuner } from '@/context/BgTunerContext'
-import { useIntroTuner } from '@/context/IntroTunerContext'
-import { useLenisScroll } from '@/components/SmoothScroll'
+import { useIntroTuner } from '@/home/context/IntroTunerContext'
+import { useLenisScroll } from '@/home/components/SmoothScroll'
 import { splitSubhead } from '@/lib/heroLayoutDefaults'
-import WordSlideUp from './WordSlideUp'
+import WordSlideUp from '@/components/hero/WordSlideUp'
+import { useDocumentVisible } from '@/hooks/useDocumentVisible'
+
+const HandReachLottie = lazy(() => import('@/components/hero/HandReachLottie'))
+const MeshWaveBackground = lazy(() => import('@/components/ui/mesh-wave-background').then(module => ({ default: module.MeshWaveBackground })))
+
+/** Same pulse, with its playback phase held whenever the cue is out of view. */
+function HeroScrollCue() {
+  const [scope, animate] = useAnimate<HTMLSpanElement>()
+  const visible = useInView(scope, { margin: '10% 0px', initial: true })
+  const documentVisible = useDocumentVisible()
+  const playback = useRef<AnimationPlaybackControls | null>(null)
+  useEffect(() => {
+    const animation = animate(scope.current, { y: [0, 5, 0], opacity: [.35, .75, .35] }, {
+      duration: 1.6, repeat: Infinity, ease: 'easeInOut',
+    })
+    playback.current = animation
+    return () => { animation.stop(); playback.current = null }
+  }, [animate, scope])
+  useEffect(() => {
+    if (visible && documentVisible) playback.current?.play()
+    else playback.current?.pause()
+  }, [visible, documentVisible])
+  return <span ref={scope} className="text-home-muted" aria-hidden><ChevronDown size={16} strokeWidth={2} /></span>
+}
 
 /**
  * Left copy over desk-loop video. Breathe delay before chrome so the room reads first.
@@ -33,7 +55,7 @@ export default function DirectHero() {
   const chromeVisible = intro.showChrome || (!intro.enabled && !intro.preview)
   const pageUnderAperture = intro.mode === 'aperture' && intro.enabled
   const bgVisible = chromeVisible || pageUnderAperture
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 767px)').matches)
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
     const apply = () => setIsMobile(mq.matches)
@@ -97,7 +119,8 @@ export default function DirectHero() {
 
   const left = layout.heroAlign === 'left'
   const onDark = left && layout.bgVideoEnabled
-  const blockScale = layout.copyScale ?? 1
+  // Mobile: desktop copyScale (often >1) blows the rotating phrase past the screen edges
+  const blockScale = isMobile ? 1 : (layout.copyScale ?? 1)
   const btnScale = layout.ctaScale ?? 1
   // Mobile: ignore desktop Leva copy offsets so everything stays centered near the top
   const copyX = isMobile ? 0 : (layout.copyOffsetX ?? 0)
@@ -149,7 +172,7 @@ export default function DirectHero() {
           />
         ) : (
           <HeroBgParallax className="absolute inset-[-4%] h-[108%] w-[108%]">
-            <MeshWaveBackground
+            <Suspense fallback={null}><MeshWaveBackground
               settings={{
                 color0: bg.color0,
                 color1: bg.color1,
@@ -160,12 +183,12 @@ export default function DirectHero() {
                 wireOpacity: bg.wireOpacity,
                 vignetteStrength: bg.vignetteStrength,
               }}
-            />
+            /></Suspense>
           </HeroBgParallax>
         )}
       </motion.div>
 
-      {chromeVisible && ctaArmed ? <HandReachLottie /> : null}
+      {chromeVisible && ctaArmed ? <Suspense fallback={null}><HandReachLottie /></Suspense> : null}
 
       <HeroContentParallax className="relative z-[4] flex flex-1 flex-col">
         <motion.div
@@ -317,14 +340,7 @@ export default function DirectHero() {
         >
           scroll
         </span>
-        <motion.span
-          className="text-home-muted"
-          animate={{ y: [0, 5, 0], opacity: [0.35, 0.75, 0.35] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-          aria-hidden
-        >
-          <ChevronDown size={16} strokeWidth={2} />
-        </motion.span>
+        <HeroScrollCue />
       </motion.a>
     </section>
   )

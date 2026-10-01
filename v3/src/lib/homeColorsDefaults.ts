@@ -6,17 +6,17 @@
 
 import type { CSSProperties } from 'react'
 
-export const HOME_COLORS_STORAGE_KEY = 'mr-v3-home-colors-v2'
+export const HOME_COLORS_STORAGE_KEY = 'mr-home-lab-colors-v4'
 
 export const defaultHomeColors = {
   bgLight: '#F3F0E8',
   bgDark: '#080909',
-  surfaceLight: '#F8F5EE',
+  surfaceLight: '#FAF8F2',
   surfaceDark: '#11120E',
   textOnLight: '#080909',
   textOnDark: '#F3F0E8',
-  muted: '#786F63',
-  line: '#D8D0C3',
+  muted: '#67706A',
+  line: '#D9DED8',
   acid: '#C8FF3D',
 } as const
 
@@ -65,7 +65,13 @@ export function loadHomeColors(): HomeColors {
   try {
     const raw = localStorage.getItem(HOME_COLORS_STORAGE_KEY)
     if (!raw) return { ...defaultHomeColors }
-    return { ...defaultHomeColors, ...JSON.parse(raw) }
+    const saved = JSON.parse(raw) as Partial<HomeColors>
+    // Bring earlier shipped defaults forward without discarding custom tuning.
+    const legacy = { surfaceLight: '#F8F5EE', muted: '#786F63', line: '#D8D0C3' }
+    for (const key of Object.keys(legacy) as (keyof typeof legacy)[]) {
+      if (saved[key]?.toLowerCase() === legacy[key].toLowerCase()) saved[key] = defaultHomeColors[key]
+    }
+    return { ...defaultHomeColors, ...saved }
   } catch {
     return { ...defaultHomeColors }
   }

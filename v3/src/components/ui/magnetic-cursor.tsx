@@ -9,7 +9,9 @@ import {
   type CSSProperties,
 } from 'react'
 import gsap from 'gsap'
-import { vec2, type Vec2 } from 'vecteur'
+import { vec2 } from 'vecteur'
+
+type Vec2 = ReturnType<typeof vec2>
 
 type MagneticCursorProps = {
   children: ReactNode
@@ -278,7 +280,7 @@ export const MagneticCursor: FC<MagneticCursorProps> = ({
             rotate: 0,
             duration: 0.25,
             ease: 'power3.out',
-            overwrite: 'all',
+            overwrite: true,
           })
         } else {
           gsap.to(cursorEl, {
@@ -294,7 +296,7 @@ export const MagneticCursor: FC<MagneticCursorProps> = ({
             rotate: 0,
             duration: 0.25,
             ease: 'power3.out',
-            overwrite: 'all',
+            overwrite: true,
           })
         }
       }
@@ -329,7 +331,7 @@ export const MagneticCursor: FC<MagneticCursorProps> = ({
           scaleY: 1,
           duration: detachDuration,
           ease: 'power3.out',
-          overwrite: 'all',
+          overwrite: true,
           onComplete: () => {
             state.isDetaching = false
             applyOutlineIdle()

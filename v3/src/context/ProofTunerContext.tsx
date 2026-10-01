@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { useControls, folder, button } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder, button } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 import {
   defaultProofTuner,
   loadProofTuner,
@@ -107,7 +107,7 @@ export function ProofTunerProvider({ store, children }: { store: LevaStore; chil
                 value: 'autoscroll',
                 options: {
                   Autoscroll: 'autoscroll',
-                  'Ads cockpit': 'ads-cockpit',
+                  'Brickwork dashboard': 'brickwork-dashboard',
                   Lottie: 'lottie',
                 },
                 label: 'visual type',

@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 export type StretchCurve = 'ramp' | 'peak' | 'valley' | 'tail' | 'flat' | 'custom'
 export type StretchFont = 'roboto-flex' | 'mona-sans'
 
-type StretchTextProps = {
+export type StretchTextProps = {
   text: string
   as?: ElementType
   className?: string

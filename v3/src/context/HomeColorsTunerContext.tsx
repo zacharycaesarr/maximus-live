@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
-import { useControls, folder, button } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder, button } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 import {
   HOME_COLORS_STORAGE_KEY,
   defaultHomeColors,

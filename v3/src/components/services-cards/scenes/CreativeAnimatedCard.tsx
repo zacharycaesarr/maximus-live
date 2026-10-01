@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
-import { PaletteIcon, ServiceCard } from '../ServiceCard'
-import { SceneCreative } from './SceneCreative'
-import type { CreativeTunerValues } from '../tuners/CreativeTuners'
-import type { CreativeMotionSettings } from './creativeMotion'
+import { PaletteIcon, ServiceCard } from '@/components/services-cards/ServiceCard'
+import { SceneCreative } from '@/components/services-cards/scenes/SceneCreative'
+import type { CreativeTunerValues } from '@/components/services-cards/tuners/CreativeTuners'
+import type { CreativeMotionSettings } from '@/components/services-cards/scenes/creativeMotion'
 import { useDocumentVisible } from '@/hooks/useDocumentVisible'
-import '../styles/creative-motion.css'
+import '@/components/services-cards/styles/creative-motion.css'
 
 export function CreativeAnimatedCard({ values: t }: { values: CreativeTunerValues }) {
   const ref = useRef<HTMLDivElement>(null)

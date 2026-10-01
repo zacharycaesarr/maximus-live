@@ -1,12 +1,12 @@
 import { useCallback, useRef, useState } from 'react'
 import { useInView, useReducedMotion } from 'framer-motion'
 import * as m from 'framer-motion/m'
-import { MegaphoneIcon, ServiceCard } from '../ServiceCard'
-import { SceneAds } from './SceneAds'
-import { entrance } from './webMotion'
-import type { AdsTunerValues } from '../tuners/AdsTuners'
+import { MegaphoneIcon, ServiceCard } from '@/components/services-cards/ServiceCard'
+import { SceneAds } from '@/components/services-cards/scenes/SceneAds'
+import { entrance } from '@/components/services-cards/scenes/webMotion'
+import type { AdsTunerValues } from '@/components/services-cards/tuners/AdsTuners'
 import { useDocumentVisible } from '@/hooks/useDocumentVisible'
-import '../styles/ads-motion.css'
+import '@/components/services-cards/styles/ads-motion.css'
 
 export type AdsMotionSettings = {
   enabled: boolean

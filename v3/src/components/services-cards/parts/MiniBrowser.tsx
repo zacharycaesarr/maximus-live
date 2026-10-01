@@ -1,8 +1,8 @@
-import { MiniLandscape } from './MiniLandscape'
-import { webText, type WebValues } from '../scenes/webDetails'
+import { MiniLandscape } from '@/components/services-cards/parts/MiniLandscape'
+import { webText, type WebValues } from '@/components/services-cards/scenes/webDetails'
 import type { CSSProperties } from 'react'
 import * as m from 'framer-motion/m'
-import { fade } from '../scenes/webMotion'
+import { fade } from '@/components/services-cards/scenes/webMotion'
 
 export function MiniBrowser({ values = {}, animated = false, introStagger = .17 }: { values?: WebValues; animated?: boolean; introStagger?: number }) {
   return (

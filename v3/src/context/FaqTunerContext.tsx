@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from 'react'
-import { useControls, folder, button } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
+import { useControls, folder, button } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
 import {
   defaultFaqTuner,
   FAQ_STORAGE_KEY,

@@ -1,5 +1,5 @@
 import * as m from 'framer-motion/m'
-import { fade } from '../scenes/webMotion'
+import { fade } from '@/components/services-cards/scenes/webMotion'
 
 function IconHome() {
   return (

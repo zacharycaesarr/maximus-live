@@ -26,7 +26,7 @@ import type { PhoneBeforeAfterSlide } from '@/components/ui/PhoneBeforeAfterCaro
 
 const PHONE_SLIDES: PhoneBeforeAfterSlide[] = [
   { id: 'northline', label: 'SMILEDESIGN' },
-  { id: 'summit', label: 'Rounds HVAC' },
+  { id: 'summit', label: 'BCCU Temp' },
   { id: 'ridge', label: 'Precise Plumbing' },
 ]
 

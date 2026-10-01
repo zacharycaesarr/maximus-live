@@ -1,7 +1,7 @@
-import { button, folder, useControls } from 'leva'
-import type { LevaStore } from '@/lib/levaStore'
-import { ADS_POSES, adsPanelPose, type PanelPose } from '../scenes/adsGeometry'
-import { persistedSchema } from './persistTuners'
+import { button, folder, useControls } from '@home-leva'
+import type { LevaStore } from '@/home/lib/levaStore'
+import { ADS_POSES, adsPanelPose, type PanelPose } from '@/components/services-cards/scenes/adsGeometry'
+import { persistedSchema } from '@/components/services-cards/tuners/persistTuners'
 
 function poseControls(prefix: string, p: PanelPose) {
   return {

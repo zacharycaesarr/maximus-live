@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ComponentType, type CSSProperties, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, ChevronDown, Home, Megaphone, Menu, Palette, User, X } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, Home, Megaphone, Menu, Palette, User, X, type LucideIcon } from 'lucide-react'
 import { BrandInline } from '@/components/brand/BrandInline'
 import { PortalIcon } from '@/components/ui/icons-portal'
 import { useNavTuner } from '@/context/NavTunerContext'
@@ -98,7 +98,7 @@ function MobileMenuCard({
   blurb: string
   onNavigate: () => void
   graphicSlot?: 'reserve' | 'none' | 'icon'
-  Icon?: ComponentType<{ size?: number; strokeWidth?: number; className?: string }>
+  Icon?: LucideIcon | ComponentType<{ size?: number; strokeWidth?: number; className?: string }>
 }) {
   const showSlot = graphicSlot === 'reserve' || graphicSlot === 'icon'
   return (

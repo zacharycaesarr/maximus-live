@@ -1,0 +1,70 @@
+/* Placement, idle float, and hover/tap live on separate DOM layers. */
+.why-placement{position:absolute;transform-style:preserve-3d}
+.why-placement--hub{z-index:2;width:22%;height:33%}
+.why-placement--one-card{z-index:3;width:29%;height:19%}
+.why-placement--ads,.why-placement--creative{width:32%;height:18%}
+.why-placement--stack{width:54%;height:19%}
+.why-placement--stack-goals{z-index:1}.why-placement--stack-audience{z-index:2}.why-placement--stack-strategy{z-index:4}.why-placement--stack-creative{z-index:3}
+.why-placement--flow{z-index:4;width:52%;height:19%}
+.why-float-layer{position:relative;width:100%;height:100%;transform-origin:center;transform-style:preserve-3d}
+.why-placement .why-one-hub,.why-placement .why-one-card,.why-placement .why-stack-card,.why-placement .why-flow-card{position:relative;left:auto;top:auto;width:100%;height:100%;box-sizing:border-box;transform:none}
+
+.why-results-main-slot{width:100%;height:72%}
+.why-results-metrics-slot{width:100%;height:25%;margin-top:2%;transform-origin:top center}
+.why-results-main-slot .why-results-main,.why-results-metrics-slot .why-results-metrics{width:100%;height:100%;box-sizing:border-box}
+.why-results-metrics-slot .why-results-metrics{margin-top:0}
+
+.why-testimonial-slot{position:absolute;z-index:1;width:46%;height:57%;transition:left var(--why-carousel-transition) cubic-bezier(.22,1,.36,1),top var(--why-carousel-transition) cubic-bezier(.22,1,.36,1),transform var(--why-carousel-transition) cubic-bezier(.22,1,.36,1),opacity var(--why-carousel-fade) ease,width var(--why-carousel-transition) ease,height var(--why-carousel-transition) ease}
+.why-testimonial-slot--center{z-index:3;width:52%;height:64%}
+.why-testimonial-slot--left,.why-testimonial-slot--right{z-index:2}
+.why-testimonial-slot--hidden-left,.why-testimonial-slot--hidden-right{z-index:0;pointer-events:none}
+.why-testimonial-slot .why-testimonial-card{position:relative;left:auto;top:auto;width:100%;height:100%;box-sizing:border-box;transition:scale .22s ease,box-shadow .22s ease,filter .22s ease}
+.why-testimonial-art.is-transitioning .why-testimonial-slot{will-change:transform,opacity}
+.why-testimonial-art.is-transitioning .why-float-layer{animation-play-state:paused!important}
+
+/* Keep the untouched first frame at the same start state as the intro keyframe. */
+.is-intro-pending .why-art,.is-intro-pending .why-testimonial-art{opacity:0;filter:blur(5px);translate:-50% calc(-50% + 11px)}
+
+/* Keep stacked-card depth static while hover lift and tilt ease smoothly. */
+.why-stack-card{transition:scale .28s cubic-bezier(.2,.8,.2,1),translate .28s cubic-bezier(.2,.8,.2,1),rotate .28s ease,filter .28s ease}
+.why-stack-card:not(.why-stack-card--strategy):is(:hover,[data-pressed="true"]){box-shadow:0 2px 2px #11170e0a,0 calc(var(--why-shadow-y) * var(--why-stack-shadow) * var(--why-shadow-depth)) calc(var(--why-shadow-blur) * var(--why-stack-shadow)) rgba(8,9,9,var(--why-shadow-opacity)),0 23px 42px #11170e0d,inset 0 1px 0 #fff}
+.why-stack-card--strategy:is(:hover,[data-pressed="true"]){box-shadow:0 2px 5px rgba(9,14,8,.11),0 10px 25px rgba(9,14,8,.17),0 24px 46px rgba(9,14,8,.08),inset 0 1px 0 #a6b39d44,inset 0 -1px 0 #0006}
+
+/* Transitioning cards stay inside their local carousel, with room for shadows. */
+.why-testimonial-art{clip-path:inset(-60px -40px -60px -40px)}
+
+/* Preserve the existing interaction styles on the inner cards. */
+.is-ambient-active .why-one-card,.is-ambient-active .why-stack-card,.is-ambient-active .why-flow-card,.is-ambient-active .why-one-hub,.is-ambient-active .why-testimonial-card,
+.is-intro-active .why-one-card,.is-intro-active .why-stack-card,.is-intro-active .why-flow-card,.is-intro-active .why-results-main,.is-intro-active .why-results-metrics{animation:none!important}
+.is-intro-active .why-placement{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) calc(var(--why-sequence,0) * var(--why-intro-stagger)) backwards}
+.is-intro-active .why-results-main-slot{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) backwards}
+.is-intro-active .why-results-metrics-slot{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) var(--why-intro-stagger) backwards}
+.is-intro-active .why-testimonial-slot{animation:why-premium-item var(--why-intro-duration) cubic-bezier(.18,.75,.25,1) backwards}
+
+/* A paused keyframe retains its phase while the panel is offscreen or inactive. */
+.has-float-motion .why-float-layer{animation:why-idle-float var(--why-idle-duration) ease-in-out var(--why-idle-phase) infinite alternate;animation-play-state:paused}
+.has-float-motion.is-float-running .why-float-layer{animation-play-state:running;will-change:transform}
+.is-ambient-active:not(.is-ambient-running) .why-one-rings,
+.is-ambient-active:not(.is-ambient-running) .why-stack-plus,
+.is-ambient-active:not(.is-ambient-running) .why-three-arrows>path,
+.is-ambient-active:not(.is-ambient-running) .why-three-repeat,
+.is-ambient-active:not(.is-ambient-running) .why-results-bars i,
+.is-ambient-active:not(.is-ambient-running) .why-results-graph circle,
+.is-ambient-active:not(.is-ambient-running) .why-results-growth b{animation-play-state:paused!important}
+.is-ambient-active .why-stack-card--strategy .why-stack-plus{animation:none}
+.is-interacting .why-float-layer{animation-play-state:paused!important}
+
+/* Strategy keeps elevation without casting a dark rectangular slab on Creative. */
+.why-stack-card--strategy{box-shadow:0 2px 5px rgba(9,14,8,.11),0 10px 25px rgba(9,14,8,.17),0 24px 46px rgba(9,14,8,.08),inset 0 1px 0 #a6b39d44,inset 0 -1px 0 #0006}
+
+@keyframes why-idle-float{
+  0%{transform:translate3d(0,0,0) rotate(0deg)}
+  50%{transform:translate3d(var(--why-idle-x),calc(var(--why-idle-y) * -1),0) rotate(var(--why-idle-rotation))}
+  100%{transform:translate3d(calc(var(--why-idle-x) * -.5),calc(var(--why-idle-y) * .38),0) rotate(calc(var(--why-idle-rotation) * -.65))}
+}
+
+@media(max-width:767px){
+  .why-testimonial-slot{width:52%;height:54%}
+  .why-testimonial-slot--center{width:63%;height:65%}
+}
+@media(prefers-reduced-motion:reduce){.has-float-motion .why-float-layer{animation:none!important}.why-testimonial-slot{transition:none!important}}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { useIntroTuner } from '@/context/IntroTunerContext'
+import { useIntroTuner } from '@/home/context/IntroTunerContext'
 import { useHeroTextTuner } from '@/context/HeroTextTunerContext'
 import { cn } from '@/lib/utils'
 
