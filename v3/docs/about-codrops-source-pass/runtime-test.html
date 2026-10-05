@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>About source-port QA</title></head>
+<body><div id="root"></div><aside id="qa" style="position:fixed;right:8px;bottom:8px;max-width:430px;max-height:42vh;overflow:auto;z-index:99999;background:#f3f0e8;color:#080909;padding:8px;font:11px sans-serif">
+<button id="inspect">Inspect About runtime</button><button id="hide">Hide QA tools</button><div id="seek"></div><pre id="result"></pre></aside>
+<script type="module">
+// Development-only diagnostics. No application module, route, dependency or production setting is replaced.
+import '/src/index.css';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import App from '/src/App.tsx';
+import {ScrollTrigger, Observer} from '/src/components/about/aboutMotionRuntime.ts';
+history.replaceState({}, '', '/about');
+createRoot(document.getElementById('root')).render(React.createElement(React.StrictMode, null, React.createElement(App)));
+for (const [label,id,progress] of [['Effect17 50%','about-story-effect17',.5],['Effect17 90%','about-story-effect17',.9],['Effect20 50%','about-story-effect20',.5],['Effect27 50%','about-story-effect27',.5],['Effect27 90%','about-story-effect27',.9],['Bridge 70%','about-bridge-effect28-0',.7]]) {
+  const button=document.createElement('button');button.textContent=label;
+  button.onclick=()=>{ const trigger=ScrollTrigger.getById(id); if(trigger) window.__lenis?.scrollTo(trigger.start+(trigger.end-trigger.start)*progress,{immediate:true,force:true}); };
+  document.getElementById('seek').append(button);
+}
+document.getElementById('hide').onclick=()=>document.getElementById('qa').hidden=true;
+document.getElementById('inspect').onclick=()=>{
+  document.getElementById('result').textContent=JSON.stringify({
+    route:location.pathname,width:innerWidth,height:innerHeight,y:scrollY,
+    mode:document.querySelector('.about-continuation')?.dataset.motionMode,
+    overflow:document.documentElement.scrollWidth>innerWidth,
+    triggers:ScrollTrigger.getAll().filter(t=>String(t.vars.id).startsWith('about-')).map(t=>({id:t.vars.id,start:t.vars.start,end:t.vars.end,startY:t.start,endY:t.end,progress:t.progress,scrub:t.vars.scrub,pin:Boolean(t.pin),duration:t.animation?.duration(),stagger:t.animation?.vars.stagger})),
+    observers:Observer.getAll().filter(o=>o.vars.id==='about-services-input').length,
+    wrappers:document.querySelectorAll('.about-continuation .about-split-char').length,
+    pins:document.querySelectorAll('.about-continuation .pin-spacer').length,
+    lenisPresent:Boolean(window.__lenis),lenisStopped:Boolean(window.__lenis?.isStopped),
+  },null,2);
+};
+</script></body></html>

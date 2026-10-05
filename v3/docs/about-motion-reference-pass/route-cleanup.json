@@ -1,0 +1,69 @@
+[
+  {
+    "route": "/about",
+    "triggers": [
+      "about-story-headline-0",
+      "about-story-block-0",
+      "about-story-words-0",
+      "about-story-headline-1",
+      "about-story-block-1",
+      "about-story-words-1",
+      "about-story-headline-2",
+      "about-story-block-2",
+      "about-story-words-2",
+      "about-service-stage"
+    ],
+    "observers": 1,
+    "wrappers": 83,
+    "pins": 1,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  {
+    "route": "/capabilities/web-development",
+    "triggers": [],
+    "observers": 0,
+    "wrappers": 0,
+    "pins": 0,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  {
+    "route": "/about",
+    "triggers": [
+      "about-story-headline-0",
+      "about-story-block-0",
+      "about-story-words-0",
+      "about-story-headline-1",
+      "about-story-block-1",
+      "about-story-words-1",
+      "about-story-headline-2",
+      "about-story-block-2",
+      "about-story-words-2",
+      "about-service-stage"
+    ],
+    "observers": 1,
+    "wrappers": 83,
+    "pins": 1,
+    "lenisPresent": true,
+    "lenisStopped": true
+  },
+  {
+    "route": "/capabilities/ad-management",
+    "triggers": [],
+    "observers": 0,
+    "wrappers": 0,
+    "pins": 0,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  {
+    "route": "/capabilities/creative-studio",
+    "triggers": [],
+    "observers": 0,
+    "wrappers": 0,
+    "pins": 0,
+    "lenisPresent": true,
+    "lenisStopped": false
+  }
+]

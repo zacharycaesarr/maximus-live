@@ -1,0 +1,1003 @@
+{
+  "desktop1440": {
+    "route": "/about",
+    "width": 1440,
+    "height": 900,
+    "y": 8618,
+    "mode": "desktop",
+    "overflow": false,
+    "triggers": [
+      {
+        "id": "about-story-effect17",
+        "start": "top bottom",
+        "end": "bottom top",
+        "startY": 4579,
+        "endY": 5637,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 1.02,
+        "stagger": 0.02
+      },
+      {
+        "id": "about-story-block-0",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 4776,
+        "endY": 5676,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-0",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4956,
+        "endY": 5560,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.45,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect20",
+        "start": "center bottom",
+        "end": "bottom top+=20%",
+        "startY": 5738,
+        "endY": 6537,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.95,
+        "stagger": {
+          "each": 0.03,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-1",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 5856,
+        "endY": 6756,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-1",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 6036,
+        "endY": 6640,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.4,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect27",
+        "start": "center center",
+        "end": "+=300%",
+        "startY": 7268,
+        "endY": 9968,
+        "progress": 0.5,
+        "scrub": true,
+        "pin": true,
+        "duration": 0.512,
+        "stagger": {
+          "each": 0.006,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-2",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 6936,
+        "endY": 7836,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-2",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 7116,
+        "endY": 7720,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-bridge-effect28-0",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 10008,
+        "endY": 11133,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-1",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 10008,
+        "endY": 11133,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-2",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 10110,
+        "endY": 11235,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-3",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 10110,
+        "endY": 11235,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-service-stage",
+        "start": "top top",
+        "startY": 11700,
+        "endY": 11835,
+        "progress": 0,
+        "pin": true
+      }
+    ],
+    "observers": 1,
+    "wrappers": 113,
+    "pins": 2,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  "desktop1366": {
+    "route": "/about",
+    "width": 1366,
+    "height": 768,
+    "y": 7347,
+    "mode": "desktop",
+    "overflow": false,
+    "triggers": [
+      {
+        "id": "about-story-effect17",
+        "start": "top bottom",
+        "end": "bottom top",
+        "startY": 3893,
+        "endY": 4811,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 1.02,
+        "stagger": 0.02
+      },
+      {
+        "id": "about-story-block-0",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 4081,
+        "endY": 4849,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-0",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4235,
+        "endY": 4740,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.45,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect20",
+        "start": "center bottom",
+        "end": "bottom top+=20%",
+        "startY": 4890,
+        "endY": 5579,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.95,
+        "stagger": {
+          "each": 0.03,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-1",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 5003,
+        "endY": 5771,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-1",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 5156,
+        "endY": 5661,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.4,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect27",
+        "start": "center center",
+        "end": "+=300%",
+        "startY": 6195,
+        "endY": 8499,
+        "progress": 0.5,
+        "scrub": true,
+        "pin": true,
+        "duration": 0.512,
+        "stagger": {
+          "each": 0.006,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-2",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 5924,
+        "endY": 6692,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-2",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 6078,
+        "endY": 6583,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-bridge-effect28-0",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 8535,
+        "endY": 9495,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-1",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 8535,
+        "endY": 9495,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-2",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 8631,
+        "endY": 9591,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-3",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 8631,
+        "endY": 9591,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-service-stage",
+        "start": "top top",
+        "startY": 9984,
+        "endY": 10100,
+        "progress": 0,
+        "pin": true
+      }
+    ],
+    "observers": 1,
+    "wrappers": 113,
+    "pins": 2,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  "mobile393": {
+    "route": "/about",
+    "width": 393,
+    "height": 852,
+    "y": 5880,
+    "mode": "mobile",
+    "overflow": false,
+    "triggers": [
+      {
+        "id": "about-story-effect17",
+        "start": "top bottom",
+        "end": "bottom top",
+        "startY": 3472,
+        "endY": 4384,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 1.02,
+        "stagger": 0.02
+      },
+      {
+        "id": "about-story-block-0",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 3559,
+        "endY": 4411,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-0",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 3730,
+        "endY": 4329,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.45,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect20",
+        "start": "center bottom",
+        "end": "bottom top+=20%",
+        "startY": 4312,
+        "endY": 5023,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.95,
+        "stagger": {
+          "each": 0.03,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-1",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 4369,
+        "endY": 5221,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-1",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4539,
+        "endY": 5138,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.4,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect27",
+        "start": "center center",
+        "end": "+=75%",
+        "startY": 5560,
+        "endY": 6199,
+        "progress": 0.5007824726134585,
+        "scrub": true,
+        "pin": true,
+        "duration": 0.512,
+        "stagger": {
+          "each": 0.006,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-2",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 5191,
+        "endY": 6043,
+        "progress": 0.8086854460093896,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-2",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 5362,
+        "endY": 5947,
+        "progress": 0.8854700854700854,
+        "scrub": true,
+        "pin": false,
+        "duration": 2,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-bridge-effect28-0",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6280,
+        "endY": 7345,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-1",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6280,
+        "endY": 7345,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-2",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6313,
+        "endY": 7378,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-3",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6313,
+        "endY": 7378,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-service-stage",
+        "start": "top top",
+        "startY": 7795,
+        "endY": 7923,
+        "progress": 0,
+        "pin": true
+      }
+    ],
+    "observers": 1,
+    "wrappers": 113,
+    "pins": 2,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  "mobile430": {
+    "route": "/about",
+    "width": 430,
+    "height": 932,
+    "y": 6432,
+    "mode": "mobile",
+    "overflow": false,
+    "triggers": [
+      {
+        "id": "about-story-effect17",
+        "start": "top bottom",
+        "end": "bottom top",
+        "startY": 3816,
+        "endY": 4815,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 1.02,
+        "stagger": 0.02
+      },
+      {
+        "id": "about-story-block-0",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 3910,
+        "endY": 4842,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-0",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4096,
+        "endY": 4721,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.45,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect20",
+        "start": "center bottom",
+        "end": "bottom top+=20%",
+        "startY": 4735,
+        "endY": 5514,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.95,
+        "stagger": {
+          "each": 0.03,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-1",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 4795,
+        "endY": 5727,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-1",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4981,
+        "endY": 5606,
+        "progress": 1,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.4,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect27",
+        "start": "center center",
+        "end": "+=75%",
+        "startY": 6086,
+        "endY": 6785,
+        "progress": 0.4949928469241774,
+        "scrub": true,
+        "pin": true,
+        "duration": 0.512,
+        "stagger": {
+          "each": 0.006,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-2",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 5680,
+        "endY": 6612,
+        "progress": 0.8068669527896996,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-2",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 5867,
+        "endY": 6492,
+        "progress": 0.904,
+        "scrub": true,
+        "pin": false,
+        "duration": 2,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-bridge-effect28-0",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6866,
+        "endY": 8031,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-1",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6866,
+        "endY": 8031,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-2",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6903,
+        "endY": 8068,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-3",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6903,
+        "endY": 8068,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-service-stage",
+        "start": "top top",
+        "startY": 8527,
+        "endY": 8667,
+        "progress": 0,
+        "pin": true
+      }
+    ],
+    "observers": 1,
+    "wrappers": 113,
+    "pins": 2,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  "routeExit": {
+    "route": "/capabilities/web-development",
+    "width": 430,
+    "height": 932,
+    "y": 0,
+    "overflow": false,
+    "triggers": [],
+    "observers": 0,
+    "wrappers": 0,
+    "pins": 0,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  "routeReturn": {
+    "route": "/about",
+    "width": 430,
+    "height": 932,
+    "y": 0,
+    "mode": "mobile",
+    "overflow": false,
+    "triggers": [
+      {
+        "id": "about-story-effect17",
+        "start": "top bottom",
+        "end": "bottom top",
+        "startY": 3816,
+        "endY": 4815,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 1.02,
+        "stagger": 0.02
+      },
+      {
+        "id": "about-story-block-0",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 3910,
+        "endY": 4842,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-0",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4096,
+        "endY": 4731,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.45,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect20",
+        "start": "center bottom",
+        "end": "bottom top+=20%",
+        "startY": 4735,
+        "endY": 5514,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.95,
+        "stagger": {
+          "each": 0.03,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-1",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 4795,
+        "endY": 5727,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-1",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 4981,
+        "endY": 5616,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 2.4,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-story-effect27",
+        "start": "center center",
+        "end": "+=75%",
+        "startY": 6086,
+        "endY": 6785,
+        "progress": 0,
+        "scrub": true,
+        "pin": true,
+        "duration": 0.512,
+        "stagger": {
+          "each": 0.006,
+          "from": "random"
+        }
+      },
+      {
+        "id": "about-story-block-2",
+        "start": "top bottom",
+        "end": "top top",
+        "startY": 5680,
+        "endY": 6612,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.5
+      },
+      {
+        "id": "about-story-words-2",
+        "start": "top bottom-=20%",
+        "end": "center top+=20%",
+        "startY": 5867,
+        "endY": 6501,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 2,
+        "stagger": 0.05
+      },
+      {
+        "id": "about-bridge-effect28-0",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6866,
+        "endY": 8031,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-1",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6866,
+        "endY": 8031,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-2",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6903,
+        "endY": 8068,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-bridge-effect28-3",
+        "start": "top bottom+=40%",
+        "end": "top top+=15%",
+        "startY": 6903,
+        "endY": 8068,
+        "progress": 0,
+        "scrub": true,
+        "pin": false,
+        "duration": 0.65,
+        "stagger": {
+          "amount": 0.15,
+          "from": "center"
+        }
+      },
+      {
+        "id": "about-service-stage",
+        "start": "top top",
+        "startY": 8527,
+        "endY": 8667,
+        "progress": 0,
+        "pin": true
+      }
+    ],
+    "observers": 1,
+    "wrappers": 113,
+    "pins": 2,
+    "lenisPresent": true,
+    "lenisStopped": false
+  },
+  "reduced": {
+    "width": 393,
+    "height": 852,
+    "splitWrappers": 0,
+    "pins": 0,
+    "bridgeFilter": "none",
+    "services": "All three visible in normal flow",
+    "overflow": false
+  },
+  "production": {
+    "width": 1440,
+    "height": 900,
+    "mode": "desktop",
+    "continuationPins": 2,
+    "overflow": false,
+    "errors": [],
+    "serviceEntryAndEscape": true
+  }
+}

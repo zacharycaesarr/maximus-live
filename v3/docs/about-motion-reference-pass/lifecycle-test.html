@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>About lifecycle QA</title></head>
+<body><div id="root"></div><aside style="position:fixed;right:10px;bottom:10px;z-index:99999;background:#f3f0e8;color:#080909;padding:8px;font:12px sans-serif"><button id="inspect">Inspect About cleanup</button><pre id="result"></pre></aside>
+<script type="module">
+// Isolated QA entry. The application and route components are imported without modification.
+import '/src/index.css';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import App from '/src/App.tsx';
+import {ScrollTrigger, Observer} from '/src/components/about/aboutMotionRuntime.ts';
+history.replaceState({}, '', '/about');
+createRoot(document.getElementById('root')).render(React.createElement(React.StrictMode, null, React.createElement(App)));
+document.getElementById('inspect').onclick = () => {
+  document.getElementById('result').textContent = JSON.stringify({
+    route: location.pathname,
+    triggers: ScrollTrigger.getAll().filter(t => String(t.vars.id).startsWith('about-')).map(t => t.vars.id),
+    observers: Observer.getAll().filter(o => o.vars.id === 'about-services-input').length,
+    wrappers: document.querySelectorAll('.about-continuation .about-split-char').length,
+    pins: document.querySelectorAll('.about-continuation .pin-spacer').length,
+    lenisPresent: Boolean(window.__lenis), lenisStopped: Boolean(window.__lenis?.isStopped),
+  }, null, 2);
+};
+</script></body></html>

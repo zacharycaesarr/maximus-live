@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>About reduced motion QA</title></head>
+<body><div id="root"></div>
+<script type="module">
+// Isolated development QA fixture, not a production route or user-facing setting.
+// Emulates the reduced-motion media query for About and applies the actual reduced CSS rules.
+import '/src/index.css';
+import reducedCss from '/src/components/about/about-continuation.css?raw';
+const originalMedia = window.matchMedia.bind(window);
+window.matchMedia = query => query.includes('prefers-reduced-motion') ? {
+  matches: true, media: query, onchange: null,
+  addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent() { return true; },
+} : originalMedia(query);
+const style = document.createElement('style');
+style.textContent = reducedCss.replace(/and\s*\(prefers-reduced-motion:\s*reduce\)/g, '').replace(/\(prefers-reduced-motion:\s*reduce\)/g, 'all');
+const [{default: React}, {createRoot}, {BrowserRouter}, {default: AboutPage}] = await Promise.all([
+  import('react'), import('react-dom/client'), import('react-router-dom'), import('/src/pages/AboutPage.tsx'),
+]);
+document.head.append(style);
+createRoot(document.getElementById('root')).render(React.createElement(React.StrictMode, null, React.createElement(BrowserRouter, null, React.createElement(AboutPage))));
+</script>
+</body>
+</html>

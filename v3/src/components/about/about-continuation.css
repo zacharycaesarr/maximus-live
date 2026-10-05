@@ -1,0 +1,80 @@
+/* Post-portrait content only. Approved opening/portrait/nav stay untouched. */
+.about-continuation { font-family: 'Neue Haas Grotesk Display', 'Helvetica Neue', sans-serif; color: var(--ab-black); background: var(--ab-cream); }
+:where(.about-continuation) :is(h2, p) { margin: 0; }
+.about-continuation .about-split-word, .about-continuation .about-split-char { display: inline-block; }
+.about-continuation .about-split-word { white-space: nowrap; }
+.about-continuation .ab-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.about-story { position: relative; background: var(--ab-cream); overflow: clip; }
+.about-story__moment { min-height: 120svh; display: flex; align-items: center; padding: 130px 6% 110px; box-sizing: border-box; }
+.about-story__spread { display: grid; grid-template-columns: minmax(0, 69fr) minmax(0, 31fr); column-gap: 4%; width: 100%; max-width: 1480px; margin: auto; }
+.about-story__meta { grid-column: 1 / -1; display: flex; justify-content: space-between; font-size: 10px; letter-spacing: .14em; margin-bottom: 52px; }
+.about-story__meta > span:last-child { opacity: .45; }
+.about-story__headline { font: 400 clamp(48px, 5.8vw, 96px)/.96 'Tiempos Headline', Georgia, serif; letter-spacing: -.045em; font-kerning: none; text-rendering: optimizeSpeed; }
+.about-story__line { display: block; white-space: nowrap; }
+.about-story__paragraph { margin-top: 38px !important; max-width: 55ch; font-size: clamp(17px, 1.4vw, 21px); line-height: 1.55; letter-spacing: -.018em; transform-origin: 0% 50%; }
+.about-story__visual { display: flex; align-items: center; justify-content: flex-end; padding-left: 12px; }
+.about-story-visual { width: 100%; max-width: 330px; height: auto; overflow: visible; color: #77796e; stroke-width: 1; }
+.about-story-visual__labels, .about-service-visual__labels { font: 9px 'Neue Haas Grotesk Display', sans-serif; letter-spacing: 1px; }
+.about-story-bridge { position: relative; min-height: 80svh; padding: 110px 6%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: clip; background: var(--ab-cream); }
+.about-story-bridge__meta { font-size: 10px; letter-spacing: .14em; margin-bottom: 44px; }
+.about-story-bridge__headline { font: 400 clamp(48px, 6.8vw, 104px)/1.05 'Tiempos Headline', Georgia, serif; letter-spacing: -.045em; text-align: center; font-kerning: none; text-rendering: optimizeSpeed; }
+.about-services { position: relative; min-height: 100svh; padding-bottom: 2px; background: var(--ab-green); color: var(--ab-cream); }
+.about-services__viewport { position: relative; height: 100svh; overflow: clip; background: var(--ab-green); outline-offset: -5px; }
+.about-services__viewport.is-active { touch-action: none; }
+.about-services__meta { position: absolute; top: max(110px, 13svh); left: 6%; right: 6%; display: flex; justify-content: space-between; z-index: 5; font-size: 10px; letter-spacing: .14em; pointer-events: none; }
+.about-service { position: absolute; inset: 0; visibility: hidden; }
+.about-service:first-of-type { visibility: visible; }
+.about-service__outer, .about-service__inner { position: absolute; inset: 0; overflow: clip; }
+.about-service__inner { background: var(--ab-green); }
+.about-service__environment { position: absolute; inset: 0; pointer-events: none; }
+.about-service__content { position: absolute; inset: 24% 18% 13%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; }
+.about-service__number { font-size: 10px; letter-spacing: .2em; margin-bottom: 24px; opacity: .5; }
+.about-service__content { pointer-events: auto; }
+.about-service__title { font: 400 clamp(60px, 7.4vw, 112px)/.88 'Neue Haas Grotesk Display', sans-serif; letter-spacing: -.05em; font-kerning: none; text-rendering: optimizeSpeed; }
+.about-service__line { display: block; white-space: nowrap; }
+.about-service__content > p { max-width: 44ch; margin-top: 32px; font-size: 17px; line-height: 1.55; color: rgba(243,240,232,.7); }
+/* Scoped reuse of the current homepage service-card CTA values, without importing its global CSS. */
+.about-service__cta { display: inline-flex; align-items: center; gap: 9px; width: max-content; margin-top: 44px; border: 1px solid rgba(8,9,9,.8); border-radius: 8px; background: #C8FF3D; color: #080909; padding: 8px 10px; font-family: Geist, 'Neue Haas Grotesk Display', sans-serif; font-size: 13px; font-weight: 500; text-decoration: none; }
+.about-service__cta svg { width: 12px; height: 12px; }
+#about-signal-page .about-service__cta { color: #080909; }
+#about-signal-page .about-service__cta:focus-visible { outline: 2px solid var(--ab-cream); outline-offset: 5px; }
+.about-service__cta:focus-visible { outline: 2px solid var(--ab-cream); outline-offset: 5px; }
+.about-service__footer { position: absolute; bottom: 5%; left: 6%; font-size: 9px; letter-spacing: .14em; opacity: .4; }
+.about-service-visual { position: absolute; inset: 0; color: rgba(243,240,232,.35); pointer-events: none; }
+.about-service-visual__left { position: absolute; left: 1%; top: 29%; width: 23%; max-width: 330px; transform: rotate(-9deg); stroke: currentColor; stroke-width: 1; }
+.about-service-visual__right { position: absolute; right: 1%; bottom: 15%; width: 19%; max-width: 250px; transform: rotate(9deg); stroke: currentColor; stroke-width: 1; }
+.about-service-visual__icon { position: absolute; right: 9%; top: 22%; width: 50px; height: 50px; opacity: .65; }
+@media (max-width: 768px) {
+  .about-story__moment { min-height: 95svh; padding: 110px 24px 80px; }
+  .about-story__spread { grid-template-columns: minmax(0, 1fr); }
+  .about-story__meta { margin-bottom: 35px; font-size: 9px; }
+  .about-story__headline { font-size: clamp(28px, 8.3vw, 60px); letter-spacing: -.045em; }
+  .about-story__paragraph { margin-top: 27px !important; font-size: 17px; line-height: 1.55; }
+  .about-story__visual { justify-content: flex-end; padding-left: 0; margin-top: 32px; }
+  .about-story-visual { width: 49%; max-width: 210px; }
+  .about-story-bridge { min-height: 75svh; padding: 100px 24px; }
+  .about-story-bridge__headline { font-size: clamp(28px, 8.3vw, 60px); }
+  .about-services__meta { top: 110px; left: 24px; right: 24px; font-size: 9px; }
+  .about-service__content { inset: 22% 22px 15%; }
+  .about-service__title { font-size: clamp(38px, 11vw, 72px); }
+  .about-service__number { margin-bottom: 24px; }
+  .about-service__content > p { margin-top: 24px; font-size: 16px; max-width: 30ch; }
+  .about-service__cta { margin-top: 32px; }
+  .about-service-visual__left { width: 28%; top: auto; bottom: 3%; left: 2%; opacity: .65; }
+  .about-service-visual__right { width: 24%; bottom: 3%; right: 3%; opacity: .65; }
+  .about-service-visual__icon { top: 18%; right: 11%; width: 30px; height: 30px; opacity: .4; }
+  .about-service__footer { bottom: 3%; left: 39%; font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-story__moment { min-height: 100svh; }
+  .about-services { min-height: 0; padding-bottom: 0; }
+  .about-services__viewport { height: auto; overflow: visible; }
+  .about-services__meta { display: none; }
+  .about-service { position: relative; min-height: 100svh; visibility: visible; }
+  .about-service__outer, .about-service__inner { position: relative; min-height: 100svh; }
+  .about-service__environment { position: relative; min-height: 100svh; }
+  .about-service__content { min-height: 100svh; position: relative; inset: auto; padding: 110px 22% 130px; box-sizing: border-box; }
+}
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .about-service__content { padding: 110px 24px 130px; }
+}
