@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About shader QA</title></head>
+<body><div id="root"></div><aside id="qa" style="position:fixed;right:8px;bottom:8px;z-index:99999;background:white;color:black;font:11px sans-serif;padding:8px;max-width:380px;max-height:45vh;overflow:auto"><button id="inspect">Inspect</button><button id="hide">Hide QA</button><div id="seeks"></div><pre id="result"></pre></aside>
+<script type="module">
+import '/src/index.css';
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import App from '/src/App.tsx';
+import {Object3D} from 'three';
+import {ScrollTrigger,Observer} from '/src/components/about/aboutMotionRuntime.ts';
+import reducedCss from '/src/components/about/about-continuation.css?raw';
+const media=matchMedia.bind(window);
+if(location.search.includes('reduced')) {
+ window.matchMedia=q=>q.includes('prefers-reduced-motion')?{matches:true,media:q,addEventListener(){},removeEventListener(){},addListener(){},removeListener(){}}:media(q);
+ const style=document.createElement('style');style.textContent=reducedCss.replace(/and\s*\(prefers-reduced-motion:\s*reduce\)/g,'').replace(/\(prefers-reduced-motion:\s*reduce\)/g,'all');document.head.append(style);
+ const watch=new MutationObserver(()=>{if(document.querySelector('[data-motion-mode="reduced"]')){document.head.append(style);watch.disconnect();}});watch.observe(document.body,{subtree:true,attributes:true,attributeFilter:['data-motion-mode']});
+}
+if(location.search.includes('unsupported')) {
+ const context=HTMLCanvasElement.prototype.getContext;
+ HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl')?null:context.call(this,type,...args);};
+}
+const originalUpdate=Object3D.prototype.updateMatrixWorld;
+let last,frames=0;
+Object3D.prototype.updateMatrixWorld=function(...args){
+ const scene=this,camera=scene.children.find(e=>e.isCamera);
+ const mesh=scene.children.find(e=>e.isMesh);
+ if(mesh?.material.uniforms?.uFrequency) { frames++; last={uniforms:Object.fromEntries(Object.entries(mesh.material.uniforms).map(([k,u])=>[k,u.value])),rotation:[mesh.rotation.x,mesh.rotation.y],scale:mesh.scale.x,camera:{fov:camera.fov,near:camera.near,far:camera.far,z:camera.position.z},geometry:mesh.geometry.parameters,vertices:mesh.geometry.attributes.position.count,pixelRatio:document.querySelector('.about-shader-story canvas')?.width / document.querySelector('.about-shader-story canvas')?.clientWidth,wireframe:mesh.material.wireframe,transparent:mesh.material.transparent,blending:mesh.material.blending}; }
+ return originalUpdate.apply(this,args);
+};
+history.replaceState({},'','/about');
+createRoot(document.getElementById('root')).render(React.createElement(React.StrictMode,null,React.createElement(App)));
+for(const p of [0,.5,1]){const b=document.createElement('button');b.textContent=`Shader ${p*100}%`;b.onclick=()=>{const r=document.querySelector('.about-shader-story'),c=r.querySelector('.about-shader-story__content');const top=r.getBoundingClientRect().top+scrollY;window.__lenis.scrollTo(top+p*(c.clientHeight-innerHeight),{immediate:true,force:true});};document.getElementById('seeks').append(b);}
+document.getElementById('inspect').onclick=()=>document.getElementById('result').textContent=JSON.stringify({route:location.pathname,width:innerWidth,height:innerHeight,y:scrollY,serviceTop:document.querySelector('.about-services')?.getBoundingClientRect().top+scrollY,state:document.querySelector('[data-shader-state]')?.dataset.shaderState,canvas:document.querySelectorAll('.about-shader-story canvas').length,overflow:document.documentElement.scrollWidth>innerWidth,splitStory:document.querySelectorAll('.about-shader-story .about-split-char').length,triggers:ScrollTrigger.getAll().filter(t=>String(t.vars.id).startsWith('about-')).map(t=>({id:t.vars.id,start:t.start,end:t.end})),observers:Observer.getAll().length,lenisStopped:window.__lenis?.isStopped,frames,last},null,2);
+document.getElementById('hide').onclick=()=>document.getElementById('qa').hidden=true;
+</script></body></html>

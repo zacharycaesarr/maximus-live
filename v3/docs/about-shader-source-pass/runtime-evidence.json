@@ -1,0 +1,391 @@
+{
+  "start": {
+    "route": "/about",
+    "width": 1440,
+    "height": 900,
+    "y": 5040,
+    "serviceTop": 7503,
+    "state": "webgl",
+    "canvas": 1,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      {
+        "id": "about-service-stage",
+        "start": 7503,
+        "end": 7638
+      }
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 3087,
+    "last": {
+      "uniforms": {
+        "uFrequency": 0,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 0,
+        "uDeepPurple": 1,
+        "uOpacity": 0.1
+      },
+      "rotation": [
+        0,
+        1.0729250000000279
+      ],
+      "scale": 1,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 2.5
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "middle": {
+    "route": "/about",
+    "width": 1440,
+    "height": 900,
+    "y": 5822,
+    "state": "webgl",
+    "canvas": 1,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      "about-service-stage"
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 4011,
+    "last": {
+      "uniforms": {
+        "uFrequency": 2.0012795905310266,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 0.5503518873960324,
+        "uDeepPurple": 0.49968010236724336,
+        "uOpacity": 0.3801791426743437
+      },
+      "rotation": [
+        1.5718013148478656,
+        1.394115000000058
+      ],
+      "scale": 1,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 2.5
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "end": {
+    "route": "/about",
+    "width": 1440,
+    "height": 900,
+    "y": 6603,
+    "serviceTop": 7503,
+    "state": "webgl",
+    "canvas": 1,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      {
+        "id": "about-service-stage",
+        "start": 7503,
+        "end": 7638
+      }
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 1931,
+    "last": {
+      "uniforms": {
+        "uFrequency": 3.9999999999999956,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 1.0999999999999988,
+        "uDeepPurple": 1.1102230246251565e-15,
+        "uOpacity": 0.6599999999999994
+      },
+      "rotation": [
+        3.1415926535897896,
+        0.6711849999999999
+      ],
+      "scale": 1,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 2.5
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "mobile393": {
+    "route": "/about",
+    "width": 393,
+    "height": 852,
+    "y": 4090,
+    "serviceTop": 6645.59375,
+    "state": "webgl",
+    "canvas": 1,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      {
+        "id": "about-service-stage",
+        "start": 6646,
+        "end": 6773
+      }
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 45,
+    "last": {
+      "uniforms": {
+        "uFrequency": 0,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 0,
+        "uDeepPurple": 1,
+        "uOpacity": 0.1
+      },
+      "rotation": [
+        0,
+        0.016664999999999968
+      ],
+      "scale": 0.75,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 3.190475
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "mobile430": {
+    "route": "/about",
+    "width": 430,
+    "height": 932,
+    "y": 4474,
+    "serviceTop": 7269.59375,
+    "state": "webgl",
+    "canvas": 1,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      {
+        "id": "about-service-stage",
+        "start": 7270,
+        "end": 7409
+      }
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 1420,
+    "last": {
+      "uniforms": {
+        "uFrequency": 0.0008717811158798269,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 0.00023973980686695242,
+        "uDeepPurple": 0.99978205472103,
+        "uOpacity": 0.10012204935622318
+      },
+      "rotation": [
+        0.0006846952872965941,
+        0.49375999999999864
+      ],
+      "scale": 0.75,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 2.5
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "unsupported": {
+    "route": "/about",
+    "width": 393,
+    "height": 852,
+    "y": 0,
+    "serviceTop": 6645.59375,
+    "state": "unsupported",
+    "canvas": 0,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      {
+        "id": "about-service-stage",
+        "start": 6646,
+        "end": 6773
+      }
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 0
+  },
+  "reduced": {
+    "route": "/about",
+    "width": 393,
+    "height": 852,
+    "y": 0,
+    "serviceTop": 4583.1875,
+    "state": "static",
+    "canvas": 0,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [],
+    "observers": 0,
+    "lenisStopped": false,
+    "frames": 0
+  },
+  "routeExit": {
+    "route": "/capabilities/web-development",
+    "width": 1440,
+    "height": 900,
+    "y": 134,
+    "serviceTop": null,
+    "canvas": 0,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [],
+    "observers": 0,
+    "lenisStopped": false,
+    "frames": 1984,
+    "last": {
+      "uniforms": {
+        "uFrequency": 3.9999999999999956,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 1.0999999999999988,
+        "uDeepPurple": 1.1102230246251565e-15,
+        "uOpacity": 0.6599999999999994
+      },
+      "rotation": [
+        3.1415926535897896,
+        0.689585
+      ],
+      "scale": 1,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 2.5
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "finiteServiceExit": {
+    "route": "/about",
+    "width": 1440,
+    "height": 900,
+    "y": 7639,
+    "serviceTop": 7503,
+    "state": "webgl",
+    "canvas": 1,
+    "overflow": false,
+    "splitStory": 0,
+    "triggers": [
+      {
+        "id": "about-service-stage",
+        "start": 7503,
+        "end": 7638
+      }
+    ],
+    "observers": 1,
+    "lenisStopped": false,
+    "frames": 1984,
+    "last": {
+      "uniforms": {
+        "uFrequency": 3.9999999999999956,
+        "uAmplitude": 4,
+        "uDensity": 1,
+        "uStrength": 1.0999999999999988,
+        "uDeepPurple": 1.1102230246251565e-15,
+        "uOpacity": 0.6599999999999994
+      },
+      "rotation": [
+        3.1415926535897896,
+        0.689585
+      ],
+      "scale": 1,
+      "camera": {
+        "fov": 75,
+        "near": 0.1,
+        "far": 10,
+        "z": 2.5
+      },
+      "geometry": {
+        "radius": 1,
+        "detail": 64
+      },
+      "vertices": 253500,
+      "pixelRatio": 1,
+      "wireframe": true,
+      "transparent": true,
+      "blending": 2
+    }
+  },
+  "production": {
+    "width": 1366,
+    "height": 768,
+    "canvas": 1,
+    "noConsoleErrors": true,
+    "noHorizontalOverflow": true
+  },
+  "mobileSwipe": "Web to Ads, reverse to Web, then release above Web verified"
+}

@@ -6,7 +6,7 @@ export default function AboutDisciplines() {
   return (
     <section className="about-services" id="about-services" aria-label="Web, advertising and creative services">
       <div className="about-services__viewport" tabIndex={-1}>
-        <div className="about-services__meta" aria-hidden="true"><span>05 / THE DISCIPLINES</span><span data-service-counter>01 / 03</span></div>
+        <div className="about-services__meta" aria-hidden="true"><span>04 / THE DISCIPLINES</span><span data-service-counter>01 / 03</span></div>
         {copy.disciplines.map((service, index) => (
           <article className="about-service" data-service={service.kind} key={service.kind} aria-labelledby={`about-service-title-${service.kind}`}>
             <div className="about-service__outer"><div className="about-service__inner">

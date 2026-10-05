@@ -14,7 +14,7 @@ export function installReadingResize(root: HTMLElement, controller: () => Contro
   const measure = () => {
     if (pending || disposed || width !== innerWidth || height !== innerHeight) return
     const signal = root.parentElement?.querySelector<HTMLElement>('.ab-sequence')
-    const items = [signal, ...root.querySelectorAll<HTMLElement>('.about-story__moment'), root.querySelector<HTMLElement>('.about-story-bridge'), root.querySelector<HTMLElement>('.about-services')]
+    const items = [signal, root.querySelector<HTMLElement>('.about-shader-story'), root.querySelector<HTMLElement>('.about-services')]
     spans = items.flatMap(element => {
       if (!element) return []
       const box = readingBox(element)

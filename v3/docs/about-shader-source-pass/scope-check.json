@@ -1,0 +1,54 @@
+{
+  "Checkpoint": "98596499b07c6b79424bfea79c22576d0a0c623b",
+  "ComparedFiles": 420,
+  "Changed": [
+    {
+      "Path": "src\\components\\about\\about-continuation.css",
+      "Status": "modified"
+    },
+    {
+      "Path": "src\\components\\about\\aboutCodropsSet2Motion.ts",
+      "Status": "deleted"
+    },
+    {
+      "Path": "src\\components\\about\\AboutContinuation.tsx",
+      "Status": "modified"
+    },
+    {
+      "Path": "src\\components\\about\\AboutDisciplines.tsx",
+      "Status": "modified"
+    },
+    {
+      "Path": "src\\components\\about\\aboutReadingResize.ts",
+      "Status": "modified"
+    },
+    {
+      "Path": "src\\components\\about\\AboutStoryBridge.tsx",
+      "Status": "deleted"
+    },
+    {
+      "Path": "src\\components\\about\\aboutStoryContent.ts",
+      "Status": "modified"
+    },
+    {
+      "Path": "src\\components\\about\\AboutStorySection.tsx",
+      "Status": "deleted"
+    },
+    {
+      "Path": "src\\components\\about\\AboutStoryVisual.tsx",
+      "Status": "deleted"
+    },
+    {
+      "Path": "src\\components\\about\\codrops-LICENSE.txt",
+      "Status": "deleted"
+    },
+    {
+      "Path": "src\\components\\about\\README.md",
+      "Status": "modified"
+    }
+  ],
+  "ProtectedChanges": [],
+  "ServiceEngineUnchanged": true,
+  "ShaderVertexVerbatim": true,
+  "ShaderFragmentVerbatim": true
+}

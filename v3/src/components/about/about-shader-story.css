@@ -1,0 +1,37 @@
+@import url('https://use.typekit.net/zmc8vly.css');
+
+/* Local conversion of the original shaders-on-scroll.sass. Source rem = 15px. */
+.about-shader-story { position: relative; background: #000; color: #fff; font-family: degular-display, sans-serif; font-weight: 400; font-style: normal; font-size: 15px; letter-spacing: .1ch; line-height: 1.2; }
+.about-shader-story, .about-shader-story * { box-sizing: border-box; }
+.about-shader-story__viewport { position: relative; overflow: clip; }
+.about-shader-story[data-shader-state="webgl"] .about-shader-story__viewport { position: sticky; top: 0; height: 100vh; }
+.about-shader-story[data-shader-state="webgl"] .about-shader-story__content { position: absolute; top: 0; left: 0; width: 100%; will-change: transform; }
+.about-shader-story__section { display: flex; justify-content: space-evenly; align-items: center; width: 100%; min-height: calc(100vh - 105px); padding: 120px; }
+.about-shader-story__section:not(:first-of-type) .about-shader-story__title { padding-bottom: min(9vw, 90px); }
+.about-shader-story__section:nth-child(even) { flex-direction: row-reverse; background: #0101ec; }
+.about-shader-story__section:nth-child(even) .about-shader-story__title { text-align: right; }
+.about-shader-story__title { text-align: left; text-transform: uppercase; opacity: .9; }
+.about-shader-story__number, .about-shader-story__name { display: block; font-weight: 500; line-height: .75; margin: 0; padding: 0; }
+.about-shader-story__number { font-size: min(36vw, 360px); }
+.about-shader-story__name { font-family: inherit; font-size: min(18vw, 180px); padding-left: .1ch; }
+.about-shader-story__arrows { font-size: min(9vw, 90px); color: #0101ec; margin: 1ch 0 0 !important; line-height: 1; }
+.about-shader-story__arrows span { display: inline-block; rotate: 90deg; }
+.about-shader-story__paragraph { align-self: flex-end; max-width: 20ch; font-size: 21px; margin: 0; }
+.about-shader-story__button { display: inline-block; margin: 5ch 0; padding: 2ch 5ch; border: 2px solid currentColor; border-radius: 50%; font-family: inherit; font-weight: 400; font-size: .8em; line-height: 1.2; letter-spacing: .1ch; text-transform: uppercase; text-decoration: none; color: inherit; transition: border-color 1s ease; }
+.about-shader-story__button:is(:hover,:focus) { border-color: #dd51b1; }
+.about-shader-story__button:focus-visible { outline: 2px solid white; outline-offset: 4px; }
+.about-shader-story__canvas { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; }
+.about-shader-story__canvas canvas { display: block; width: 100%; height: 100%; }
+.about-shader-story__line { position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: white; transform: scaleX(0); transform-origin: left; pointer-events: none; }
+.about-shader-story:not([data-shader-state="webgl"]) .about-shader-story__canvas, .about-shader-story:not([data-shader-state="webgl"]) .about-shader-story__line { display: none; }
+@media (max-width: 1024px) {
+  .about-shader-story__section { flex-direction: column; justify-content: center; min-height: 100vh; padding: 10vh 30px; }
+  .about-shader-story__title { width: 100%; }
+  .about-shader-story__section:nth-child(even) { flex-direction: column; }
+  .about-shader-story__section:nth-child(even) .about-shader-story__paragraph { align-self: flex-start; }
+  .about-shader-story__paragraph { font-size: 18px; }
+  .about-shader-story__canvas { opacity: .7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-shader-story__button { transition: none; }
+}

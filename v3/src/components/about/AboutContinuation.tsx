@@ -1,10 +1,8 @@
 import { useEffect, useRef } from 'react'
-import AboutStorySection from './AboutStorySection'
-import AboutStoryBridge from './AboutStoryBridge'
+import AboutShaderStory from './AboutShaderStory'
 import AboutDisciplines from './AboutDisciplines'
 import { gsap, ScrollTrigger } from './aboutMotionRuntime'
 import { aboutMotionConfig as config } from './aboutMotionConfig'
-import { buildCodropsSet2Motion } from './aboutCodropsSet2Motion'
 import { buildServiceSequence } from './aboutServiceSequence'
 import { installReadingResize } from './aboutReadingResize'
 import './about-continuation.css'
@@ -35,7 +33,6 @@ export default function AboutContinuation() {
           }, conditions => {
             const { desktop, reduced } = conditions.conditions!
             root.dataset.motionMode = reduced ? 'reduced' : desktop ? 'desktop' : 'mobile'
-            const revertStory = buildCodropsSet2Motion(root, !desktop, !!reduced)
             const services = reduced ? undefined : buildServiceSequence(root)
             currentServices = services
             ScrollTrigger.refresh()
@@ -48,7 +45,6 @@ export default function AboutContinuation() {
               previousServiceState = state
               resumeServiceIndex = state?.active ? state.index : undefined
               services?.dispose()
-              revertStory()
             }
           }, root)
           return () => media.revert()
@@ -69,8 +65,7 @@ export default function AboutContinuation() {
   return (
     <div ref={rootRef} className="about-continuation">
       {/* Future AboutPaperCrumple belongs here. Today the portrait flows directly into Story. */}
-      <AboutStorySection />
-      <AboutStoryBridge />
+      <AboutShaderStory />
       <AboutDisciplines />
     </div>
   )

@@ -4,20 +4,7 @@
 .about-continuation .about-split-word, .about-continuation .about-split-char { display: inline-block; }
 .about-continuation .about-split-word { white-space: nowrap; }
 .about-continuation .ab-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.about-story { position: relative; background: var(--ab-cream); overflow: clip; }
-.about-story__moment { min-height: 120svh; display: flex; align-items: center; padding: 130px 6% 110px; box-sizing: border-box; }
-.about-story__spread { display: grid; grid-template-columns: minmax(0, 69fr) minmax(0, 31fr); column-gap: 4%; width: 100%; max-width: 1480px; margin: auto; }
-.about-story__meta { grid-column: 1 / -1; display: flex; justify-content: space-between; font-size: 10px; letter-spacing: .14em; margin-bottom: 52px; }
-.about-story__meta > span:last-child { opacity: .45; }
-.about-story__headline { font: 400 clamp(48px, 5.8vw, 96px)/.96 'Tiempos Headline', Georgia, serif; letter-spacing: -.045em; font-kerning: none; text-rendering: optimizeSpeed; }
-.about-story__line { display: block; white-space: nowrap; }
-.about-story__paragraph { margin-top: 38px !important; max-width: 55ch; font-size: clamp(17px, 1.4vw, 21px); line-height: 1.55; letter-spacing: -.018em; transform-origin: 0% 50%; }
-.about-story__visual { display: flex; align-items: center; justify-content: flex-end; padding-left: 12px; }
-.about-story-visual { width: 100%; max-width: 330px; height: auto; overflow: visible; color: #77796e; stroke-width: 1; }
-.about-story-visual__labels, .about-service-visual__labels { font: 9px 'Neue Haas Grotesk Display', sans-serif; letter-spacing: 1px; }
-.about-story-bridge { position: relative; min-height: 80svh; padding: 110px 6%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: clip; background: var(--ab-cream); }
-.about-story-bridge__meta { font-size: 10px; letter-spacing: .14em; margin-bottom: 44px; }
-.about-story-bridge__headline { font: 400 clamp(48px, 6.8vw, 104px)/1.05 'Tiempos Headline', Georgia, serif; letter-spacing: -.045em; text-align: center; font-kerning: none; text-rendering: optimizeSpeed; }
+.about-service-visual__labels { font: 9px 'Neue Haas Grotesk Display', sans-serif; letter-spacing: 1px; }
 .about-services { position: relative; min-height: 100svh; padding-bottom: 2px; background: var(--ab-green); color: var(--ab-cream); }
 .about-services__viewport { position: relative; height: 100svh; overflow: clip; background: var(--ab-green); outline-offset: -5px; }
 .about-services__viewport.is-active { touch-action: none; }
@@ -45,15 +32,6 @@
 .about-service-visual__right { position: absolute; right: 1%; bottom: 15%; width: 19%; max-width: 250px; transform: rotate(9deg); stroke: currentColor; stroke-width: 1; }
 .about-service-visual__icon { position: absolute; right: 9%; top: 22%; width: 50px; height: 50px; opacity: .65; }
 @media (max-width: 768px) {
-  .about-story__moment { min-height: 95svh; padding: 110px 24px 80px; }
-  .about-story__spread { grid-template-columns: minmax(0, 1fr); }
-  .about-story__meta { margin-bottom: 35px; font-size: 9px; }
-  .about-story__headline { font-size: clamp(28px, 8.3vw, 60px); letter-spacing: -.045em; }
-  .about-story__paragraph { margin-top: 27px !important; font-size: 17px; line-height: 1.55; }
-  .about-story__visual { justify-content: flex-end; padding-left: 0; margin-top: 32px; }
-  .about-story-visual { width: 49%; max-width: 210px; }
-  .about-story-bridge { min-height: 75svh; padding: 100px 24px; }
-  .about-story-bridge__headline { font-size: clamp(28px, 8.3vw, 60px); }
   .about-services__meta { top: 110px; left: 24px; right: 24px; font-size: 9px; }
   .about-service__content { inset: 22% 22px 15%; }
   .about-service__title { font-size: clamp(38px, 11vw, 72px); }
@@ -66,7 +44,6 @@
   .about-service__footer { bottom: 3%; left: 39%; font-size: 7px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .about-story__moment { min-height: 100svh; }
   .about-services { min-height: 0; padding-bottom: 0; }
   .about-services__viewport { height: auto; overflow: visible; }
   .about-services__meta { display: none; }

@@ -1,6 +1,14 @@
 # About: Signal opening and portrait handoff
 
-## October 5 original Codrops Set 2 source port (current)
+## October 5 Shaders on Scroll experiment (current)
+
+Restore checkpoint: `98596499b07c6b79424bfea79c22576d0a0c623b`. The approved opening/portrait and service transition engine are unchanged. The former Story/bridge components, SplitText effects, SVG studies and their CSS were removed. The middle now uses `AboutShaderStory.tsx`, a scoped source-faithful port of Faboolea's Shaders on Scroll. Both original GLSL files are byte-identical; geometry remains `IcosahedronGeometry(1, 64)`, with the original camera, additive wireframe material, uniforms, colors, font kit and three-stage layout.
+
+Three.js 0.186.1 was added with TypeScript declarations; existing GSAP 3.15.0 and Lenis are retained. One section-local .05 interpolation moves only the new content and its shader progress. No second global scroll engine/body-height override exists. The brief's continuous direct uniform interpolation replaces the source's rounded progress and 6.6-second uniform tweens. Renderer work pauses offscreen/when hidden, and all resources dispose on unmount. Static fallback is provided for reduced motion or unavailable WebGL.
+
+Production build and scoped ESLint pass. Desktop/live-reference comparison, mobile scale, source shader checksums, service entry/finite exit, mobile forward/reverse swipes, route cleanup and fallback checks are documented in [the shader experiment report](../../../docs/about-shader-source-pass/report.md). This is the uncustomized reference experiment; stop here for visual review.
+
+## October 5 original Codrops Set 2 source port (superseded)
 
 No checkpoint was created. The supplied `Downloads/OnScrollTypographyAnimations-main` repository was inspected directly (`src/index2.html`, `src/js/index2.js`, `src/css/base.css`). The previous custom Story animation module and its configuration were removed. Story now uses actual effect17, effect20 and effect27; paragraphs use effect16. The new short Section 04 bridge uses effect28's original character-distance calculation. Section 05 retains the approved Web / Ads / Creative transition engine and replaceable placeholder visuals.
 
