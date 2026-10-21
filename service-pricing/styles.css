@@ -566,6 +566,14 @@ img { display: block; max-width: 100%; }
   max-width: 640px;
 }
 
+.pricing-divider {
+  display: block;
+  width: 56px;
+  height: 1px;
+  margin: 0 0 14px;
+  background: rgba(8, 9, 9, 0.22);
+}
+
 .pricing-kicker {
   font-family: var(--ff-body);
   font-size: 11px;
@@ -709,7 +717,8 @@ img { display: block; max-width: 100%; }
   min-height: 48px;
 }
 
-.plan--rec .plan-title-row {
+.plan--rec .plan-title-row,
+.plan--addon .plan-title-row {
   padding-right: 115px;
 }
 
@@ -1381,14 +1390,36 @@ img { display: block; max-width: 100%; }
 
   .plan-iso--foundation { --plan-ico: 48px; }
   .plan-iso--digital    { --plan-ico: 45px; }
-  .plan-iso--managed    { --plan-ico: 35px; }
+  .plan-iso--managed    { --plan-ico: 42px; }
 
   .plan-title-row {
     gap: 12px;
     min-height: 40px;
   }
 
-  .plan--rec .plan-title-row { padding-right: 96px; }
+  .plan--rec .plan-title-row,
+  .plan--addon .plan-title-row {
+    padding-right: 0;
+  }
+
+  /* Keep badges out of the title on small screens */
+  .plan-badge {
+    position: static;
+    display: inline-flex;
+    align-self: flex-start;
+    margin: 0 0 14px;
+  }
+
+  .pricing-group-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pricing-divider {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   .plan-price-row span { font-size: 36px; }
 
