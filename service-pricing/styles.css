@@ -715,6 +715,7 @@ img { display: block; max-width: 100%; }
   gap: 14px;           /* space between icon and title */
   margin-bottom: 10px;
   min-height: 48px;
+  overflow: visible;
 }
 
 .plan--rec .plan-title-row,
@@ -747,15 +748,15 @@ img { display: block; max-width: 100%; }
 /* Per-card visual weight tweaks (same CSS size, slight optical scale) */
 .plan-iso--foundation {
   --plan-ico: 58px;
-  transform: translateY(-6px);
+  transform: translateY(-12px);
 }
 .plan-iso--digital {
   --plan-ico: 62px;
-  transform: translateY(-6px);
+  transform: translateY(-12px);
 }
 .plan-iso--managed {
   --plan-ico: 60px;
-  transform: translateY(-6px);
+  transform: translateY(-12px);
 }
 
 .plan.reveal:not(.is-in) .plan-iso img {
