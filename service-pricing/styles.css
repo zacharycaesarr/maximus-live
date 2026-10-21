@@ -91,6 +91,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
+  color-scheme: light only;
   --cream: #f3f0e8;
   --surface: #faf8f2;
   --ink: #080909;
@@ -111,6 +112,8 @@
 html {
   scroll-behavior: smooth;
   overflow-x: clip;
+  background-color: #f3f0e8;
+  color-scheme: light only;
 }
 
 body {
@@ -119,10 +122,21 @@ body {
   font-size: 16px;
   letter-spacing: -0.01em;
   background: var(--cream);
+  background-color: #f3f0e8;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   line-height: 1.55;
   font-kerning: normal;
+  color-scheme: light only;
+}
+
+/* Keep browser-native controls on the light palette (Samsung/Chrome force-dark) */
+input,
+textarea,
+select,
+button,
+option {
+  color-scheme: light;
 }
 
 a { color: inherit; text-decoration: none; }
