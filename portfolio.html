@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light">
   <title>Portfolio | Maximus Reach</title>
   <meta name="description" content="Selected concept work and sample campaigns by Maximus Reach. Web development, ad management, digital growth, and creative.">
 
@@ -20,7 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=29">
+  <link rel="stylesheet" href="style.css?v=33">
 </head>
 <body class="page-portfolio">
 
@@ -346,6 +348,64 @@
 
   </main>
 
+  <section class="faq-dock" id="faq" data-faq>
+    <div class="faq-dock-inner">
+      <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-stage">
+        Frequently asked questions
+      </button>
+
+      <div class="faq-stage" id="faq-stage" hidden>
+        <div class="faq-stage-grid">
+          <div class="faq-left">
+            <div class="faq-speaker" aria-hidden="true">
+              <svg class="faq-head" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="90" height="90" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- side profile facing right -->
+                <path d="M42 16
+                  C30 17 23 28 24 42
+                  C24 50 27 56 32 60
+                  C30 64 29 70 31 76
+                  C34 84 42 90 54 90
+                  L54 76
+                  C60 72 66 66 68 58
+                  C70 52 68 48 64 46
+                  C68 42 70 36 68 30
+                  C66 22 56 15 42 16 Z" />
+                <path d="M32 58 C36 61 42 62 46 60" opacity="0.35" />
+                <g class="speech-bars">
+                  <path class="bar bar-top" d="M74 34 Q84 40 74 46" />
+                  <path class="bar bar-mid" d="M78 28 Q96 40 78 52" />
+                  <path class="bar bar-bot" d="M82 22 Q108 40 82 58" />
+                </g>
+              </svg>
+            </div>
+
+            <div class="faq-bubble">
+              <div class="faq-thought-dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <p class="faq-bubble-label">Ask me</p>
+              <div class="faq-q-list" role="list">
+                <button type="button" class="faq-q" role="listitem" data-faq-i="0">What do you actually do?</button>
+                <button type="button" class="faq-q" role="listitem" data-faq-i="1">Do I need a big budget to start?</button>
+                <button type="button" class="faq-q" role="listitem" data-faq-i="2">Can you just build a site, or just run ads?</button>
+                <button type="button" class="faq-q" role="listitem" data-faq-i="3">How long does a typical project take?</button>
+                <button type="button" class="faq-q" role="listitem" data-faq-i="4">Do you only work with local businesses?</button>
+                <button type="button" class="faq-q" role="listitem" data-faq-i="5">What happens after launch?</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-answer" aria-live="polite">
+            <p class="faq-answer-label">Answer</p>
+            <p class="faq-answer-text" data-faq-answer>Pick a question on the left.</p>
+          </div>
+        </div>
+
+        <button type="button" class="faq-close">Close</button>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <span>© 2026 Maximus Reach</span>
     <span class="ft-dot">·</span>
@@ -354,6 +414,6 @@
     <span>Zachary Maximus</span>
   </footer>
 
-  <script src="script.js?v=25"></script>
+  <script src="script.js?v=29"></script>
 </body>
 </html>
