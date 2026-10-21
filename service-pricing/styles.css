@@ -399,14 +399,22 @@ img { display: block; max-width: 100%; }
   max-width: 720px;
 }
 
-.hero-inline-mark {
+.inline-mark {
   display: inline-block;
+  width: 1.05em;
+  height: 1.05em;
+  vertical-align: -0.2em;
+  margin: 0 0.12em;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.inline-mark--hero {
   width: 1.15em;
   height: 1.15em;
   vertical-align: -0.22em;
   margin: 0 0.18em;
   border-radius: 5px;
-  object-fit: contain;
 }
 
 .eyebrow {
